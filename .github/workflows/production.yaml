@@ -28,9 +28,9 @@ jobs:
           mkdir -p ${{env.WORK_DIR}}
           cd ${{env.WORK_DIR}}
           rm -r ${{env.PROJECT_NAME}}
-          git clone -b web ${{env.REPOSITORY}}
+          git clone -b master ${{env.REPOSITORY}}
           cd ${{env.PROJECT_NAME}}
-          git checkout web
+          git checkout master
           git status
 
   Build:
