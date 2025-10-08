@@ -1,0 +1,14 @@
+include: package:flutter_lints/flutter.yaml
+analyzer:
+  errors:
+    unused_field: ignore
+    unused_element: ignore
+    unused_element_parameter: ignore
+  exclude: 
+    - "**/*.g.dart"
+    - lib/generated/
+
+
+linter:
+  rules:
+    no_leading_underscores_for_local_identifiers: false

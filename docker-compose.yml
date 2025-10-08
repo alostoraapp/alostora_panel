@@ -1,0 +1,38 @@
+version: "3.9"
+
+networks:
+  default:
+    name: web_net
+
+services:
+    nginx:
+      build:
+        context: .
+        dockerfile: ./nginx/Dockerfile
+      image: webapp-nginx:latest
+      container_name: admin_panel
+      restart: on-failure
+      volumes:
+        - admin_panel:/app/frontend/build
+      networks:
+        - default
+        
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=web_net"
+        - "traefik.http.routers.webapp.entrypoints=http"
+        - "traefik.http.routers.webapp.rule=Host(`panel.alostora.org`)"
+        - "traefik.http.routers.webapp.service=webapp-secure"
+        - "traefik.http.routers.webapp.middlewares=https-redirect"
+        - "traefik.http.routers.webapp-secure.entrypoints=https"
+        - "traefik.http.routers.webapp-secure.rule=Host(`panel.alostora.org`)"
+        - "traefik.http.routers.webapp-secure.tls=true"
+        - "traefik.http.routers.webapp-secure.tls.options=default"
+        - "traefik.http.routers.webapp-secure.tls.certresolver=mycert"
+        - "traefik.http.routers.webapp-secure.service=webapp-secure"
+        - "traefik.http.services.webapp-secure.loadbalancer.server.port=80"
+        - "traefik.http.middlewares.redirect-to-non-www.redirectregex.permanent=true"
+
+
+volumes:
+  admin_panel:
