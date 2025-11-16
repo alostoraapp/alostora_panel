@@ -6,20 +6,19 @@ networks:
 
 services:
   nginx:
-    # We pull the pre-built image from GitHub Container Registry
-    # !!! IMPORTANT: Replace 'alostoraapp/alostora_panel'
-    # with your GitHub <username_or_org>/<repository_name>
+    # This correctly pulls the image built by the CI/CD
     image: ghcr.io/alostoraapp/alostora_panel:latest
     container_name: admin_panel
     restart: on-failure
 
-    # The app files are baked into the image, so no volume is needed here.
+    # No build context and no app volumes are needed here
+    # which is correct for this approach.
 
     networks:
       - default
 
     labels:
-      # Your Traefik labels remain unchanged
+      # Your Traefik labels
       - "traefik.enable=true"
       - "traefik.docker.network=web_net"
       - "traefik.http.routers.webapp.entrypoints=http"
@@ -35,8 +34,7 @@ services:
       - "traefik.http.services.webapp-secure.loadbalancer.server.port=80"
       - "traefik.http.middlewares.redirect-to-non-www.redirectregex.permanent=true"
 
-# The 'admin_panel' volume is no longer used by the nginx service
-# If nothing else uses this, you can remove this block.
-# If you remove it, also remove the 'docker volume rm' command in production.yaml
+# This volume is still defined but not used by nginx
+# This is fine as your script in production.yaml cleans it up
 volumes:
   admin_panel:
