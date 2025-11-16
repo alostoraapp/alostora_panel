@@ -1,14 +1,38 @@
-include: package:flutter_lints/flutter.yaml
-analyzer:
-  errors:
-    unused_field: ignore
-    unused_element: ignore
-    unused_element_parameter: ignore
-  exclude: 
-    - "**/*.g.dart"
-    - lib/generated/
+# This file configures the linter.
+# For more information, see: https://dart.dev/guides/language/analysis-options
 
+include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
-    no_leading_underscores_for_local_identifiers: false
+    # --- Style Rules ---
+    # Prefer using `final` for local variables.
+    prefer_final_locals: true
+    # Prefer `const` for constructors.
+    prefer_const_constructors: true
+    # Prefer `const` for literals.
+    prefer_const_literals_to_create_immutables: true
+    # Avoid `print` calls in production code.
+    avoid_print: true
+    # This rule forces package-relative imports (absolute imports)
+    # for any file inside the 'lib' directory.
+    avoid_relative_lib_imports: true
+
+    # --- Pub Rules ---
+    # Sort pub dependencies alphabetically.
+    sort_pub_dependencies: true
+
+analyzer:
+  exclude:
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+  errors:
+    # Treat info-level diagnostics as warnings.
+    # missing_required_param: warning
+    # missing_return: warning
+    # must_be_immutable: warning
+    
+    # Treat missing `required` parameters as an error.
+    missing_required_param: error
+    # Treat missing returns as an error.
+    missing_return: error

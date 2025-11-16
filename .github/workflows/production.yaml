@@ -78,6 +78,3 @@ jobs:
           docker container prune --force
           docker image prune --force
           docker volume prune --force
-
-          echo "------------- docker restart -----------------"
-          docker restart $(docker ps -q)

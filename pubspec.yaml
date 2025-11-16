@@ -1,134 +1,79 @@
-name: adminpro
-description: "A new Flutter project."
+name: alostora
+description: "Alostora Admin Panel."
 publish_to: 'none'
 
-version: '4.6.0'
+version: 1.0.0+1
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
-  
+
 dependencies:
-  flutter_localizations:
-    sdk: flutter
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  responsive_framework: ^1.5.1
-  provider: ^6.1.5
-  dropdown_button2: ^2.3.9
-  country_flags: ^4.0.1
-  iconly: ^1.0.1
-  flutter_svg: ^2.2.0
-  material_design_icons_flutter: ^7.0.7296
-  expansion_widget: ^0.1.0
-  syncfusion_flutter_charts: ^31.1.20
-  go_router: ^16.2.0
-  fl_chart: ^1.0.0
-  collection: ^1.19.1
-  flutter_layout_grid: ^2.0.8
-  syncfusion_flutter_calendar: ^31.1.20
+  flutter_localizations:
+    sdk: flutter
+
+  # Core Architecture
+  equatable: ^2.0.5
+  flutter_bloc: ^9.1.1
+  get_it: ^9.0.5
+  go_router: ^17.0.0
+  google_fonts: ^6.2.1 # Added for professional font handling
   intl: ^0.20.2
-  feather_icons: ^1.2.0
-  flutter_animate: ^4.5.2
-  table_calendar: ^3.2.0
-  syncfusion_flutter_datagrid: ^31.1.20
-#  magicoon_icons: ^0.0.6
-  flex_color_picker: ^3.7.1
-  iconsax_plus: ^1.0.0
-  syntax_highlight: ^0.5.0
-  url_strategy: ^0.3.0
-  pdf: ^3.11.3
-  printing: ^5.14.2
-  timeline_tile: ^2.0.0
-  syncfusion_flutter_gauges: ^31.1.20
 
-  # Remote Packages
-  appflowy_board:
-    # path: ../appflowy-board/
-    git:
-      url: https://github.com/iamtoricool/appflowy-board.git
-      ref: main
+  # Network
+  dio: ^5.9.0
 
-  responsive_grid:
-    git: 
-      url: https://github.com/iamtoricool/ResponsiveGrid_Flutter.git
-      ref: master
+  # Storage
+  flutter_secure_storage: ^9.2.4
 
-
-dependency_overrides: 
-  magicoon_icons:
-    git:
-      url: https://github.com/nhCoder/magicoon_icons.git
-      ref: 1c5e401
+  # UI Utility
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  icons_launcher: ^3.0.1
-  intl_utils: ^2.8.11
   rename_app: ^1.6.5
-  change_app_package_name: ^1.5.0
 
+l10n:
+  arb-dir: lib/l10n
+  template-arb-file: app_en.arb
+  output-localization-file: app_localizations.dart
 
 flutter:
   uses-material-design: true
 
+  # This line enables the intl tool
+  generate: true
+
   assets:
+    # We will let google_fonts handle the fonts now
+    # - assets/fonts/Inter/
+
+    # Images
     - assets/images/
-    - assets/images/widget_images/
-    - assets/images/widget_images/banner_images/
-    - assets/images/sidebar_icons/
-    - assets/images/widget_images/dashboard_icon/
-    - assets/images/widget_images/card_images/feature_card/
-    - assets/images/widget_images/sm_icon/
-    - assets/images/widget_images/authentication_images/
-    - assets/images/widget_images/dashboard_overview_icon/
-    - assets/images/widget_images/svg_icons/
-    - assets/images/widget_images/not_found_images/
-    - assets/app_icons/
-    - assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/
-    - assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/
-    - assets/images/widget_images/dashboard_overview_icon/influencer_admin_icons/
-    - assets/images/widget_images/dashboard_overview_icon/news_admin_icons/
-    # static images
-    - assets/images/static_images/
-    - assets/images/static_images/ai_generated/images/
-    - assets/images/static_images/avatars/person_images/
-    - assets/images/static_images/avatars/placeholder_avatar/
-    - assets/images/static_images/background_images/
-    - assets/images/static_images/icons/crypto_icons/
-    - assets/images/static_images/placeholder_images/random_placeholders/
-    - assets/images/static_images/product_images/
-    #socail icons
-    - assets/images/static_images/icons/social_icons/
-  #   - images/a_dot_ham.jpeg
-    #country image
-    - assets/images/widget_images/country_image/
-    - assets/images/widget_images/delivery_dashboard_icons/
-    - assets/images/widget_images/dashboard_lms_management_icons/
+    - assets/images/logo/
 
-  fonts:
-    - family: Inter
-      fonts:
-        - asset: fonts/Inter/Inter-Thin.ttf
-          weight: 100
-        - asset: fonts/Inter/Inter-ExtraLight.ttf
-          weight: 200
-        - asset: fonts/Inter/Inter-Light.ttf
-          weight: 300
-        - asset: fonts/Inter/Inter-Regular.ttf
-          weight: 400
-        - asset: fonts/Inter/Inter-Medium.ttf
-          weight: 500
-        - asset: fonts/Inter/Inter-SemiBold.ttf
-          weight: 600
-        - asset: fonts/Inter/Inter-Bold.ttf
-          weight: 700
-        - asset: fonts/Inter/Inter-ExtraBold.ttf
-          weight: 800
-        - asset: fonts/Inter/Inter-Black.ttf
-          weight: 900
-
-flutter_intl:
-  enabled: true
+  # Font definitions are now handled by the google_fonts package
+  # fonts:
+  #   - family: Inter
+  #     fonts:
+  #       - asset: assets/fonts/Inter/Inter-Thin.ttf
+  #         weight: 100
+  #       - asset: assets/fonts/Inter/Inter-ExtraLight.ttf
+  #         weight: 200
+  #       - asset: assets/fonts/Inter/Inter-Light.ttf
+  #         weight: 300
+  #       - asset: assets/fonts/Inter/Inter-Regular.ttf
+  #         weight: 400
+  #       - asset: assets/fonts/Inter/Inter-Medium.ttf
+  #         weight: 500
+  #       - asset: assets/fonts/Inter/Inter-SemiBold.ttf
+  #         weight: 600
+  #       - asset: assets/fonts/Inter/Inter-Bold.ttf
+  #         weight: 700
+  #       - asset: assets/fonts/Inter/Inter-ExtraBold.ttf
+  #         weight: 800
+  #       - asset: assets/fonts/Inter/Inter-Black.ttf
+  #         weight: 900

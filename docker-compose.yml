@@ -13,7 +13,7 @@ services:
       container_name: admin_panel
       restart: on-failure
       volumes:
-        - admin_panel:/app/frontend/build
+        - admin_panel:/app.dart/frontend/build
       networks:
         - default
         
