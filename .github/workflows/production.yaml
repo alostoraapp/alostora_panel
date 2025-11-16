@@ -1,80 +1,92 @@
 name: Flutter webapp CI/CD
 
-
 env:
-  REPOSITORY: git@github.com:${{github.repository}}.git
-  PROJECT_NAME : ${{ github.event.repository.name }}
-  WORK_DIR : /home/webapp
-  DOCKER_HUB_URL : docker.io
+  # !!! IMPORTANT: Replace 'alostoraapp/alostora_panel'
+  # with your GitHub <username_or_org>/<repository_name>
+  IMAGE_NAME: ghcr.io/alostoraapp/alostora_panel:latest
 
+  WORK_DIR : /home/webapp
+  PROJECT_NAME : ${{ github.event.repository.name }}
+  REPOSITORY: git@github.com:${{github.repository}}.git
 
 on:
   push:
     branches: [ master ]
 
-
 jobs:
-  Clone:
+  Build-and-Push:
     runs-on: ubuntu-latest
-    steps:
-    - name: Clone
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        port: ${{ secrets.PORT }}
-        script: |
-          mkdir -p ${{env.WORK_DIR}}
-          cd ${{env.WORK_DIR}}
-          rm -r ${{env.PROJECT_NAME}}
-          git clone -b master ${{env.REPOSITORY}}
-          cd ${{env.PROJECT_NAME}}
-          git checkout master
-          git status
+    permissions:
+      # We no longer need the 'packages: write' permission here
+      # because we are using our own PAT
+      contents: read
 
-  Build:
-    needs: Clone
-    runs-on: ubuntu-latest
     steps:
-    - name: Build
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        port: ${{ secrets.PORT }}
-        script: |
-          cd ${{env.WORK_DIR}}/${{env.PROJECT_NAME}}
+      - name: Check out code
+        uses: actions/checkout@v4
 
-          echo " ------------- docker build image -------------"
-          docker compose build --pull 
-          
+      - name: Log in to GitHub Container Registry using PAT
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          # Use the new PAT secret instead of GITHUB_TOKEN
+          password: ${{ secrets.GH_PAT }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_NAME }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   Deploy:
-    needs: Build
+    needs: Build-and-Push
     runs-on: ubuntu-latest
     steps:
-    - name: Build
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        port: ${{ secrets.PORT }}
-        script: |
-          cd ${{env.WORK_DIR}}/${{env.PROJECT_NAME}}
-          
-          echo "------------- Stopping admin_panel container -------------"
-          docker rm -f admin_panel || true  # Stop the container if it's running
-
-          echo "------------- Removing old frontend files from volume -------------"
-          docker volume rm -f alostora_panel_admin_panel
-
-          echo "------------- docker up webapp container --------------"
-          docker compose -f docker-compose.yml up -d --force-recreate --no-build  # Recreate the container with updated volume
-
-          echo "------------- docker prune old images ---------------"
-          docker container prune --force
-          docker image prune --force
-          docker volume prune --force
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            mkdir -p ${{env.WORK_DIR}}
+            cd ${{env.WORK_DIR}}
+            
+            if [ ! -d "${{env.PROJECT_NAME}}/.git" ]; then
+              rm -rf ${{env.PROJECT_NAME}}
+              git clone -b master ${{env.REPOSITORY}} ${{env.PROJECT_NAME}}
+              cd ${{env.PROJECT_NAME}}
+            else
+              cd ${{env.PROJECT_NAME}}
+              git checkout master
+              git pull origin master
+            fi
+            
+            echo "------------- Logging in to GHCR on server using PAT -------------"
+            # Use the PAT secret for login on the server as well
+            # The secret is available to the 'appleboy/ssh-action'
+            echo "${{ secrets.GH_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            echo "------------- Pulling the latest image -------------"
+            docker pull ${{ env.IMAGE_NAME }}
+            
+            echo "------------- Removing old volume/container -------------"
+            docker volume rm -f alostora_panel_admin_panel || true
+            docker rm -f admin_panel || true
+            
+            echo "------------- Starting container with new image -------------"
+            docker compose -f docker-compose.yml up -d --force-recreate --no-build
+            
+            echo "------------- Pruning old images/containers -------------"
+            docker container prune --force
+            docker image prune -a --force
+            docker volume prune --force
