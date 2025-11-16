@@ -1,0 +1,12 @@
+{
+  "@@locale": "en",
+  "appName": "Admin Panel",
+  "login": "Login",
+  "logout": "Logout",
+  "home": "Dashboard",
+  "welcome": "Welcome, Admin!",
+  "changeTheme": "Change Theme",
+  "changeLanguage": "Change Language",
+  "email": "Email",
+  "password": "Password"
+}

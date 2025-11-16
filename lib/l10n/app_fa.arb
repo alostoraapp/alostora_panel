@@ -1,0 +1,12 @@
+{
+  "@@locale": "fa",
+  "appName": "پنل ادمین",
+  "login": "ورود",
+  "logout": "خروج",
+  "home": "داشبورد",
+  "welcome": "خوش آمدید، ادمین!",
+  "changeTheme": "تغییر تم",
+  "changeLanguage": "تغییر زبان",
+  "email": "ایمیل",
+  "password": "رمز عبور"
+}
