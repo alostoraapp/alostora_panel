@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/l10n/l10n.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../../../core/presentation/cubit/theme_cubit.dart';
@@ -46,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context);
+    final s = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isDesktop = screenWidth >= 1200;
