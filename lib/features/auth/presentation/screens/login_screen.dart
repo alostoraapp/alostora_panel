@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
@@ -92,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: theme.colorScheme.tertiaryContainer,
                   child: Center(
                     child: Image.asset(
-                      logoAsset, // Use dynamic logo
+                      logoAsset,
                       width: 400,
                     ),
                   ),
@@ -106,24 +107,42 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildHeader(BuildContext context, AppLocalizations s) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final smallLogoAsset = isDark
+        ? 'assets/images/logo/logo_dark_small.png'
+        : 'assets/images/logo/logo_light_small.png';
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            s.appName,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          Row(
+            children: [
+              Image.asset(
+                smallLogoAsset,
+                height: 36,
+                width: 36,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                s.appName,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
           Row(
             children: [
               IconButton(
-                icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+                icon: FaIcon(isDark ? FontAwesomeIcons.sun : FontAwesomeIcons.moon, size: 20,),
                 tooltip: s.changeTheme,
                 onPressed: () => context.read<ThemeCubit>().toggleThemeMode(),
               ),
               IconButton(
-                icon: const Icon(Icons.language),
+                icon: const FaIcon(FontAwesomeIcons.language, size: 20,),
                 tooltip: s.changeLanguage,
                 onPressed: () => context.read<LanguageCubit>().toggleLanguage(),
               ),
@@ -134,17 +153,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginForm(BuildContext context, AppLocalizations s, ThemeData theme) {
+  Widget _buildLoginForm(
+      BuildContext context, AppLocalizations s, ThemeData theme) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           s.login,
-          style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+          style:
+              theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 40),
-        
-        // Divider
         Row(
           children: [
             Expanded(child: Divider(color: theme.colorScheme.outline)),
@@ -156,8 +175,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
         const SizedBox(height: 40),
-
-        // Email Field
         _TextFieldLabelWrapper(
           labelText: s.email,
           child: TextFormField(
@@ -168,8 +185,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         const SizedBox(height: 20),
-
-        // Password Field
         _TextFieldLabelWrapper(
           labelText: s.password,
           child: TextFormField(
@@ -179,15 +194,14 @@ class _LoginScreenState extends State<LoginScreen> {
               hintText: s.passwordHint,
               suffixIcon: IconButton(
                 onPressed: () => setState(() => _showPassword = !_showPassword),
-                icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
+                icon: FaIcon(
+                    _showPassword ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye),
               ),
             ),
             onFieldSubmitted: (_) => _login(context),
           ),
         ),
         const SizedBox(height: 30),
-
-        // Submit Button
         SizedBox(
           width: double.infinity,
           child: BlocConsumer<AuthBloc, AuthState>(
@@ -232,7 +246,10 @@ class _TextFieldLabelWrapper extends StatelessWidget {
       children: [
         Text(
           labelText,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         child,

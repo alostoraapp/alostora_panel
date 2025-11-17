@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../core/l10n/app_localizations.dart'; // Correct import for the 'S' helper class
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -22,10 +23,10 @@ class DashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(s.home), // This now correctly points to "Dashboard"
+        title: Text(s.home),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const FaIcon(FontAwesomeIcons.signOutAlt),
             tooltip: s.logout,
             onPressed: () {
               context.read<AuthBloc>().add(AuthLogoutRequested());

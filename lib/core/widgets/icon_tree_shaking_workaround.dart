@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// This widget is not meant to be used visually.
 /// It's a workaround to prevent the Flutter web build's tree-shaking
@@ -14,12 +15,12 @@ class IconTreeShakingWorkaround extends StatelessWidget {
     if (false) {
       return const Column(
         children: [
-          Icon(Icons.light_mode),
-          Icon(Icons.dark_mode),
-          Icon(Icons.language),
-          Icon(Icons.visibility),
-          Icon(Icons.visibility_off),
-          Icon(Icons.logout),
+          FaIcon(FontAwesomeIcons.sun),
+          FaIcon(FontAwesomeIcons.moon),
+          FaIcon(FontAwesomeIcons.language),
+          FaIcon(FontAwesomeIcons.eye),
+          FaIcon(FontAwesomeIcons.eyeSlash),
+          FaIcon(FontAwesomeIcons.signOutAlt),
         ],
       );
     }
