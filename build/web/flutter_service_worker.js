@@ -37,9 +37,9 @@ const RESOURCES = {"favicon.png": "c1cd83b22114e58adbbb0555fb2ba2e1",
 "assets/packages/font_awesome_flutter/lib/fonts/Font-Awesome-7-Brands-Regular-400.otf": "1fcba7a59e49001aa1b4409a25d425b0",
 "assets/packages/font_awesome_flutter/lib/fonts/Font-Awesome-7-Free-Solid-900.otf": "0c8a88fc124a043a9a51a298418ad516",
 "assets/AssetManifest.bin.json": "99e5cc6893c47ded83a49027f83459b4",
-"index.html": "0e9fa047cfe608b986d5563a286d22f6",
-"/": "0e9fa047cfe608b986d5563a286d22f6",
-"flutter_bootstrap.js": "3c5611edf5948f38d6ce96b2efc233e7",
+"index.html": "7e16af93b1cbf9f76496bc23ae1209db",
+"/": "7e16af93b1cbf9f76496bc23ae1209db",
+"flutter_bootstrap.js": "fd985414255db02af9c8d716e0895d65",
 "flutter.js": "24bc71911b75b5f8135c949e27a2984e"};
 // The application shell files that are downloaded before a service worker can
 // start.
