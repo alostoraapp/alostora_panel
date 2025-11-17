@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Admin Panel';
+  String get appName => 'Alostore Admin Panel';
 
   @override
   String get login => 'Login';
@@ -18,7 +18,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logout => 'Logout';
 
   @override
-  String get home => 'Home';
+  String get home => 'Dashboard';
 
   @override
   String get welcome => 'Welcome, Admin!';
@@ -34,4 +34,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get password => 'Password';
+
+  @override
+  String get emailHint => 'Enter your email address';
+
+  @override
+  String get passwordHint => 'Enter your password';
+
+  @override
+  String get loginCredentials => 'Login with your credentials';
 }

@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appName": "Admin Panel",
+  "appName": "Alostore Admin Panel",
   "login": "Login",
   "logout": "Logout",
   "home": "Dashboard",
@@ -8,5 +8,8 @@
   "changeTheme": "Change Theme",
   "changeLanguage": "Change Language",
   "email": "Email",
-  "password": "Password"
+  "password": "Password",
+  "emailHint": "Enter your email address",
+  "passwordHint": "Enter your password",
+  "loginCredentials": "Login with your credentials"
 }

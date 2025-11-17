@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../core/usecase/usecase.dart';
+import '../../features/auth/domain/usecases/refresh_token_usecase.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../injection_container.dart';
 import '../config/constants.dart';
@@ -37,9 +38,6 @@ class AppInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    // --- The CORE of the fix is here ---
-    // We check if the failed request is one of the auth endpoints.
-    // A 401 on these endpoints is expected when logged out and should NOT trigger a refresh.
     final isAuthEndpoint = err.requestOptions.path == AppConstants.loginUrl ||
         err.requestOptions.path == AppConstants.refreshTokenUrl ||
         err.requestOptions.path == AppConstants.verifyUrl ||
@@ -49,17 +47,17 @@ class AppInterceptor extends Interceptor {
       if (!_isRefreshing) {
         _isRefreshing = true;
         try {
-          final result = await sl<AuthRepository>().refreshToken();
+          // Use the dedicated UseCase now
+          final refreshTokenUseCase = sl<RefreshTokenUseCase>();
+          final result = await refreshTokenUseCase(NoParams());
           _isRefreshing = false;
 
           result.fold(
             (failure) {
-              // If refresh fails, the user is truly unauthenticated. Logout.
               sl<AuthBloc>().add(AuthLogoutRequested());
               return handler.reject(err);
             },
             (_) async {
-              // Refresh was successful, retry the original request.
               return handler.resolve(await _retry(err.requestOptions));
             },
           );
@@ -69,12 +67,9 @@ class AppInterceptor extends Interceptor {
           return handler.reject(err);
         }
       } else {
-        // If a refresh is already in progress, just pass the error along
-        // as it will be handled by the original refresh flow.
         return handler.next(err);
       }
     } else {
-      // If it's not a 401 or it's an auth endpoint, just pass the error.
       return handler.next(err);
     }
   }

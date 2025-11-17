@@ -9,7 +9,7 @@ class AppLocalizationsFa extends AppLocalizations {
   AppLocalizationsFa([String locale = 'fa']) : super(locale);
 
   @override
-  String get appName => 'پنل ادمین';
+  String get appName => 'پنل ادمین الاسطوره';
 
   @override
   String get login => 'ورود';
@@ -18,7 +18,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get logout => 'خروج';
 
   @override
-  String get home => 'خانه';
+  String get home => 'داشبورد';
 
   @override
   String get welcome => 'خوش آمدید، ادمین!';
@@ -34,4 +34,13 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get password => 'رمز عبور';
+
+  @override
+  String get emailHint => 'آدرس ایمیل خود را وارد کنید';
+
+  @override
+  String get passwordHint => 'رمز عبور خود را وارد کنید';
+
+  @override
+  String get loginCredentials => 'با اطلاعات کاربری خود وارد شوید';
 }

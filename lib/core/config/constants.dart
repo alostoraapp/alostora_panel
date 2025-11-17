@@ -1,6 +1,3 @@
-
-// This file can be used for app-wide constants.
-
 class AppConstants {
   // static const String baseUrl = 'http://localhost:8000/v1';
   static const String baseUrl = 'https://apiv2.alostora.org/v1';

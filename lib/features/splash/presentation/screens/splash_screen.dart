@@ -5,10 +5,18 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    // Check the current theme's brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Select the appropriate logo based on the theme
+    final logoAsset = isDark
+        ? 'assets/images/logo/logo_caption_dark.png'
+        : 'assets/images/logo/logo_caption_light.png';
+
+    return Scaffold(
       body: Center(
-        child: Image(
-          image: AssetImage('assets/images/logo/logo_caption_light.png'),
+        child: Image.asset(
+          logoAsset,
           fit: BoxFit.cover,
           width: 512,
         ),

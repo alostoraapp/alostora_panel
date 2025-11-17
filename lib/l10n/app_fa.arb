@@ -1,6 +1,6 @@
 {
   "@@locale": "fa",
-  "appName": "پنل ادمین",
+  "appName": "پنل ادمین الاسطوره",
   "login": "ورود",
   "logout": "خروج",
   "home": "داشبورد",
@@ -8,5 +8,8 @@
   "changeTheme": "تغییر تم",
   "changeLanguage": "تغییر زبان",
   "email": "ایمیل",
-  "password": "رمز عبور"
+  "password": "رمز عبور",
+  "emailHint": "آدرس ایمیل خود را وارد کنید",
+  "passwordHint": "رمز عبور خود را وارد کنید",
+  "loginCredentials": "با اطلاعات کاربری خود وارد شوید"
 }

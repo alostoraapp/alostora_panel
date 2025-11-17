@@ -34,9 +34,9 @@ class AppRouter {
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
-        path: AppRoutes.dashboard, // Changed from home to dashboard
-        name: AppRoutes.dashboard, // Changed from home to dashboard
-        builder: (context, state) => const DashboardScreen(), // Changed from HomeScreen to DashboardScreen
+        path: AppRoutes.dashboard,
+        name: AppRoutes.dashboard,
+        builder: (context, state) => const DashboardScreen(),
       ),
     ],
 
