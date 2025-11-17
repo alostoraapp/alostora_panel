@@ -11,5 +11,18 @@
   "password": "رمز عبور",
   "emailHint": "آدرس ایمیل خود را وارد کنید",
   "passwordHint": "رمز عبور خود را وارد کنید",
-  "loginCredentials": "با اطلاعات کاربری خود وارد شوید"
+  "loginCredentials": "با اطلاعات کاربری خود وارد شوید",
+  "dashboard": "داشبورد",
+  "settings": "تنظیمات",
+  "totalUsers": "تعداد کل کاربران",
+  "onlineUsers": "کاربران آنلاین",
+  "todaysMatches": "مسابقات امروز",
+  "liveMatches": "مسابقات زنده",
+  "tomorrowsMatches": "مسابقات فردا",
+  "thisWeeksMatches": "مسابقات این هفته",
+  "loginError": "ورود ناموفق بود. لطفا اطلاعات خود را بررسی کنید.",
+  "overview": "بررسی اجمالی",
+  "matches": "مسابقات",
+  "matchesTiles": "کاشی‌های مسابقات",
+  "matchesList": "لیست مسابقات"
 }

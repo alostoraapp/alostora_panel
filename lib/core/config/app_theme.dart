@@ -32,16 +32,18 @@ class AppTheme {
     required _AppThemeColors colors,
   }) {
     final baseTheme = ThemeData(brightness: brightness);
-    final textTheme = GoogleFonts.vazirmatnTextTheme(baseTheme.textTheme);
+    final textTheme = GoogleFonts.interTextTheme(baseTheme.textTheme);
 
     return baseTheme.copyWith(
-      primaryColor: AppColors.kPrimary600,
-      // Use the scaffold background color from the theme-specific colors.
+      primaryColor: colors.colorScheme.primary,
       scaffoldBackgroundColor: colors.scaffoldColor,
       textTheme: textTheme.apply(bodyColor: colors.textColor, displayColor: colors.textColor),
 
       // Color Scheme
       colorScheme: colors.colorScheme,
+
+      // Icon Theme
+      iconTheme: IconThemeData(color: colors.iconColor),
 
       // Component Themes
       appBarTheme: AppBarTheme(
@@ -52,11 +54,13 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: colors.appBarForegroundColor,
         ),
+        iconTheme: IconThemeData(color: colors.appBarForegroundColor), // Ensure app bar icons match
       ),
       drawerTheme: DrawerThemeData(backgroundColor: colors.drawerColor),
       dialogTheme: DialogThemeData(backgroundColor: colors.dialogColor),
-      elevatedButtonTheme: _getElevatedButtonTheme(textTheme),
-      outlinedButtonTheme: _getOutlinedButtonTheme(),
+      cardTheme: CardThemeData(color: colors.cardColor),
+      elevatedButtonTheme: _getElevatedButtonTheme(textTheme, colors),
+      outlinedButtonTheme: _getOutlinedButtonTheme(colors),
       textButtonTheme: _getTextButtonTheme(),
       inputDecorationTheme: _getInputDecorationTheme(textTheme, colors),
       checkboxTheme: CheckboxThemeData(
@@ -75,27 +79,27 @@ class AppTheme {
 
   // --- COMPONENT THEME HELPERS --- //
 
-  static ElevatedButtonThemeData _getElevatedButtonTheme(TextTheme baseTextTheme) {
+  static ElevatedButtonThemeData _getElevatedButtonTheme(TextTheme baseTextTheme, _AppThemeColors colors) {
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         padding: _buttonPadding,
         visualDensity: _buttonDensity,
         shape: _buttonShape,
-        backgroundColor: AppColors.kPrimary500,
-        foregroundColor: AppColors.kWhiteColor,
+        backgroundColor: colors.colorScheme.primary,
+        foregroundColor: colors.colorScheme.onPrimary,
         textStyle: baseTextTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }
 
-  static OutlinedButtonThemeData _getOutlinedButtonTheme() {
+  static OutlinedButtonThemeData _getOutlinedButtonTheme(_AppThemeColors colors) {
     return OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         padding: _buttonPadding,
         visualDensity: _buttonDensity,
         shape: _buttonShape,
-        side: const BorderSide(color: AppColors.kPrimary600),
-        foregroundColor: AppColors.kPrimary600,
+        side: BorderSide(color: colors.colorScheme.primary),
+        foregroundColor: colors.colorScheme.primary,
       ),
     );
   }
@@ -126,9 +130,9 @@ class AppTheme {
       isDense: true,
       isCollapsed: true,
       enabledBorder: border(),
-      focusedBorder: border(color: AppColors.kPrimary600),
-      errorBorder: border(color: AppColors.kError),
-      focusedErrorBorder: border(color: AppColors.kError),
+      focusedBorder: border(color: colors.colorScheme.primary),
+      errorBorder: border(color: colors.colorScheme.error),
+      focusedErrorBorder: border(color: colors.colorScheme.error),
       disabledBorder: border(),
       floatingLabelStyle: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
       hintStyle: textTheme.bodySmall?.copyWith(
@@ -144,6 +148,8 @@ class AppTheme {
 abstract class _AppThemeColors {
   Color get scaffoldColor;
   Color get textColor;
+  Color get iconColor;
+  Color get cardColor;
   Color get appBarColor;
   Color get appBarForegroundColor;
   Color get drawerColor;
@@ -163,7 +169,7 @@ class _LightColors implements _AppThemeColors {
 
   @override
   ColorScheme get colorScheme => const ColorScheme.light(
-        surface: AppColors.kPrimary50,
+        surface: AppColors.kNeutral50,
         primary: AppColors.kPrimary600,
         onPrimary: AppColors.kWhiteColor,
         secondary: AppColors.kNeutral200,
@@ -177,9 +183,13 @@ class _LightColors implements _AppThemeColors {
       );
 
   @override
-  Color get scaffoldColor => AppColors.kNeutral50; // Off-white background
+  Color get scaffoldColor => AppColors.kNeutral50;
   @override
-  Color get textColor => AppColors.kNeutral900; // Black text
+  Color get cardColor => AppColors.kWhiteColor;
+  @override
+  Color get textColor => AppColors.kNeutral900;
+  @override
+  Color get iconColor => AppColors.kNeutral700;
   @override
   Color get appBarColor => AppColors.kWhiteColor;
   @override
@@ -205,31 +215,35 @@ class _DarkColors implements _AppThemeColors {
 
   @override
   ColorScheme get colorScheme => const ColorScheme.dark(
-        surface: AppColors.kDark1,
+        surface: AppColors.kDarkSurface,
         primary: AppColors.kPrimary600,
-        error: AppColors.kError,
         onPrimary: AppColors.kWhiteColor,
-        primaryContainer: AppColors.kDark2,
+        error: AppColors.kError,
+        primaryContainer: AppColors.kDarkCard,
         onPrimaryContainer: AppColors.kWhiteColor,
         secondary: AppColors.kNeutral200,
         outline: AppColors.kNeutral600,
         onTertiary: AppColors.kNeutral200,
-        tertiaryContainer: AppColors.kDark3,
+        tertiaryContainer: AppColors.kDarkCard,
         onTertiaryContainer: AppColors.kNeutral200,
       );
 
   @override
-  Color get scaffoldColor => AppColors.kDark1; // Standard dark background
+  Color get scaffoldColor => AppColors.kDarkSurface;
   @override
-  Color get textColor => AppColors.kWhiteColor; // White text
+  Color get cardColor => AppColors.kDarkCard;
   @override
-  Color get appBarColor => AppColors.kDark2;
+  Color get textColor => AppColors.kWhiteColor;
+  @override
+  Color get iconColor => AppColors.kWhiteColor; // Default white for dark mode
+  @override
+  Color get appBarColor => AppColors.kDarkCard;
   @override
   Color get appBarForegroundColor => AppColors.kWhiteColor;
   @override
-  Color get drawerColor => AppColors.kDark2;
+  Color get drawerColor => AppColors.kDarkSidebar;
   @override
-  Color get dialogColor => AppColors.kDark2;
+  Color get dialogColor => AppColors.kDarkCard;
   @override
   Color get inputBorderColor => AppColors.kNeutral600;
   @override
@@ -237,7 +251,7 @@ class _DarkColors implements _AppThemeColors {
   @override
   Color get checkboxBorderColor => AppColors.kNeutral400;
   @override
-  Color get scrollbarTrackColor => AppColors.kDark3;
+  Color get scrollbarTrackColor => AppColors.kNeutral900;
   @override
-  Color get scrollbarThumbColor => AppColors.kDark2;
+  Color get scrollbarThumbColor => AppColors.kNeutral700;
 }

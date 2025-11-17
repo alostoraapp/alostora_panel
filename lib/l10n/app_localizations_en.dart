@@ -43,4 +43,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginCredentials => 'Login with your credentials';
+
+  @override
+  String get dashboard => 'Dashboard';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get totalUsers => 'Total Users';
+
+  @override
+  String get onlineUsers => 'Online Users';
+
+  @override
+  String get todaysMatches => 'Today\'s Matches';
+
+  @override
+  String get liveMatches => 'Live Matches';
+
+  @override
+  String get tomorrowsMatches => 'Tomorrow\'s Matches';
+
+  @override
+  String get thisWeeksMatches => 'This Week\'s Matches';
+
+  @override
+  String get loginError => 'Login failed. Please check your credentials.';
+
+  @override
+  String get overview => 'Overview';
+
+  @override
+  String get matches => 'Matches';
+
+  @override
+  String get matchesTiles => 'Matches Tiles';
+
+  @override
+  String get matchesList => 'Matches List';
 }

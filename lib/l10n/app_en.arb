@@ -11,5 +11,18 @@
   "password": "Password",
   "emailHint": "Enter your email address",
   "passwordHint": "Enter your password",
-  "loginCredentials": "Login with your credentials"
+  "loginCredentials": "Login with your credentials",
+  "dashboard": "Dashboard",
+  "settings": "Settings",
+  "totalUsers": "Total Users",
+  "onlineUsers": "Online Users",
+  "todaysMatches": "Today's Matches",
+  "liveMatches": "Live Matches",
+  "tomorrowsMatches": "Tomorrow's Matches",
+  "thisWeeksMatches": "This Week's Matches",
+  "loginError": "Login failed. Please check your credentials.",
+  "overview": "Overview",
+  "matches": "Matches",
+  "matchesTiles": "Matches Tiles",
+  "matchesList": "Matches List"
 }

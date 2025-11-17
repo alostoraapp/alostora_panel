@@ -21,7 +21,7 @@ class AppColors {
   static const Color kError = Color(0xFFD32F2F);
 
   // Dark Theme Specific Colors
-  static const Color kDark1 = Color(0xFF121212);
-  static const Color kDark2 = Color(0xFF1E1E1E);
-  static const Color kDark3 = Color(0xFF2C2C2C);
+  static const Color kDarkSurface = Color(0xFF20232A); // Main background from image
+  static const Color kDarkCard = Color(0xFF2C2F38);    // Card background from image
+  static const Color kDarkSidebar = Color(0xFF252830); // Sidebar background from image
 }

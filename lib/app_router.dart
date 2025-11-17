@@ -5,22 +5,23 @@ import 'core/presentation/widgets/go_router_refresh_stream.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/home/presentation/screens/dashboard_screen.dart';
+import 'features/shell/presentation/screens/app_shell.dart';
+import 'features/shell/presentation/screens/placeholder_screen.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
 import 'injection_container.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
+  static final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
   static final GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
 
-    // Refresh the router state when AuthBloc state changes
     refreshListenable: GoRouterRefreshStream(
       sl<AuthBloc>().stream,
     ),
 
-    // Initial route
     initialLocation: AppRoutes.splash,
 
     routes: [
@@ -33,10 +34,28 @@ class AppRouter {
         name: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
       ),
-      GoRoute(
-        path: AppRoutes.dashboard,
-        name: AppRoutes.dashboard,
-        builder: (context, state) => const DashboardScreen(),
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) {
+          return AppShell(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.dashboardOverview,
+            name: AppRoutes.dashboardOverview,
+            builder: (context, state) => const DashboardScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.matchesTiles,
+            name: AppRoutes.matchesTiles,
+            builder: (context, state) => const PlaceholderScreen(title: 'Matches Tiles'),
+          ),
+          GoRoute(
+            path: AppRoutes.matchesList,
+            name: AppRoutes.matchesList,
+            builder: (context, state) => const PlaceholderScreen(title: 'Matches List'),
+          ),
+        ],
       ),
     ],
 
@@ -46,30 +65,37 @@ class AppRouter {
       final isSplash = state.matchedLocation == AppRoutes.splash;
       final isLoggingIn = state.matchedLocation == AppRoutes.login;
 
-      // While app is initializing, show splash screen
       if (authState is AuthInitial) {
         return isSplash ? null : AppRoutes.splash;
       }
 
-      // If unauthenticated, redirect to login
       if (authState is AuthUnauthenticated) {
         return isLoggingIn ? null : AppRoutes.login;
       }
 
-      // If authenticated, redirect to dashboard
       if (authState is AuthAuthenticated) {
-        return isLoggingIn || isSplash ? AppRoutes.dashboard : null; // Changed from home to dashboard
+        // If authenticated, redirect from splash or login to the overview page.
+        if (isSplash || isLoggingIn) return AppRoutes.dashboardOverview;
+        // If at the root, also redirect to the overview page.
+        if (state.matchedLocation == '/') return AppRoutes.dashboardOverview;
       }
 
-      // Default redirect in case of unknown state
-      return AppRoutes.login;
+      // No redirect needed for other cases
+      return null;
     },
   );
 }
 
-// Static class for route paths to avoid magic strings
 class AppRoutes {
   static const String splash = '/splash';
   static const String login = '/login';
-  static const String dashboard = '/dashboard'; // Changed from home to dashboard
+
+  // Dashboard
+  static const String dashboard = '/dashboard';
+  static const String dashboardOverview = '/dashboard/overview';
+
+  // Matches
+  static const String matches = '/matches';
+  static const String matchesTiles = '/matches/tiles';
+  static const String matchesList = '/matches/list';
 }

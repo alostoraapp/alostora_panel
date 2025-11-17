@@ -166,6 +166,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login with your credentials'**
   String get loginCredentials;
+
+  /// No description provided for @dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get dashboard;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @totalUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Users'**
+  String get totalUsers;
+
+  /// No description provided for @onlineUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Online Users'**
+  String get onlineUsers;
+
+  /// No description provided for @todaysMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Matches'**
+  String get todaysMatches;
+
+  /// No description provided for @liveMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Matches'**
+  String get liveMatches;
+
+  /// No description provided for @tomorrowsMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow\'s Matches'**
+  String get tomorrowsMatches;
+
+  /// No description provided for @thisWeeksMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week\'s Matches'**
+  String get thisWeeksMatches;
+
+  /// No description provided for @loginError.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed. Please check your credentials.'**
+  String get loginError;
+
+  /// No description provided for @overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// No description provided for @matches.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches'**
+  String get matches;
+
+  /// No description provided for @matchesTiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches Tiles'**
+  String get matchesTiles;
+
+  /// No description provided for @matchesList.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches List'**
+  String get matchesList;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
