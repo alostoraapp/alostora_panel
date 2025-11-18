@@ -1,13 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/app_icons.dart';
-import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/s.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
+import '../../../../injection_container.dart';
+import '../../domain/entities/competition_entity.dart';
+import '../bloc/matches_bloc.dart';
+import '../bloc/matches_event.dart';
+import '../bloc/matches_state.dart';
 import '../widgets/match_tile.dart';
 
 class MatchTilesScreen extends StatefulWidget {
@@ -18,28 +26,64 @@ class MatchTilesScreen extends StatefulWidget {
 }
 
 class _MatchTilesScreenState extends State<MatchTilesScreen> {
-  bool _isLiveSelected = true;
-  DateTime _selectedDate = DateTime.now();
+  final _matchesBloc = sl<MatchesBloc>();
   final _searchController = TextEditingController();
+  String _ordering = 'importance';
+  bool _isLive = false;
+  DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(() {
-      // TODO: Implement search logic
-      setState(() {});
-    });
+    _fetchMatches();
+    _searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
+    _matchesBloc.close();
     super.dispose();
+  }
+
+  void _onSearchChanged() {
+    _fetchMatches();
+  }
+
+  void _fetchMatches() {
+    final startTimestamp = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day).toUtc().millisecondsSinceEpoch ~/ 1000;
+    final endTimestamp = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, 23, 59, 59).toUtc().millisecondsSinceEpoch ~/ 1000;
+
+    _matchesBloc.add(GetMatches(
+      search: _searchController.text.isNotEmpty ? _searchController.text : null,
+      ordering: _ordering,
+      isLive: _isLive,
+      startTimestamp: startTimestamp,
+      endTimestamp: endTimestamp,
+    ));
   }
 
   void _onDateChanged(DateTime newDate) {
     setState(() {
       _selectedDate = newDate;
+      _fetchMatches();
+    });
+  }
+
+  void _onOrderingChanged(String? newOrdering) {
+    if (newOrdering != null) {
+      setState(() {
+        _ordering = newOrdering;
+        _fetchMatches();
+      });
+    }
+  }
+
+  void _onLiveFilterChanged(bool isSelected) {
+    setState(() {
+      _isLive = isSelected;
+      _fetchMatches();
     });
   }
 
@@ -48,15 +92,17 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
     final isDesktop = ResponsiveBreakpoints.of(context).isDesktop;
 
     final timePicker = _TimePickerCard(
-      isLiveSelected: _isLiveSelected,
+      isLiveSelected: _isLive,
       selectedDate: _selectedDate,
-      onLiveSelected: (isSelected) {
-        setState(() => _isLiveSelected = isSelected);
-      },
+      onLiveSelected: _onLiveFilterChanged,
       onDateChanged: _onDateChanged,
     );
 
-    final searchCard = _SearchCard(controller: _searchController);
+    final searchCard = _SearchCard(
+      controller: _searchController,
+      ordering: _ordering,
+      onOrderingChanged: _onOrderingChanged,
+    );
 
     return Scaffold(
       body: ListView(
@@ -80,77 +126,41 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
               ],
             ),
           const SizedBox(height: 16),
-          _buildMatchesList(context),
+          BlocBuilder<MatchesBloc, MatchesState>(
+            bloc: _matchesBloc,
+            builder: (context, state) {
+              if (state is MatchesLoading) {
+                return _buildShimmerList();
+              }
+              if (state is MatchesLoaded) {
+                return _buildMatchesList(context, state.competitions);
+              }
+              if (state is MatchesError) {
+                return Center(child: Text(state.message));
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildMatchesList(BuildContext context) {
-    final Map<String, Map<String, dynamic>> competitions = {
-      'Serie A': {
-        'logo': 'https://upload.wikimedia.org/wikipedia/commons/0/03/Flag_of_Italy.svg',
-        'matches': List.generate(4, (index) {
-          return const MatchTile(
-            homeTeam: 'AC Milan',
-            awayTeam: 'Inter',
-            homeScore: '1',
-            awayScore: '2',
-            status: "FT",
-            homeTeamLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_of_AC_Milan.svg/1200px-Logo_of_AC_Milan.svg.png',
-            awayTeamLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/05/Inter_Milan_logo.svg/1200px-Inter_Milan_logo.svg.png',
-          );
-        }),
-      },
-      'Bundesliga': {
-        'logo': 'https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg',
-        'matches': List.generate(4, (index) {
-          return const MatchTile(
-            homeTeam: 'Bayern Munich',
-            awayTeam: 'Dortmund',
-            homeScore: '4',
-            awayScore: '2',
-            status: "85\'",
-            homeTeamLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg/1200px-FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg.png',
-            awayTeamLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Borussia_Dortmund_logo.svg/1200px-Borussia_Dortmund_logo.svg.png',
-          );
-        }),
-      },
-      'La Liga': {
-        'logo': 'https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg',
-        'matches': List.generate(4, (index) {
-          return const MatchTile(
-            homeTeam: 'Barcelona',
-            awayTeam: 'Sevilla',
-            homeScore: '3',
-            awayScore: '0',
-            status: "HT",
-            homeTeamLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png',
-            awayTeamLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/Sevilla_FC_logo.svg/1200px-Sevilla_FC_logo.svg.png',
-          );
-        }),
-      },
-    };
-
-    final competitionKeys = competitions.keys.toList();
-
+  Widget _buildMatchesList(BuildContext context, List<CompetitionEntity> competitions) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: competitionKeys.length,
+      itemCount: competitions.length,
       separatorBuilder: (context, index) => const SizedBox(height: 24),
       itemBuilder: (context, index) {
-        final competitionName = competitionKeys[index];
-        final competitionData = competitions[competitionName]!;
-        final competitionLogo = competitionData['logo'] as String;
-        final List<Widget> matches = competitionData['matches'] as List<Widget>;
+        final competition = competitions[index];
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _CompetitionHeader(
-              name: competitionName,
-              logoUrl: competitionLogo,
+              name: competition.name,
+              logoUrl: competition.logo,
             ),
             const SizedBox(height: 8),
             LayoutBuilder(
@@ -164,7 +174,7 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                 final double childAspectRatio = itemWidth > 0 ? itemWidth / itemHeight : 1.0;
 
                 return GridView.builder(
-                  itemCount: matches.length,
+                  itemCount: competition.matches.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -174,7 +184,51 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                     mainAxisSpacing: 8,
                   ),
                   itemBuilder: (context, index) {
-                    return matches[index];
+                    return MatchTile(match: competition.matches[index]);
+                  },
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildShimmerList() {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 3, // Number of shimmer items
+      separatorBuilder: (context, index) => const SizedBox(height: 24),
+      itemBuilder: (context, index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const _CompetitionHeaderShimmer(),
+            const SizedBox(height: 8),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final breakpoints = ResponsiveBreakpoints.of(context);
+                final int crossAxisCount = breakpoints.equals('4K') ? 3 : (breakpoints.isDesktop ? 2 : 1);
+                const double itemHeight = 90.0;
+                const double crossAxisSpacing = 16;
+
+                final double itemWidth = (constraints.maxWidth - (crossAxisSpacing * (crossAxisCount - 1))) / crossAxisCount;
+                final double childAspectRatio = itemWidth > 0 ? itemWidth / itemHeight : 1.0;
+
+                return GridView.builder(
+                  itemCount: 4, // Number of shimmer tiles per competition
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    childAspectRatio: childAspectRatio,
+                    crossAxisSpacing: crossAxisSpacing,
+                    mainAxisSpacing: 8,
+                  ),
+                  itemBuilder: (context, index) {
+                    return const MatchTileShimmer();
                   },
                 );
               },
@@ -228,7 +282,6 @@ class _TimePickerCard extends StatelessWidget {
 
     final liveButton = SizedBox(
       height: buttonHeight,
-      width: 60,
       child: isLiveSelected
           ? ElevatedButton(
               onPressed: () => onLiveSelected(false),
@@ -238,7 +291,7 @@ class _TimePickerCard extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               ),
-              child: Text(s.live),
+              child: Text(s.liveFilter),
             )
           : OutlinedButton(
               onPressed: () => onLiveSelected(true),
@@ -248,7 +301,7 @@ class _TimePickerCard extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               ),
-              child: Text(s.live),
+              child: Text(s.liveFilter),
             ),
     );
 
@@ -356,7 +409,14 @@ class _TimePickerCard extends StatelessWidget {
 
 class _SearchCard extends StatelessWidget {
   final TextEditingController controller;
-  const _SearchCard({required this.controller});
+  final String ordering;
+  final ValueChanged<String?> onOrderingChanged;
+
+  const _SearchCard({
+    required this.controller,
+    required this.ordering,
+    required this.onOrderingChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -371,26 +431,44 @@ class _SearchCard extends StatelessWidget {
       child: SizedBox(
         height: 74,
         child: Center(
-          child: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: s.search,
-              border: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              prefixIcon: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: SvgPicture.asset(
-                  AppIcons.search,
-                  width: 20,
-                  height: 20,
-                  colorFilter: iconColor != null ? ColorFilter.mode(iconColor, BlendMode.srcIn) : null,
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: s.search,
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: SvgPicture.asset(
+                        AppIcons.search,
+                        width: 20,
+                        height: 20,
+                        colorFilter: iconColor != null ? ColorFilter.mode(iconColor, BlendMode.srcIn) : null,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
                 ),
               ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: DropdownButton<String>(
+                  value: ordering,
+                  underline: const SizedBox.shrink(),
+                  items: [
+                    DropdownMenuItem(value: 'importance', child: Text(s.sortByImportance)),
+                    DropdownMenuItem(value: 'time', child: Text(s.sortByTime)),
+                  ],
+                  onChanged: onOrderingChanged,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -439,11 +517,48 @@ class _CompetitionHeader extends StatelessWidget {
                 ),
               ),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_horiz, color: Colors.white),
-            )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CompetitionHeaderShimmer extends StatelessWidget {
+  const _CompetitionHeaderShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Shimmer.fromColors(
+      baseColor: isDark ? Colors.grey[800]! : Colors.grey[300]!,
+      highlightColor: isDark ? Colors.grey[700]! : Colors.grey[100]!,
+      child: Card(
+        elevation: 1,
+        color: isDark ? const Color(0xFF1B2131) : const Color(0xFF37373f),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        clipBehavior: Clip.antiAlias,
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Container(
+                width: 24,
+                height: 16,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  height: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

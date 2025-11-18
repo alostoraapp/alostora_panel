@@ -294,6 +294,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search'**
   String get search;
+
+  /// No description provided for @sortByImportance.
+  ///
+  /// In en, this message translates to:
+  /// **'Importance'**
+  String get sortByImportance;
+
+  /// No description provided for @sortByTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get sortByTime;
+
+  /// No description provided for @liveFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get liveFilter;
+
+  /// No description provided for @matchStatusAbnormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Abnormal'**
+  String get matchStatusAbnormal;
+
+  /// No description provided for @matchStatusNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Started'**
+  String get matchStatusNotStarted;
+
+  /// No description provided for @matchStatusFirstHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'First Half'**
+  String get matchStatusFirstHalf;
+
+  /// No description provided for @matchStatusHalfTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Half-Time'**
+  String get matchStatusHalfTime;
+
+  /// No description provided for @matchStatusSecondHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Second Half'**
+  String get matchStatusSecondHalf;
+
+  /// No description provided for @matchStatusOvertime.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime'**
+  String get matchStatusOvertime;
+
+  /// No description provided for @matchStatusOvertimeDeprecated.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime (Deprecated)'**
+  String get matchStatusOvertimeDeprecated;
+
+  /// No description provided for @matchStatusPenaltyShootout.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty Shootout'**
+  String get matchStatusPenaltyShootout;
+
+  /// No description provided for @matchStatusEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get matchStatusEnded;
+
+  /// No description provided for @matchStatusDelayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delayed'**
+  String get matchStatusDelayed;
+
+  /// No description provided for @matchStatusInterrupted.
+  ///
+  /// In en, this message translates to:
+  /// **'Interrupted'**
+  String get matchStatusInterrupted;
+
+  /// No description provided for @matchStatusCutInHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut in Half'**
+  String get matchStatusCutInHalf;
+
+  /// No description provided for @matchStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get matchStatusCancelled;
+
+  /// No description provided for @matchStatusTbd.
+  ///
+  /// In en, this message translates to:
+  /// **'To be Determined'**
+  String get matchStatusTbd;
+
+  /// No description provided for @matchStatusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get matchStatusUnknown;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

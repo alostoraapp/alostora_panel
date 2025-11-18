@@ -4,9 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
+import 'core/config/constants.dart';
 import 'core/presentation/cubit/language_cubit.dart';
 import 'core/presentation/cubit/theme_cubit.dart';
-import 'core/services/api_client.dart'; // Import ApiClient
+import 'core/services/api_client.dart';
 import 'core/services/app_interceptor.dart';
 import 'core/services/in_memory_token_storage.dart';
 import 'core/services/token_storage_service.dart';
@@ -18,21 +19,34 @@ import 'features/auth/domain/usecases/login_usecase.dart';
 import 'features/auth/domain/usecases/logout_usecase.dart';
 import 'features/auth/domain/usecases/refresh_token_usecase.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/matches/data/datasources/matches_remote_datasource.dart';
+import 'features/matches/data/repositories/matches_repository_impl.dart';
+import 'features/matches/domain/repositories/matches_repository.dart';
+import 'features/matches/domain/usecases/get_matches_usecase.dart';
+import 'features/matches/presentation/bloc/matches_bloc.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // --- Features ---
+
+  // Auth
   sl.registerLazySingleton(() => AuthBloc(loginUseCase: sl(), logoutUseCase: sl(), checkStatusUseCase: sl()));
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => CheckStatusUseCase(sl()));
   sl.registerLazySingleton(() => RefreshTokenUseCase(sl()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(remoteDataSource: sl(), tokenStorageService: sl()));
-  // DataSources now depend on ApiClient, not Dio directly
-  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl(), sl()));
+
+  // Matches
+  sl.registerFactory(() => MatchesBloc(sl()));
+  sl.registerLazySingleton(() => GetMatchesUseCase(sl()));
+  sl.registerLazySingleton<MatchesRepository>(() => MatchesRepositoryImpl(sl()));
+  sl.registerLazySingleton<MatchesRemoteDataSource>(() => MatchesRemoteDataSourceImpl(sl(), sl()));
+
+
   // --- Core ---
-  // Register ApiClient
   sl.registerLazySingleton(() => ApiClient(sl()));
 
   if (kIsWeb) {
@@ -48,6 +62,7 @@ Future<void> init() async {
   // External - Dio
   sl.registerLazySingleton(() {
     final dio = Dio();
+    dio.options.baseUrl = AppConstants.baseUrl;
     if (kIsWeb) {
       dio.options.extra['withCredentials'] = true;
     }

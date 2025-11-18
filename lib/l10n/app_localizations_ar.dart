@@ -110,4 +110,58 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get search => 'بحث';
+
+  @override
+  String get sortByImportance => 'الأهمية';
+
+  @override
+  String get sortByTime => 'الوقت';
+
+  @override
+  String get liveFilter => 'مباشر';
+
+  @override
+  String get matchStatusAbnormal => 'غير طبيعي';
+
+  @override
+  String get matchStatusNotStarted => 'لم تبدأ';
+
+  @override
+  String get matchStatusFirstHalf => 'الشوط الأول';
+
+  @override
+  String get matchStatusHalfTime => 'نصف الوقت';
+
+  @override
+  String get matchStatusSecondHalf => 'الشوط الثاني';
+
+  @override
+  String get matchStatusOvertime => 'وقت إضافي';
+
+  @override
+  String get matchStatusOvertimeDeprecated => 'وقت إضافي (مهمل)';
+
+  @override
+  String get matchStatusPenaltyShootout => 'ركلات الترجيح';
+
+  @override
+  String get matchStatusEnded => 'انتهت';
+
+  @override
+  String get matchStatusDelayed => 'مؤجلة';
+
+  @override
+  String get matchStatusInterrupted => 'توقفت';
+
+  @override
+  String get matchStatusCutInHalf => 'انقطعت';
+
+  @override
+  String get matchStatusCancelled => 'ألغيت';
+
+  @override
+  String get matchStatusTbd => 'لم يتحدد بعد';
+
+  @override
+  String get matchStatusUnknown => 'غير معروف';
 }

@@ -110,4 +110,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get search => 'Search';
+
+  @override
+  String get sortByImportance => 'Importance';
+
+  @override
+  String get sortByTime => 'Time';
+
+  @override
+  String get liveFilter => 'Live';
+
+  @override
+  String get matchStatusAbnormal => 'Abnormal';
+
+  @override
+  String get matchStatusNotStarted => 'Not Started';
+
+  @override
+  String get matchStatusFirstHalf => 'First Half';
+
+  @override
+  String get matchStatusHalfTime => 'Half-Time';
+
+  @override
+  String get matchStatusSecondHalf => 'Second Half';
+
+  @override
+  String get matchStatusOvertime => 'Overtime';
+
+  @override
+  String get matchStatusOvertimeDeprecated => 'Overtime (Deprecated)';
+
+  @override
+  String get matchStatusPenaltyShootout => 'Penalty Shootout';
+
+  @override
+  String get matchStatusEnded => 'Ended';
+
+  @override
+  String get matchStatusDelayed => 'Delayed';
+
+  @override
+  String get matchStatusInterrupted => 'Interrupted';
+
+  @override
+  String get matchStatusCutInHalf => 'Cut in Half';
+
+  @override
+  String get matchStatusCancelled => 'Cancelled';
+
+  @override
+  String get matchStatusTbd => 'To be Determined';
+
+  @override
+  String get matchStatusUnknown => 'Unknown';
 }

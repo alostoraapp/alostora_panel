@@ -1,8 +1,8 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/config/constants.dart';
+import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../../../core/services/api_client.dart';
 import '../models/token_response_model.dart';
 
@@ -15,13 +15,16 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final ApiClient _apiClient;
-  const AuthRemoteDataSourceImpl(this._apiClient);
+  final LanguageCubit _languageCubit;
+
+  const AuthRemoteDataSourceImpl(this._apiClient, this._languageCubit);
 
   @override
   Future<TokenResponseModel> login(String email, String password) async {
+    final lang = _languageCubit.state.languageCode == 'ar' ? 'ar' : 'en';
     final responseData = await _apiClient.post(
       AppConstants.loginUrl,
-      data: {'email': email, 'password': password},
+      data: {'email': email, 'password': password, 'lang': lang},
     );
     return TokenResponseModel.fromJson(responseData);
   }
@@ -31,7 +34,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await _apiClient.post(AppConstants.verifyUrl);
     } on DioException {
-      // This is an expected failure when not logged in. Rethrow to be handled by the repository.
       rethrow;
     }
   }
@@ -40,9 +42,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> logout() async {
     try {
       await _apiClient.post(AppConstants.logoutUrl);
-    } on DioException {
-      // Logout is best-effort. We can ignore failures here as local tokens will be cleared anyway.
-    }
+    } on DioException {}
   }
 
   @override

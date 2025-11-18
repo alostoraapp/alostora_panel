@@ -110,4 +110,58 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get search => 'جستجو';
+
+  @override
+  String get sortByImportance => 'اهمیت';
+
+  @override
+  String get sortByTime => 'زمان';
+
+  @override
+  String get liveFilter => 'زنده';
+
+  @override
+  String get matchStatusAbnormal => 'غیر عادی';
+
+  @override
+  String get matchStatusNotStarted => 'شروع نشده';
+
+  @override
+  String get matchStatusFirstHalf => 'نیمه اول';
+
+  @override
+  String get matchStatusHalfTime => 'بین دو نیمه';
+
+  @override
+  String get matchStatusSecondHalf => 'نیمه دوم';
+
+  @override
+  String get matchStatusOvertime => 'وقت اضافه';
+
+  @override
+  String get matchStatusOvertimeDeprecated => 'وقت اضافه (منسوخ)';
+
+  @override
+  String get matchStatusPenaltyShootout => 'ضربات پنالتی';
+
+  @override
+  String get matchStatusEnded => 'پایان یافته';
+
+  @override
+  String get matchStatusDelayed => 'با تاخیر';
+
+  @override
+  String get matchStatusInterrupted => 'متوقف شده';
+
+  @override
+  String get matchStatusCutInHalf => 'قطع شده';
+
+  @override
+  String get matchStatusCancelled => 'لغو شده';
+
+  @override
+  String get matchStatusTbd => 'نامشخص';
+
+  @override
+  String get matchStatusUnknown => 'ناشناخته';
 }
