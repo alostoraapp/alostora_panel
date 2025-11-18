@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 class MatchTile extends StatefulWidget {
   final String homeTeam;
   final String awayTeam;
-  final String score;
+  final String homeScore;
+  final String awayScore;
   final String status;
   final String homeTeamLogo;
   final String awayTeamLogo;
@@ -14,7 +15,8 @@ class MatchTile extends StatefulWidget {
     super.key,
     required this.homeTeam,
     required this.awayTeam,
-    required this.score,
+    required this.homeScore,
+    required this.awayScore,
     required this.status,
     required this.homeTeamLogo,
     required this.awayTeamLogo,
@@ -45,12 +47,12 @@ class _MatchTileState extends State<MatchTile> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTeam(theme, name: widget.homeTeam, logoUrl: widget.homeTeamLogo),
-              _buildScore(theme, score: widget.score, status: widget.status),
+              _buildScore(theme, homeScore: widget.homeScore, awayScore: widget.awayScore, status: widget.status),
               _buildTeam(theme, name: widget.awayTeam, logoUrl: widget.awayTeamLogo, isReversed: true),
             ],
           ),
@@ -73,20 +75,20 @@ class _MatchTileState extends State<MatchTile> {
     return Expanded(
       flex: 3,
       child: isReversed
-          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [Expanded(child: Align(alignment: Alignment.centerRight, child: text)), const SizedBox(width: 16), logo])
-          : Row(children: [logo, const SizedBox(width: 16), Expanded(child: text)]),
+          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [Expanded(child: Align(alignment: Alignment.centerRight, child: text)), const SizedBox(width: 6), logo])
+          : Row(children: [logo, const SizedBox(width: 6), Expanded(child: text)]),
     );
   }
 
-  Widget _buildScore(ThemeData theme, {required String score, required String status}) {
+  Widget _buildScore(ThemeData theme, {required String homeScore, required String awayScore, required String status}) {
     return Expanded(
       flex: 2,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            score,
-            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            '$homeScore - $awayScore',
+            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(

@@ -49,41 +49,99 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
   }
 
   Widget _buildMatchesList(BuildContext context) {
-    final List<Widget> matches = List.generate(4, (index) {
-      return const MatchTile(
-        homeTeam: 'Barcelona',
-        awayTeam: 'Sevilla',
-        score: '0 - 0',
-        status: "23'",
-        homeTeamLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png',
-        awayTeamLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/Sevilla_FC_logo.svg/1200px-Sevilla_FC_logo.svg.png',
-      );
-    });
+    final Map<String, Map<String, dynamic>> competitions = {
+      'Serie A': {
+        'logo': 'https://upload.wikimedia.org/wikipedia/commons/0/03/Flag_of_Italy.svg',
+        'matches': List.generate(4, (index) {
+          return const MatchTile(
+            homeTeam: 'AC Milan',
+            awayTeam: 'Inter',
+            homeScore: '1',
+            awayScore: '2',
+            status: "FT",
+            homeTeamLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_of_AC_Milan.svg/1200px-Logo_of_AC_Milan.svg.png',
+            awayTeamLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/05/Inter_Milan_logo.svg/1200px-Inter_Milan_logo.svg.png',
+          );
+        }),
+      },
+      'Bundesliga': {
+        'logo': 'https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg',
+        'matches': List.generate(4, (index) {
+          return const MatchTile(
+            homeTeam: 'Bayern Munich',
+            awayTeam: 'Dortmund',
+            homeScore: '4',
+            awayScore: '2',
+            status: "85'",
+            homeTeamLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg/1200px-FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg.png',
+            awayTeamLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Borussia_Dortmund_logo.svg/1200px-Borussia_Dortmund_logo.svg.png',
+          );
+        }),
+      },
+      'La Liga': {
+        'logo': 'https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg',
+        'matches': List.generate(4, (index) {
+          return const MatchTile(
+            homeTeam: 'Barcelona',
+            awayTeam: 'Sevilla',
+            homeScore: '3',
+            awayScore: '0',
+            status: "HT",
+            homeTeamLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png',
+            awayTeamLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/Sevilla_FC_logo.svg/1200px-Sevilla_FC_logo.svg.png',
+          );
+        }),
+      },
+    };
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final breakpoints = ResponsiveBreakpoints.of(context);
-        final int crossAxisCount = breakpoints.equals('4K') ? 3 : (breakpoints.isDesktop ? 2 : 1);
-        const double itemHeight = 110.0;
-        const double crossAxisSpacing = 16;
+    final competitionKeys = competitions.keys.toList();
 
-        final double itemWidth = (constraints.maxWidth - (crossAxisSpacing * (crossAxisCount - 1))) / crossAxisCount;
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: competitionKeys.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 24),
+      itemBuilder: (context, index) {
+        final competitionName = competitionKeys[index];
+        final competitionData = competitions[competitionName]!;
+        final competitionLogo = competitionData['logo'] as String;
+        final List<Widget> matches = competitionData['matches'] as List<Widget>;
 
-        final double childAspectRatio = itemWidth > 0 ? itemWidth / itemHeight : 1.0;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _CompetitionHeader(
+              name: competitionName,
+              logoUrl: competitionLogo,
+            ),
+            const SizedBox(height: 8),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final breakpoints = ResponsiveBreakpoints.of(context);
+                final int crossAxisCount = breakpoints.equals('4K') ? 3 : (breakpoints.isDesktop ? 2 : 1);
+                const double itemHeight = 90.0;
+                const double crossAxisSpacing = 16;
 
-        return GridView.builder(
-          itemCount: matches.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            childAspectRatio: childAspectRatio, 
-            crossAxisSpacing: crossAxisSpacing,
-            mainAxisSpacing: 16,
-          ),
-          itemBuilder: (context, index) {
-            return matches[index];
-          },
+                final double itemWidth = (constraints.maxWidth - (crossAxisSpacing * (crossAxisCount - 1))) / crossAxisCount;
+                final double childAspectRatio = itemWidth > 0 ? itemWidth / itemHeight : 1.0;
+
+                return GridView.builder(
+                  itemCount: matches.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    childAspectRatio: childAspectRatio,
+                    crossAxisSpacing: crossAxisSpacing,
+                    mainAxisSpacing: 8,
+                  ),
+                  itemBuilder: (context, index) {
+                    return matches[index];
+                  },
+                );
+              },
+            ),
+          ],
         );
       },
     );
@@ -133,6 +191,7 @@ class _TimePickerCard extends StatelessWidget {
 
     final liveButton = SizedBox(
       height: buttonHeight,
+      width: 60,
       child: isLiveSelected
           ? ElevatedButton(
               onPressed: () => onLiveSelected(false),
@@ -140,6 +199,7 @@ class _TimePickerCard extends StatelessWidget {
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               ),
               child: Text(s.live),
             )
@@ -149,6 +209,7 @@ class _TimePickerCard extends StatelessWidget {
                 foregroundColor: Colors.red,
                 side: const BorderSide(color: Colors.red),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               ),
               child: Text(s.live),
             ),
@@ -159,7 +220,7 @@ class _TimePickerCard extends StatelessWidget {
       shadowColor: Colors.black12,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -167,7 +228,7 @@ class _TimePickerCard extends StatelessWidget {
             Flexible(flex: 3, child: liveButton),
             const SizedBox(width: 16),
             Flexible(
-              flex: 5,
+              flex: 7,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -255,6 +316,58 @@ class _TimePickerCard extends StatelessWidget {
               todayHighlightColor: theme.colorScheme.primary,
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CompetitionHeader extends StatelessWidget {
+  final String logoUrl;
+  final String name;
+
+  const _CompetitionHeader({required this.logoUrl, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Card(
+      elevation: 1,
+      color: isDark ? Color(0xFF1B2131) : const Color(0xFF37373f),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: SvgPicture.network(
+                logoUrl,
+                width: 24,
+                height: 16,
+                fit: BoxFit.cover,
+                placeholderBuilder: (context) => const SizedBox(width: 24, height: 16),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                name,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.more_horiz, color: Colors.white),
+            )
+          ],
         ),
       ),
     );
