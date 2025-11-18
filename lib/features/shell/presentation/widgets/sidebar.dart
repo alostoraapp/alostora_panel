@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/sidebar_menu_config.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../../../core/l10n/s.dart';
 import '../../domain/entities/sidebar_menu_model.dart';
 import '../bloc/shell_bloc.dart';
@@ -203,10 +204,14 @@ class _SidebarSubMenuItem extends StatelessWidget {
     final selectedColor = theme.primaryColor;
 
     return ListTile(
-      leading: Icon(
-        isSelected ? Icons.circle : Icons.circle_outlined,
-        size: 12,
-        color: isSelected ? selectedColor : theme.unselectedWidgetColor,
+      leading: SvgPicture.asset(
+        isSelected ? AppIcons.circle : AppIcons.circleOutlined,
+        width: 12,
+        height: 12,
+        colorFilter: ColorFilter.mode(
+          isSelected ? selectedColor : theme.unselectedWidgetColor,
+          BlendMode.srcIn,
+        ),
       ),
       title: Text(
         submenu.title,

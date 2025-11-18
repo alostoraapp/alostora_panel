@@ -78,8 +78,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matches => 'Matches';
 
   @override
-  String get matchesTiles => 'Matches Tiles';
+  String get matchesTiles => 'Tiles View';
 
   @override
   String get matchesList => 'Matches List';
+
+  @override
+  String get live => 'Live';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get tomorrow => 'Tomorrow';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String inXDays(Object count) {
+    return 'In $count days';
+  }
+
+  @override
+  String xDaysAgo(Object count) {
+    return '$count days ago';
+  }
+
+  @override
+  String get calendar => 'Calendar';
 }

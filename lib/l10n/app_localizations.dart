@@ -236,7 +236,7 @@ abstract class AppLocalizations {
   /// No description provided for @matchesTiles.
   ///
   /// In en, this message translates to:
-  /// **'Matches Tiles'**
+  /// **'Tiles View'**
   String get matchesTiles;
 
   /// No description provided for @matchesList.
@@ -244,6 +244,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Matches List'**
   String get matchesList;
+
+  /// No description provided for @live.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get live;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @inXDays.
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} days'**
+  String inXDays(Object count);
+
+  /// No description provided for @xDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days ago'**
+  String xDaysAgo(Object count);
+
+  /// No description provided for @calendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get calendar;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

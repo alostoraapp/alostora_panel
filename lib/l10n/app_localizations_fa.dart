@@ -78,8 +78,33 @@ class AppLocalizationsFa extends AppLocalizations {
   String get matches => 'مسابقات';
 
   @override
-  String get matchesTiles => 'کاشی‌های مسابقات';
+  String get matchesTiles => 'نمای تایل';
 
   @override
   String get matchesList => 'لیست مسابقات';
+
+  @override
+  String get live => 'زنده';
+
+  @override
+  String get today => 'امروز';
+
+  @override
+  String get tomorrow => 'فردا';
+
+  @override
+  String get yesterday => 'دیروز';
+
+  @override
+  String inXDays(Object count) {
+    return 'در $count روز آینده';
+  }
+
+  @override
+  String xDaysAgo(Object count) {
+    return '$count روز قبل';
+  }
+
+  @override
+  String get calendar => 'تقویم';
 }

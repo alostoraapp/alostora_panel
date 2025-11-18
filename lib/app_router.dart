@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/presentation/widgets/go_router_refresh_stream.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
-import 'features/home/presentation/screens/dashboard_screen.dart';
+import 'features/matches/presentation/screens/match_tiles_screen.dart';
+import 'features/overview/presentation/screens/dashboard_screen.dart';
 import 'features/shell/presentation/screens/app_shell.dart';
 import 'features/shell/presentation/screens/placeholder_screen.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
@@ -48,7 +49,7 @@ class AppRouter {
           GoRoute(
             path: AppRoutes.matchesTiles,
             name: AppRoutes.matchesTiles,
-            builder: (context, state) => const PlaceholderScreen(title: 'Matches Tiles'),
+            builder: (context, state) => const MatchTilesScreen(),
           ),
           GoRoute(
             path: AppRoutes.matchesList,

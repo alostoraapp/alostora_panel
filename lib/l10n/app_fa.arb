@@ -23,6 +23,13 @@
   "loginError": "ورود ناموفق بود. لطفا اطلاعات خود را بررسی کنید.",
   "overview": "بررسی اجمالی",
   "matches": "مسابقات",
-  "matchesTiles": "کاشی‌های مسابقات",
-  "matchesList": "لیست مسابقات"
+  "matchesTiles": "نمای تایل",
+  "matchesList": "لیست مسابقات",
+  "live": "زنده",
+  "today": "امروز",
+  "tomorrow": "فردا",
+  "yesterday": "دیروز",
+  "inXDays": "در {count} روز آینده",
+  "xDaysAgo": "{count} روز قبل",
+  "calendar": "تقویم"
 }

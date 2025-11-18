@@ -54,7 +54,7 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: colors.appBarForegroundColor,
         ),
-        iconTheme: IconThemeData(color: colors.appBarForegroundColor), // Ensure app bar icons match
+        iconTheme: IconThemeData(color: colors.appBarForegroundColor), // Ensure app bar icons matches
       ),
       drawerTheme: DrawerThemeData(backgroundColor: colors.drawerColor),
       dialogTheme: DialogThemeData(backgroundColor: colors.dialogColor),

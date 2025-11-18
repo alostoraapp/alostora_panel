@@ -5,6 +5,7 @@ class AppIcons {
 
   static const String analyse = '$_basePath/ic_analyse.svg';
   static const String circle = '$_basePath/ic_circle.svg';
+  static const String circleOutlined = '$_basePath/ic_circle_outlined.svg';
   static const String football = '$_basePath/ic_football.svg';
   static const String tile = '$_basePath/ic_tile.svg';
   static const String list = '$_basePath/ic_list.svg';
@@ -22,4 +23,6 @@ class AppIcons {
   static const String eyeSlash = '$_basePath/ic_eye_slash.svg';
   static const String eye = '$_basePath/ic_eye.svg';
   static const String house = '$_basePath/ic_house.svg';
+  static const String angleSmallLeft = '$_basePath/ic_angle_small_left.svg';
+  static const String angleSmallRight = '$_basePath/ic_angle_small_right.svg';
 }

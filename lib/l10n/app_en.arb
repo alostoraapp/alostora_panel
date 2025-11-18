@@ -23,6 +23,13 @@
   "loginError": "Login failed. Please check your credentials.",
   "overview": "Overview",
   "matches": "Matches",
-  "matchesTiles": "Matches Tiles",
-  "matchesList": "Matches List"
+  "matchesTiles": "Tiles View",
+  "matchesList": "Matches List",
+  "live": "Live",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "yesterday": "Yesterday",
+  "inXDays": "In {count} days",
+  "xDaysAgo": "{count} days ago",
+  "calendar": "Calendar"
 }

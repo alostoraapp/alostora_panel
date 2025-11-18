@@ -1,10 +1,10 @@
 name: Flutter webapp CI/CD
 
 env:
-  # This image name MUST match the one in your docker-compose.yml
+  # This image name MUST matches the one in your docker-compose.yml
   IMAGE_NAME: ghcr.io/alostoraapp/alostora_panel:latest
 
-  WORK_DIR : /home/webapp
+  WORK_DIR : /overview/webapp
   PROJECT_NAME : ${{ github.event.repository.name }}
   REPOSITORY: git@github.com:${{github.repository}}.git
 
