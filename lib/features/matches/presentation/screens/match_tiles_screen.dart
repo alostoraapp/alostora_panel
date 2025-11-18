@@ -225,10 +225,9 @@ class _TimePickerCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Flexible(flex: 3, child: liveButton),
-            const SizedBox(width: 16),
-            Flexible(
-              flex: 7,
+            liveButton,
+            SizedBox(
+              width: 200,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -258,21 +257,17 @@ class _TimePickerCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 16),
-            Flexible(
-              flex: 2,
-              child: SizedBox(
-                height: buttonHeight,
-                child: IconButton(
-                  icon: SvgPicture.asset(AppIcons.calendar, colorFilter: ColorFilter.mode(theme.colorScheme.onPrimary, BlendMode.srcIn)),
-                  style: IconButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: theme.colorScheme.onPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    fixedSize: const Size(50, 50)
-                  ),
-                  onPressed: () => _showDatePicker(context, theme),
+            SizedBox(
+              height: buttonHeight,
+              width: 50,
+              child: IconButton(
+                icon: SvgPicture.asset(AppIcons.calendar, colorFilter: ColorFilter.mode(theme.colorScheme.onPrimary, BlendMode.srcIn)),
+                style: IconButton.styleFrom(
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: theme.colorScheme.onPrimary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
+                onPressed: () => _showDatePicker(context, theme),
               ),
             ),
           ],

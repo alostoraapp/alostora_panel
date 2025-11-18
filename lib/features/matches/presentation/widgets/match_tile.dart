@@ -70,7 +70,7 @@ class _MatchTileState extends State<MatchTile> {
       errorWidget: (context, url, error) => const Icon(Icons.shield, size: 32, color: Colors.grey),
     );
 
-    final text = Text(name, style: theme.textTheme.titleMedium, overflow: TextOverflow.ellipsis);
+    final text = Text(name, style: theme.textTheme.titleMedium, overflow: TextOverflow.ellipsis, maxLines: 2);
 
     return Expanded(
       flex: 3,
