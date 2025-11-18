@@ -31,5 +31,6 @@
   "yesterday": "دیروز",
   "inXDays": "در {count} روز آینده",
   "xDaysAgo": "{count} روز قبل",
-  "calendar": "تقویم"
+  "calendar": "تقویم",
+  "search": "جستجو"
 }

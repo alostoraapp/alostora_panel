@@ -20,6 +20,22 @@ class MatchTilesScreen extends StatefulWidget {
 class _MatchTilesScreenState extends State<MatchTilesScreen> {
   bool _isLiveSelected = true;
   DateTime _selectedDate = DateTime.now();
+  final _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      // TODO: Implement search logic
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   void _onDateChanged(DateTime newDate) {
     setState(() {
@@ -29,18 +45,40 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = ResponsiveBreakpoints.of(context).isDesktop;
+
+    final timePicker = _TimePickerCard(
+      isLiveSelected: _isLiveSelected,
+      selectedDate: _selectedDate,
+      onLiveSelected: (isSelected) {
+        setState(() => _isLiveSelected = isSelected);
+      },
+      onDateChanged: _onDateChanged,
+    );
+
+    final searchCard = _SearchCard(controller: _searchController);
+
     return Scaffold(
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          _TimePickerCard(
-            isLiveSelected: _isLiveSelected,
-            selectedDate: _selectedDate,
-            onLiveSelected: (isSelected) {
-              setState(() => _isLiveSelected = isSelected);
-            },
-            onDateChanged: _onDateChanged,
-          ),
+          if (isDesktop)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: timePicker),
+                const SizedBox(width: 16),
+                Expanded(child: searchCard),
+              ],
+            )
+          else
+            Column(
+              children: [
+                timePicker,
+                const SizedBox(height: 16),
+                searchCard,
+              ],
+            ),
           const SizedBox(height: 16),
           _buildMatchesList(context),
         ],
@@ -72,7 +110,7 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
             awayTeam: 'Dortmund',
             homeScore: '4',
             awayScore: '2',
-            status: "85'",
+            status: "85\'",
             homeTeamLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg/1200px-FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg.png',
             awayTeamLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Borussia_Dortmund_logo.svg/1200px-Borussia_Dortmund_logo.svg.png',
           );
@@ -147,7 +185,6 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
     );
   }
 }
-
 
 class _TimePickerCard extends StatelessWidget {
   final bool isLiveSelected;
@@ -317,6 +354,50 @@ class _TimePickerCard extends StatelessWidget {
   }
 }
 
+class _SearchCard extends StatelessWidget {
+  final TextEditingController controller;
+  const _SearchCard({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final iconColor = theme.iconTheme.color;
+
+    return Card(
+      elevation: 2,
+      shadowColor: Colors.black12,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: SizedBox(
+        height: 74,
+        child: Center(
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: s.search,
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              prefixIcon: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: SvgPicture.asset(
+                  AppIcons.search,
+                  width: 20,
+                  height: 20,
+                  colorFilter: iconColor != null ? ColorFilter.mode(iconColor, BlendMode.srcIn) : null,
+                ),
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _CompetitionHeader extends StatelessWidget {
   final String logoUrl;
   final String name;
@@ -330,7 +411,7 @@ class _CompetitionHeader extends StatelessWidget {
 
     return Card(
       elevation: 1,
-      color: isDark ? Color(0xFF1B2131) : const Color(0xFF37373f),
+      color: isDark ? const Color(0xFF1B2131) : const Color(0xFF37373f),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.zero,

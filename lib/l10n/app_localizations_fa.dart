@@ -107,4 +107,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get calendar => 'تقویم';
+
+  @override
+  String get search => 'جستجو';
 }

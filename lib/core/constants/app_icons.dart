@@ -25,4 +25,5 @@ class AppIcons {
   static const String house = '$_basePath/ic_house.svg';
   static const String angleSmallLeft = '$_basePath/ic_angle_small_left.svg';
   static const String angleSmallRight = '$_basePath/ic_angle_small_right.svg';
+  static const String search = '$_basePath/ic_search.svg';
 }

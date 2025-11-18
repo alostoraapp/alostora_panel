@@ -1,6 +1,8 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/presentation/cubit/language_cubit.dart';
 
 class MatchTile extends StatefulWidget {
   final String homeTeam;
@@ -32,6 +34,7 @@ class _MatchTileState extends State<MatchTile> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isRtl = context.watch<LanguageCubit>().isRTL();
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
@@ -49,6 +52,7 @@ class _MatchTileState extends State<MatchTile> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
           child: Row(
+            textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTeam(theme, name: widget.homeTeam, logoUrl: widget.homeTeamLogo),
@@ -75,7 +79,7 @@ class _MatchTileState extends State<MatchTile> {
     return Expanded(
       flex: 3,
       child: isReversed
-          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [Expanded(child: Align(alignment: Alignment.centerRight, child: text)), const SizedBox(width: 6), logo])
+          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [Expanded(child: Align(alignment: AlignmentDirectional.centerEnd, child: text)), const SizedBox(width: 6), logo])
           : Row(children: [logo, const SizedBox(width: 6), Expanded(child: text)]),
     );
   }

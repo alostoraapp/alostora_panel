@@ -13,6 +13,7 @@ class L10n {
   static final all = [
     const Locale('en'), // English (LTR)
     const Locale('fa'), // Persian (RTL)
+    const Locale('ar'), // Arabic (RTL)
   ];
 
   static String getFlag(String code) {
@@ -21,12 +22,14 @@ class L10n {
         return '🇺🇸';
       case 'fa':
         return '🇮🇷';
+      case 'ar':
+        return '🇸🇦';
       default:
         return '🇺🇳';
     }
   }
 
   static bool isRTL(Locale locale) {
-    return locale.languageCode == 'fa';
+    return ['fa', 'ar'].contains(locale.languageCode);
   }
 }

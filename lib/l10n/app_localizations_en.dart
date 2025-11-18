@@ -107,4 +107,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendar => 'Calendar';
+
+  @override
+  String get search => 'Search';
 }

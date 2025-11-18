@@ -31,5 +31,6 @@
   "yesterday": "Yesterday",
   "inXDays": "In {count} days",
   "xDaysAgo": "{count} days ago",
-  "calendar": "Calendar"
+  "calendar": "Calendar",
+  "search": "Search"
 }

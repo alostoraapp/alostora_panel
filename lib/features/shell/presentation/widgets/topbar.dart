@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../../../core/presentation/cubit/theme_cubit.dart';
@@ -51,13 +52,34 @@ class Topbar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: s.changeTheme,
           onPressed: () => context.read<ThemeCubit>().toggleThemeMode(),
         ),
-        IconButton(
+        PopupMenuButton<Locale>(
+          onSelected: (locale) {
+            context.read<LanguageCubit>().setLanguage(locale);
+          },
+          tooltip: s.changeLanguage,
           icon: SvgPicture.asset(
             AppIcons.language,
             colorFilter: ColorFilter.mode(iconColor!, BlendMode.srcIn),
           ),
-          tooltip: s.changeLanguage,
-          onPressed: () => context.read<LanguageCubit>().toggleLanguage(),
+          itemBuilder: (context) {
+            return L10n.all.map((locale) {
+              final flag = L10n.getFlag(locale.languageCode);
+              return PopupMenuItem(
+                value: locale,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      flag,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(locale.languageCode.toUpperCase()),
+                  ],
+                ),
+              );
+            }).toList();
+          },
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
