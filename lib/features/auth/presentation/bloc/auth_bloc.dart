@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -73,10 +72,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthLogoutRequested event,
     Emitter<AuthState> emit,
   ) async {
-    final result = await _logoutUseCase(NoParams());
-    result.fold(
-      (failure) => emit(AuthError(message: failure.message)), // Or handle differently
-      (_) => emit(AuthUnauthenticated()),
-    );
+    // Attempt to logout from server
+    await _logoutUseCase(NoParams());
+    
+    // Regardless of the server response (success or failure), 
+    // we should clear the local state and redirect the user to login.
+    emit(AuthUnauthenticated());
   }
 }
