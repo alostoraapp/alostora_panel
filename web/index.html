@@ -36,15 +36,38 @@
 </head>
 <body>
   <script>
+    const restoreFullHeight = () => {
+      document.documentElement.style.height = '100%';
+      document.body.style.height = '100%';
+      document.body.style.removeProperty('min-height');
+    };
+  
+    const constrainToViewport = () => {
+      if (!window.visualViewport) return;
+      const vh = window.visualViewport.height;
+      document.body.style.height = `${vh}px`;
+      document.body.style.minHeight = `${vh}px`;
+    };
+  
     if ('visualViewport' in window) {
-      const fixHeight = () => {
-        document.body.style.height = `${window.visualViewport.height}px`;
-      };
-      window.visualViewport.addEventListener('resize', fixHeight);
-      window.visualViewport.addEventListener('scroll', fixHeight);
-      window.addEventListener('orientationchange', fixHeight);
-      fixHeight();
+      window.visualViewport.addEventListener('resize', () => {
+        if (window.visualViewport.height >= window.innerHeight - 5) {
+          restoreFullHeight();
+        } else {
+          constrainToViewport();
+        }
+      });
+  
+      document.addEventListener('focusout', () => {
+        setTimeout(() => {
+          if (window.visualViewport.height >= window.innerHeight - 5) {
+            restoreFullHeight();
+          }
+        }, 100);
+      });
     }
+  
+    restoreFullHeight();
   </script>
 
   <script src="flutter_bootstrap.js" async></script>
