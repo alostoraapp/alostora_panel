@@ -53,7 +53,7 @@
   "matchStatusInterrupted": "توقف",
   "matchStatusCutInHalf": "قطع",
   "matchStatusCancelled": "لغو",
-  "matchStatusTbd": "نامشخص",
+  "matchStatusTbd": "ن.م",
   "matchStatusUnknown": "؟",
   "addNewCompetition": "افزودن رقابت جدید",
   "enterCompetitionId": "شناسه رقابت را وارد کنید",

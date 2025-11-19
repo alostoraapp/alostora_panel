@@ -61,9 +61,7 @@ class LoginScreen extends StatelessWidget {
   Widget _buildMobileLayout(BuildContext context, OnLoginRequested onLogin) {
     return Column(
       children: [
-        // هدر ثابت در بالای صفحه
         const LoginHeader(),
-        // فضای اسکرول شونده برای فرم
         Expanded(
           child: Center(
             child: SingleChildScrollView(
@@ -72,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(height: 16), // فاصله کمی از هدر
+                  const SizedBox(height: 16),
                   Text(
                     S.of(context).login,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -107,7 +105,6 @@ class LoginScreen extends StatelessWidget {
             color: theme.colorScheme.primaryContainer,
             child: Column(
               children: [
-                // هدر ثابت در بالای ستون چپ
                 const LoginHeader(),
                 Expanded(
                   child: Center(

@@ -82,88 +82,109 @@ class _CompetitionSearchDropdownState extends State<CompetitionSearchDropdown> {
   void _showOverlay() {
     if (_overlayEntry != null) return;
 
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final size = renderBox.size;
-
     _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        width: size.width,
-        child: CompositedTransformFollower(
-          link: _layerLink,
-          showWhenUnlinked: false,
-          offset: Offset(0.0, size.height + 5.0),
-          child: Material(
-            elevation: 4.0,
-            borderRadius: BorderRadius.circular(8),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 300),
-              child: BlocBuilder<SearchCompetitionsBloc, SearchCompetitionsState>(
-                bloc: _bloc,
-                builder: (context, state) {
-                  if (state.status == SearchCompetitionsStatus.loading && state.competitions.isEmpty) {
-                    return const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator()));
-                  }
+      builder: (context) {
+        final RenderBox renderBox = this.context.findRenderObject() as RenderBox;
+        final size = renderBox.size;
+        final offset = renderBox.localToGlobal(Offset.zero);
+        final mediaQuery = MediaQuery.of(context);
+        final screenHeight = mediaQuery.size.height;
+        final paddingBottom = mediaQuery.viewInsets.bottom;
 
-                  if (state.status == SearchCompetitionsStatus.failure && state.competitions.isEmpty) {
-                     return Padding(
-                       padding: const EdgeInsets.all(16.0),
-                       child: Text(state.errorMessage ?? 'Error'),
-                     );
-                  }
+        const double maxDropdownHeight = 300.0;
+        final double spaceBelow = screenHeight - paddingBottom - (offset.dy + size.height);
+        final double spaceAbove = offset.dy;
 
-                  if (state.competitions.isEmpty && state.query.isNotEmpty && state.status != SearchCompetitionsStatus.loading) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(S.of(context).noResultsFound),
-                      );
-                  }
-                  
-                  if (state.competitions.isEmpty && state.query.isEmpty) {
+        bool showAbove = false;
+        if (spaceBelow < maxDropdownHeight && spaceAbove > spaceBelow) {
+          showAbove = true;
+        }
+
+        final double visibleMaxHeight = showAbove
+            ? (spaceAbove - 10).clamp(50.0, maxDropdownHeight).toDouble()
+            : (spaceBelow - 10).clamp(50.0, maxDropdownHeight).toDouble();
+
+        return Positioned(
+          width: size.width,
+          child: CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            targetAnchor: showAbove ? Alignment.topLeft : Alignment.bottomLeft,
+            followerAnchor: showAbove ? Alignment.bottomLeft : Alignment.topLeft,
+            offset: showAbove ? const Offset(0.0, -5.0) : const Offset(0.0, 5.0),
+            child: Material(
+              elevation: 4.0,
+              borderRadius: BorderRadius.circular(8),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: visibleMaxHeight),
+                child: BlocBuilder<SearchCompetitionsBloc, SearchCompetitionsState>(
+                  bloc: _bloc,
+                  builder: (context, state) {
+                    if (state.status == SearchCompetitionsStatus.loading && state.competitions.isEmpty) {
+                      return const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator()));
+                    }
+
+                    if (state.status == SearchCompetitionsStatus.failure && state.competitions.isEmpty) {
                        return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(S.of(context).typeToSearch),
-                      );
-                  }
+                         padding: const EdgeInsets.all(16.0),
+                         child: Text(state.errorMessage ?? 'Error'),
+                       );
+                    }
+
+                    if (state.competitions.isEmpty && state.query.isNotEmpty && state.status != SearchCompetitionsStatus.loading) {
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(S.of(context).noResultsFound),
+                        );
+                    }
+                    
+                    if (state.competitions.isEmpty && state.query.isEmpty) {
+                         return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(S.of(context).typeToSearch),
+                        );
+                    }
 
 
-                  return ListView.builder(
-                    controller: _scrollController,
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemCount: state.hasReachedMax ? state.competitions.length : state.competitions.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index >= state.competitions.length) {
-                        return const Center(child: Padding(padding: EdgeInsets.all(8.0), child: CircularProgressIndicator(strokeWidth: 2)));
-                      }
+                    return ListView.builder(
+                      controller: _scrollController,
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemCount: state.hasReachedMax ? state.competitions.length : state.competitions.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index >= state.competitions.length) {
+                          return const Center(child: Padding(padding: EdgeInsets.all(8.0), child: CircularProgressIndicator(strokeWidth: 2)));
+                        }
 
-                      final competition = state.competitions[index];
-                      return ListTile(
-                        leading: CachedNetworkImage(
-                          imageUrl: competition.logo,
-                          width: 32,
-                          height: 32,
-                          placeholder: (context, url) => const CircleAvatar(radius: 16, backgroundColor: Colors.grey),
-                          errorWidget: (context, url, error) => const Icon(Icons.broken_image),
-                        ),
-                        title: Text(competition.name),
-                        onTap: () {
-                          setState(() {
-                            _selectedCompetition = competition;
-                            _controller.text = competition.name;
-                          });
-                          widget.onSelected(competition);
-                          _hideOverlay();
-                          _focusNode.unfocus();
-                        },
-                      );
-                    },
-                  );
-                },
+                        final competition = state.competitions[index];
+                        return ListTile(
+                          leading: CachedNetworkImage(
+                            imageUrl: competition.logo,
+                            width: 32,
+                            height: 32,
+                            placeholder: (context, url) => const CircleAvatar(radius: 16, backgroundColor: Colors.grey),
+                            errorWidget: (context, url, error) => const Icon(Icons.broken_image),
+                          ),
+                          title: Text(competition.name),
+                          onTap: () {
+                            setState(() {
+                              _selectedCompetition = competition;
+                              _controller.text = competition.name;
+                            });
+                            widget.onSelected(competition);
+                            _hideOverlay();
+                            _focusNode.unfocus();
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
 
     Overlay.of(context).insert(_overlayEntry!);
@@ -203,12 +224,6 @@ class _CompetitionSearchDropdownState extends State<CompetitionSearchDropdown> {
                     setState(() {
                       _controller.clear();
                       _selectedCompetition = null;
-                      // We don't clear selection in parent immediately to avoid confusion? 
-                      // Or maybe we should? 
-                      // widget.onSelected(null); // The signature requires non-null. 
-                      // Let's keep it simple, clearing clears text. 
-                      // But the parent might need to know. 
-                      // For now, let's assume user will select another one.
                     });
                      _bloc.add(const SearchCompetitionsQueryChanged(''));
                   },

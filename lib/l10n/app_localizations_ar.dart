@@ -133,16 +133,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get liveFilter => 'مباشر';
 
   @override
-  String get matchStatusAbnormal => 'غير طبيعي';
+  String get matchStatusAbnormal => 'غ.ط';
 
   @override
-  String get matchStatusNotStarted => 'لم تبدأ';
+  String get matchStatusNotStarted => 'ل.ت';
 
   @override
   String get matchStatusFirstHalf => 'ش1';
 
   @override
-  String get matchStatusHalfTime => 'استراحة';
+  String get matchStatusHalfTime => 'إست';
 
   @override
   String get matchStatusSecondHalf => 'ش2';
@@ -154,28 +154,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get matchStatusOvertimeDeprecated => 'و.إ';
 
   @override
-  String get matchStatusPenaltyShootout => 'ركلات الترجيح';
+  String get matchStatusPenaltyShootout => 'ر.ت';
 
   @override
   String get matchStatusEnded => 'انتهت';
 
   @override
-  String get matchStatusDelayed => 'مؤجلة';
+  String get matchStatusDelayed => 'مؤج';
 
   @override
-  String get matchStatusInterrupted => 'توقفت';
+  String get matchStatusInterrupted => 'توق';
 
   @override
-  String get matchStatusCutInHalf => 'انقطعت';
+  String get matchStatusCutInHalf => 'انق';
 
   @override
-  String get matchStatusCancelled => 'ألغيت';
+  String get matchStatusCancelled => 'ألغ';
 
   @override
-  String get matchStatusTbd => 'لم يتحدد بعد';
+  String get matchStatusTbd => 'غ.م';
 
   @override
-  String get matchStatusUnknown => 'غير معروف';
+  String get matchStatusUnknown => '؟';
 
   @override
   String get addNewCompetition => 'إضافة مسابقة جديدة';

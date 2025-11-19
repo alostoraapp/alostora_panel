@@ -172,7 +172,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get matchStatusCancelled => 'لغو';
 
   @override
-  String get matchStatusTbd => 'نامشخص';
+  String get matchStatusTbd => 'ن.م';
 
   @override
   String get matchStatusUnknown => '؟';

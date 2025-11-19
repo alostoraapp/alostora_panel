@@ -340,13 +340,13 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusAbnormal.
   ///
   /// In en, this message translates to:
-  /// **'Abnormal'**
+  /// **'Abn'**
   String get matchStatusAbnormal;
 
   /// No description provided for @matchStatusNotStarted.
   ///
   /// In en, this message translates to:
-  /// **'Not Started'**
+  /// **'NS'**
   String get matchStatusNotStarted;
 
   /// No description provided for @matchStatusFirstHalf.
@@ -358,7 +358,7 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusHalfTime.
   ///
   /// In en, this message translates to:
-  /// **'Half-Time'**
+  /// **'HT'**
   String get matchStatusHalfTime;
 
   /// No description provided for @matchStatusSecondHalf.
@@ -376,55 +376,55 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusOvertimeDeprecated.
   ///
   /// In en, this message translates to:
-  /// **'Overtime (Deprecated)'**
+  /// **'ET'**
   String get matchStatusOvertimeDeprecated;
 
   /// No description provided for @matchStatusPenaltyShootout.
   ///
   /// In en, this message translates to:
-  /// **'Penalty Shootout'**
+  /// **'Pen'**
   String get matchStatusPenaltyShootout;
 
   /// No description provided for @matchStatusEnded.
   ///
   /// In en, this message translates to:
-  /// **'Ended'**
+  /// **'FT'**
   String get matchStatusEnded;
 
   /// No description provided for @matchStatusDelayed.
   ///
   /// In en, this message translates to:
-  /// **'Delayed'**
+  /// **'Dly'**
   String get matchStatusDelayed;
 
   /// No description provided for @matchStatusInterrupted.
   ///
   /// In en, this message translates to:
-  /// **'Interrupted'**
+  /// **'Int'**
   String get matchStatusInterrupted;
 
   /// No description provided for @matchStatusCutInHalf.
   ///
   /// In en, this message translates to:
-  /// **'Cut in half'**
+  /// **'Cut'**
   String get matchStatusCutInHalf;
 
   /// No description provided for @matchStatusCancelled.
   ///
   /// In en, this message translates to:
-  /// **'Cancelled'**
+  /// **'Canc'**
   String get matchStatusCancelled;
 
   /// No description provided for @matchStatusTbd.
   ///
   /// In en, this message translates to:
-  /// **'To be determined'**
+  /// **'TBD'**
   String get matchStatusTbd;
 
   /// No description provided for @matchStatusUnknown.
   ///
   /// In en, this message translates to:
-  /// **'Unknown'**
+  /// **'?'**
   String get matchStatusUnknown;
 
   /// No description provided for @addNewCompetition.

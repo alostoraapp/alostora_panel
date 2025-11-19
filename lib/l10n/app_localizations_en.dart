@@ -133,16 +133,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get liveFilter => 'Live';
 
   @override
-  String get matchStatusAbnormal => 'Abnormal';
+  String get matchStatusAbnormal => 'Abn';
 
   @override
-  String get matchStatusNotStarted => 'Not Started';
+  String get matchStatusNotStarted => 'NS';
 
   @override
   String get matchStatusFirstHalf => '1H';
 
   @override
-  String get matchStatusHalfTime => 'Half-Time';
+  String get matchStatusHalfTime => 'HT';
 
   @override
   String get matchStatusSecondHalf => '2H';
@@ -151,31 +151,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchStatusOvertime => 'ET';
 
   @override
-  String get matchStatusOvertimeDeprecated => 'Overtime (Deprecated)';
+  String get matchStatusOvertimeDeprecated => 'ET';
 
   @override
-  String get matchStatusPenaltyShootout => 'Penalty Shootout';
+  String get matchStatusPenaltyShootout => 'Pen';
 
   @override
-  String get matchStatusEnded => 'Ended';
+  String get matchStatusEnded => 'FT';
 
   @override
-  String get matchStatusDelayed => 'Delayed';
+  String get matchStatusDelayed => 'Dly';
 
   @override
-  String get matchStatusInterrupted => 'Interrupted';
+  String get matchStatusInterrupted => 'Int';
 
   @override
-  String get matchStatusCutInHalf => 'Cut in half';
+  String get matchStatusCutInHalf => 'Cut';
 
   @override
-  String get matchStatusCancelled => 'Cancelled';
+  String get matchStatusCancelled => 'Canc';
 
   @override
-  String get matchStatusTbd => 'To be determined';
+  String get matchStatusTbd => 'TBD';
 
   @override
-  String get matchStatusUnknown => 'Unknown';
+  String get matchStatusUnknown => '?';
 
   @override
   String get addNewCompetition => 'Add New Competition';
