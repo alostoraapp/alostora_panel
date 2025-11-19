@@ -127,16 +127,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchStatusNotStarted => 'Not Started';
 
   @override
-  String get matchStatusFirstHalf => 'First Half';
+  String get matchStatusFirstHalf => '1H';
 
   @override
   String get matchStatusHalfTime => 'Half-Time';
 
   @override
-  String get matchStatusSecondHalf => 'Second Half';
+  String get matchStatusSecondHalf => '2H';
 
   @override
-  String get matchStatusOvertime => 'Overtime';
+  String get matchStatusOvertime => 'ET';
 
   @override
   String get matchStatusOvertimeDeprecated => 'Overtime (Deprecated)';
@@ -154,13 +154,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchStatusInterrupted => 'Interrupted';
 
   @override
-  String get matchStatusCutInHalf => 'Cut in Half';
+  String get matchStatusCutInHalf => 'Cut in half';
 
   @override
   String get matchStatusCancelled => 'Cancelled';
 
   @override
-  String get matchStatusTbd => 'To be Determined';
+  String get matchStatusTbd => 'To be determined';
 
   @override
   String get matchStatusUnknown => 'Unknown';

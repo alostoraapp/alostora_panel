@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/l10n/s.dart';
@@ -64,41 +65,67 @@ class _MatchTileState extends State<MatchTile> {
   String _getMatchMinute(MatchEntity match) {
     if (match.status == MatchStatus.firstHalf && match.firstHalfStartTime != null) {
       final difference = DateTime.now().difference(match.firstHalfStartTime!);
-      return '${difference.inMinutes}\'';
+      final minutes = difference.inMinutes;
+      if (minutes > 45) {
+        return '45+${minutes - 45}\'';
+      }
+      return '$minutes\'';
     }
     if (match.status == MatchStatus.secondHalf && match.secondHalfStartTime != null) {
       final difference = DateTime.now().difference(match.secondHalfStartTime!);
-      return '${45 + difference.inMinutes}\'';
+      final minutes = 90 + difference.inMinutes - 45; // Assuming second half starts at 45, which is not always true but standard for calculation relative to start time if we treat it as absolute match time, but better:
+       // Standard logic: 45 + (now - second_half_start). 
+      final secondHalfMinutes = difference.inMinutes;
+      final totalMinutes = 45 + secondHalfMinutes;
+      
+      if (totalMinutes > 90) {
+        return '90+${totalMinutes - 90}\'';
+      }
+      return '$totalMinutes\'';
     }
     return '';
+  }
+
+  bool _isLive(MatchStatus status) {
+    return status == MatchStatus.firstHalf ||
+        status == MatchStatus.secondHalf ||
+        status == MatchStatus.halfTime ||
+        status == MatchStatus.overtime ||
+        status == MatchStatus.penaltyShootout;
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isRtl = context.watch<LanguageCubit>().isRTL();
+    final isLive = _isLive(widget.match.status);
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
       cursor: SystemMouseCursors.click,
       child: Card(
         elevation: _isHovering ? 4 : 1,
-        shadowColor: _isHovering ? theme.colorScheme.primary.withOpacity(0.3) : Colors.black12,
+        shadowColor: isLive
+            ? Colors.red.withOpacity(0.5)
+            : (_isHovering ? theme.colorScheme.primary.withOpacity(0.3) : Colors.black12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-            color: _isHovering ? theme.colorScheme.primary : Colors.transparent,
-            width: 1,
-          ),
+          side: isLive
+              ? const BorderSide(color: Colors.red, width: 1.5)
+              : BorderSide(
+                  color: _isHovering ? theme.colorScheme.primary : Colors.transparent,
+                  width: 1,
+                ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
           child: Row(
             textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTeam(theme, team: widget.match.homeTeam),
-              _buildScore(theme, match: widget.match),
+              _buildCenterInfo(theme, match: widget.match),
               _buildTeam(theme, team: widget.match.awayTeam, isReversed: true),
             ],
           ),
@@ -110,25 +137,26 @@ class _MatchTileState extends State<MatchTile> {
   Widget _buildTeam(ThemeData theme, {required TeamEntity team, bool isReversed = false}) {
     final logo = CachedNetworkImage(
       imageUrl: team.logo,
-      width: 32,
-      height: 32,
+      width: 40,
+      height: 40,
       placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2.0),
-      errorWidget: (context, url, error) => const Icon(Icons.shield, size: 32, color: Colors.grey),
+      errorWidget: (context, url, error) => const Icon(Icons.shield, size: 40, color: Colors.grey),
     );
 
-    final text = Text(team.name, style: theme.textTheme.titleMedium, overflow: TextOverflow.ellipsis, maxLines: 2);
+    final text = Text(team.name, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600), overflow: TextOverflow.ellipsis, maxLines: 2);
 
     return Expanded(
       flex: 3,
       child: isReversed
-          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [Expanded(child: Align(alignment: AlignmentDirectional.centerEnd, child: text)), const SizedBox(width: 6), logo])
-          : Row(children: [logo, const SizedBox(width: 6), Expanded(child: text)]),
+          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [Expanded(child: Align(alignment: AlignmentDirectional.centerEnd, child: text)), const SizedBox(width: 8), logo])
+          : Row(children: [logo, const SizedBox(width: 8), Expanded(child: text)]),
     );
   }
 
-  Widget _buildScore(ThemeData theme, {required MatchEntity match}) {
+  Widget _buildCenterInfo(ThemeData theme, {required MatchEntity match}) {
     final statusText = _getMatchStatusText(match.status, context);
     final matchMinute = _getMatchMinute(match);
+    final startTime = DateFormat('HH:mm').format(match.matchTime.toLocal());
 
     return Expanded(
       flex: 2,
@@ -136,13 +164,19 @@ class _MatchTileState extends State<MatchTile> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '${match.homeScoreFinal} - ${match.awayScoreFinal}',
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            startTime,
+            style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
           ),
-          const SizedBox(height: 4),
+          Text(
+            '${match.homeScoreFinal} - ${match.awayScoreFinal}',
+            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          ),
           Text(
             '$statusText $matchMinute'.trim(),
-            style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: _isLive(match.status) ? Colors.red : theme.hintColor,
+              fontWeight: _isLive(match.status) ? FontWeight.bold : FontWeight.normal,
+            ),
           ),
         ],
       ),
@@ -165,12 +199,12 @@ class MatchTileShimmer extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTeamShimmer(theme),
-              _buildScoreShimmer(theme),
+              _buildCenterInfoShimmer(theme),
               _buildTeamShimmer(theme, isReversed: true),
             ],
           ),
@@ -181,8 +215,8 @@ class MatchTileShimmer extends StatelessWidget {
 
   Widget _buildTeamShimmer(ThemeData theme, {bool isReversed = false}) {
     final logo = Container(
-      width: 32,
-      height: 32,
+      width: 40,
+      height: 40,
       decoration: const BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
@@ -198,26 +232,32 @@ class MatchTileShimmer extends StatelessWidget {
     return Expanded(
       flex: 3,
       child: isReversed
-          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [text, const SizedBox(width: 6), logo])
-          : Row(children: [logo, const SizedBox(width: 6), text]),
+          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [text, const SizedBox(width: 8), logo])
+          : Row(children: [logo, const SizedBox(width: 8), text]),
     );
   }
 
-  Widget _buildScoreShimmer(ThemeData theme) {
+  Widget _buildCenterInfoShimmer(ThemeData theme) {
     return Expanded(
       flex: 2,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+           Container(
+            height: 14,
+            width: 40,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 4),
           Container(
-            height: 20,
+            height: 24,
             width: 60,
             color: Colors.white,
           ),
           const SizedBox(height: 4),
           Container(
             height: 12,
-            width: 80,
+            width: 50,
             color: Colors.white,
           ),
         ],

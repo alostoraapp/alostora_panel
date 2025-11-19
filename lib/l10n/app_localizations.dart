@@ -328,7 +328,7 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusFirstHalf.
   ///
   /// In en, this message translates to:
-  /// **'First Half'**
+  /// **'1H'**
   String get matchStatusFirstHalf;
 
   /// No description provided for @matchStatusHalfTime.
@@ -340,13 +340,13 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusSecondHalf.
   ///
   /// In en, this message translates to:
-  /// **'Second Half'**
+  /// **'2H'**
   String get matchStatusSecondHalf;
 
   /// No description provided for @matchStatusOvertime.
   ///
   /// In en, this message translates to:
-  /// **'Overtime'**
+  /// **'ET'**
   String get matchStatusOvertime;
 
   /// No description provided for @matchStatusOvertimeDeprecated.
@@ -382,7 +382,7 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusCutInHalf.
   ///
   /// In en, this message translates to:
-  /// **'Cut in Half'**
+  /// **'Cut in half'**
   String get matchStatusCutInHalf;
 
   /// No description provided for @matchStatusCancelled.
@@ -394,7 +394,7 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusTbd.
   ///
   /// In en, this message translates to:
-  /// **'To be Determined'**
+  /// **'To be determined'**
   String get matchStatusTbd;
 
   /// No description provided for @matchStatusUnknown.

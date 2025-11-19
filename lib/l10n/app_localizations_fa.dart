@@ -121,47 +121,47 @@ class AppLocalizationsFa extends AppLocalizations {
   String get liveFilter => 'زنده';
 
   @override
-  String get matchStatusAbnormal => 'غیر عادی';
+  String get matchStatusAbnormal => 'غ‌ط';
 
   @override
-  String get matchStatusNotStarted => 'شروع نشده';
+  String get matchStatusNotStarted => 'ش‌ن';
 
   @override
-  String get matchStatusFirstHalf => 'نیمه اول';
+  String get matchStatusFirstHalf => 'ن1';
 
   @override
-  String get matchStatusHalfTime => 'بین دو نیمه';
+  String get matchStatusHalfTime => 'ب‌د‌ن';
 
   @override
-  String get matchStatusSecondHalf => 'نیمه دوم';
+  String get matchStatusSecondHalf => 'ن2';
 
   @override
-  String get matchStatusOvertime => 'وقت اضافه';
+  String get matchStatusOvertime => 'و‌ا';
 
   @override
-  String get matchStatusOvertimeDeprecated => 'وقت اضافه (منسوخ)';
+  String get matchStatusOvertimeDeprecated => 'و‌ا';
 
   @override
-  String get matchStatusPenaltyShootout => 'ضربات پنالتی';
+  String get matchStatusPenaltyShootout => 'پ';
 
   @override
-  String get matchStatusEnded => 'پایان یافته';
+  String get matchStatusEnded => 'پایان';
 
   @override
-  String get matchStatusDelayed => 'با تاخیر';
+  String get matchStatusDelayed => 'تاخیر';
 
   @override
-  String get matchStatusInterrupted => 'متوقف شده';
+  String get matchStatusInterrupted => 'توقف';
 
   @override
-  String get matchStatusCutInHalf => 'قطع شده';
+  String get matchStatusCutInHalf => 'قطع';
 
   @override
-  String get matchStatusCancelled => 'لغو شده';
+  String get matchStatusCancelled => 'لغو';
 
   @override
   String get matchStatusTbd => 'نامشخص';
 
   @override
-  String get matchStatusUnknown => 'ناشناخته';
+  String get matchStatusUnknown => '؟';
 }

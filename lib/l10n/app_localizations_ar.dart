@@ -127,19 +127,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get matchStatusNotStarted => 'لم تبدأ';
 
   @override
-  String get matchStatusFirstHalf => 'الشوط الأول';
+  String get matchStatusFirstHalf => 'ش1';
 
   @override
-  String get matchStatusHalfTime => 'نصف الوقت';
+  String get matchStatusHalfTime => 'استراحة';
 
   @override
-  String get matchStatusSecondHalf => 'الشوط الثاني';
+  String get matchStatusSecondHalf => 'ش2';
 
   @override
-  String get matchStatusOvertime => 'وقت إضافي';
+  String get matchStatusOvertime => 'و.إ';
 
   @override
-  String get matchStatusOvertimeDeprecated => 'وقت إضافي (مهمل)';
+  String get matchStatusOvertimeDeprecated => 'و.إ';
 
   @override
   String get matchStatusPenaltyShootout => 'ركلات الترجيح';
