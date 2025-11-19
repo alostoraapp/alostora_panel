@@ -52,11 +52,6 @@ class _LoginFormState extends State<LoginForm> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          s.login,
-          style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 40),
         Row(
           children: [
             Expanded(child: Divider(color: theme.colorScheme.outline)),
