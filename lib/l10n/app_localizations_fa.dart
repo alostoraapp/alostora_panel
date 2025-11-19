@@ -51,6 +51,18 @@ class AppLocalizationsFa extends AppLocalizations {
   String get settings => 'تنظیمات';
 
   @override
+  String get competitionSelect => 'انتخاب رقابت‌ها';
+
+  @override
+  String get active => 'فعال';
+
+  @override
+  String get inactive => 'غیرفعال';
+
+  @override
+  String get saveOrder => 'ذخیره ترتیب';
+
+  @override
   String get totalUsers => 'تعداد کل کاربران';
 
   @override
@@ -164,4 +176,34 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get matchStatusUnknown => '؟';
+
+  @override
+  String get addNewCompetition => 'افزودن رقابت جدید';
+
+  @override
+  String get enterCompetitionId => 'شناسه رقابت را وارد کنید';
+
+  @override
+  String get pleaseEnterCompetitionId => 'لطفاً شناسه رقابت را وارد کنید';
+
+  @override
+  String get competitionId => 'شناسه رقابت';
+
+  @override
+  String get add => 'افزودن';
+
+  @override
+  String get cancel => 'لغو';
+
+  @override
+  String get save => 'ذخیره';
+
+  @override
+  String get noResultsFound => 'نتیجه‌ای یافت نشد';
+
+  @override
+  String get typeToSearch => 'برای جستجو تایپ کنید...';
+
+  @override
+  String get searchCompetition => 'جستجوی رقابت';
 }

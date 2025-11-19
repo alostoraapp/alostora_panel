@@ -39,6 +39,30 @@ class ApiClient {
     }
   }
 
+  /// Executes a PATCH request and handles errors.
+  Future<dynamic> patch(String path, {dynamic data, Map<String, dynamic>? queryParameters}) async {
+    try {
+      final response = await _dio.patch(path, data: data, queryParameters: queryParameters);
+      return response.data;
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
+      throw ServerFailure(message: e.toString());
+    }
+  }
+
+  /// Executes a DELETE request and handles errors.
+  Future<dynamic> delete(String path, {dynamic data, Map<String, dynamic>? queryParameters}) async {
+    try {
+      final response = await _dio.delete(path, data: data, queryParameters: queryParameters);
+      return response.data;
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
+      throw ServerFailure(message: e.toString());
+    }
+  }
+
   /// Centralized Dio exception handling.
   void _handleDioException(DioException e) {
     if (e.response != null && e.response!.data is Map<String, dynamic>) {

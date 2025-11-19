@@ -37,5 +37,17 @@ List<SidebarMenuModel> getSidebarMenus(BuildContext context) {
         ),
       ],
     ),
+    SidebarMenuModel(
+      title: s.settings,
+      icon: AppIcons.settings,
+      route: '/settings',
+      children: [
+        SidebarMenuModel(
+          title: s.competitionSelect,
+          icon: AppIcons.list, // Reusing list icon or maybe circle
+          route: '/settings/competition-select',
+        ),
+      ],
+    ),
   ];
 }

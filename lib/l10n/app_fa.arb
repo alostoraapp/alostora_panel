@@ -14,6 +14,10 @@
   "loginCredentials": "با اطلاعات کاربری خود وارد شوید",
   "dashboard": "داشبورد",
   "settings": "تنظیمات",
+  "competitionSelect": "انتخاب رقابت‌ها",
+  "active": "فعال",
+  "inactive": "غیرفعال",
+  "saveOrder": "ذخیره ترتیب",
   "totalUsers": "تعداد کل کاربران",
   "onlineUsers": "کاربران آنلاین",
   "todaysMatches": "مسابقات امروز",
@@ -50,5 +54,15 @@
   "matchStatusCutInHalf": "قطع",
   "matchStatusCancelled": "لغو",
   "matchStatusTbd": "نامشخص",
-  "matchStatusUnknown": "؟"
+  "matchStatusUnknown": "؟",
+  "addNewCompetition": "افزودن رقابت جدید",
+  "enterCompetitionId": "شناسه رقابت را وارد کنید",
+  "pleaseEnterCompetitionId": "لطفاً شناسه رقابت را وارد کنید",
+  "competitionId": "شناسه رقابت",
+  "add": "افزودن",
+  "cancel": "لغو",
+  "save": "ذخیره",
+  "noResultsFound": "نتیجه‌ای یافت نشد",
+  "typeToSearch": "برای جستجو تایپ کنید...",
+  "searchCompetition": "جستجوی رقابت"
 }

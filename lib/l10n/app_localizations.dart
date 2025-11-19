@@ -181,6 +181,30 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// No description provided for @competitionSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Competition Select'**
+  String get competitionSelect;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// No description provided for @saveOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Order'**
+  String get saveOrder;
+
   /// No description provided for @totalUsers.
   ///
   /// In en, this message translates to:
@@ -402,6 +426,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown'**
   String get matchStatusUnknown;
+
+  /// No description provided for @addNewCompetition.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Competition'**
+  String get addNewCompetition;
+
+  /// No description provided for @enterCompetitionId.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Competition ID'**
+  String get enterCompetitionId;
+
+  /// No description provided for @pleaseEnterCompetitionId.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter competition ID'**
+  String get pleaseEnterCompetitionId;
+
+  /// No description provided for @competitionId.
+  ///
+  /// In en, this message translates to:
+  /// **'Competition ID'**
+  String get competitionId;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @typeToSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Type to search...'**
+  String get typeToSearch;
+
+  /// No description provided for @searchCompetition.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Competition'**
+  String get searchCompetition;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

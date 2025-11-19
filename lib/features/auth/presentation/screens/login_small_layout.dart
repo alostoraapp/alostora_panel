@@ -14,18 +14,22 @@ class LoginSmallLayout extends StatelessWidget {
     return Container(
       color: theme.colorScheme.primaryContainer,
       child: SafeArea(
-        child: Column(
-          children: [
-            const LoginHeader(),
-            Expanded(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 375),
-                child: Center(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24),
-                    child: LoginForm(onLogin: onLogin),
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const LoginHeader(),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 375),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: LoginForm(onLogin: onLogin),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ],

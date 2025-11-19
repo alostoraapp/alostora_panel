@@ -26,4 +26,8 @@ class AppIcons {
   static const String angleSmallLeft = '$_basePath/ic_angle_small_left.svg';
   static const String angleSmallRight = '$_basePath/ic_angle_small_right.svg';
   static const String search = '$_basePath/ic_search.svg';
+  static const String add = '$_basePath/ic_add.svg';
+  static const String trash = '$_basePath/ic_trash.svg';
+  static const String settings = '$_basePath/ic_settings.svg';
+  static const String shield = '$_basePath/ic_shield.svg';
 }

@@ -14,6 +14,10 @@
   "loginCredentials": "Login with your credentials",
   "dashboard": "Dashboard",
   "settings": "Settings",
+  "competitionSelect": "Competition Select",
+  "active": "Active",
+  "inactive": "Inactive",
+  "saveOrder": "Save Order",
   "totalUsers": "Total Users",
   "onlineUsers": "Online Users",
   "todaysMatches": "Today's Matches",
@@ -50,5 +54,15 @@
   "matchStatusCutInHalf": "Cut in half",
   "matchStatusCancelled": "Cancelled",
   "matchStatusTbd": "To be determined",
-  "matchStatusUnknown": "Unknown"
+  "matchStatusUnknown": "Unknown",
+  "addNewCompetition": "Add New Competition",
+  "enterCompetitionId": "Enter Competition ID",
+  "pleaseEnterCompetitionId": "Please enter competition ID",
+  "competitionId": "Competition ID",
+  "add": "Add",
+  "cancel": "Cancel",
+  "save": "Save",
+  "noResultsFound": "No results found",
+  "typeToSearch": "Type to search...",
+  "searchCompetition": "Search Competition"
 }

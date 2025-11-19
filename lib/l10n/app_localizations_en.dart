@@ -51,6 +51,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get competitionSelect => 'Competition Select';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get saveOrder => 'Save Order';
+
+  @override
   String get totalUsers => 'Total Users';
 
   @override
@@ -164,4 +176,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchStatusUnknown => 'Unknown';
+
+  @override
+  String get addNewCompetition => 'Add New Competition';
+
+  @override
+  String get enterCompetitionId => 'Enter Competition ID';
+
+  @override
+  String get pleaseEnterCompetitionId => 'Please enter competition ID';
+
+  @override
+  String get competitionId => 'Competition ID';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get typeToSearch => 'Type to search...';
+
+  @override
+  String get searchCompetition => 'Search Competition';
 }

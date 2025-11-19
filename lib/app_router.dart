@@ -6,6 +6,7 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/matches/presentation/screens/match_tiles_screen.dart';
 import 'features/overview/presentation/screens/dashboard_screen.dart';
+import 'features/settings/presentation/screens/competition_select_screen.dart';
 import 'features/shell/presentation/screens/app_shell.dart';
 import 'features/shell/presentation/screens/placeholder_screen.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
@@ -56,6 +57,12 @@ class AppRouter {
             name: AppRoutes.matchesList,
             builder: (context, state) => const PlaceholderScreen(title: 'Matches List'),
           ),
+          // Settings
+          GoRoute(
+            path: AppRoutes.competitionSelect,
+            name: AppRoutes.competitionSelect,
+            builder: (context, state) => const CompetitionSelectScreen(),
+          ),
         ],
       ),
     ],
@@ -99,4 +106,8 @@ class AppRoutes {
   static const String matches = '/matches';
   static const String matchesTiles = '/matches/tiles';
   static const String matchesList = '/matches/list';
+
+  // Settings
+  static const String settings = '/settings';
+  static const String competitionSelect = '/settings/competition-select';
 }

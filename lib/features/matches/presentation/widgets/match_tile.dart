@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:shimmer/shimmer.dart';
 
+import '../../../../core/constants/app_icons.dart';
 import '../../../../core/l10n/s.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../domain/entities/match_entity.dart';
@@ -139,8 +141,24 @@ class _MatchTileState extends State<MatchTile> {
       imageUrl: team.logo,
       width: 40,
       height: 40,
-      placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2.0),
-      errorWidget: (context, url, error) => const Icon(Icons.shield, size: 40, color: Colors.grey),
+      placeholder: (context, url) => Shimmer.fromColors(
+        baseColor: theme.colorScheme.surfaceVariant,
+        highlightColor: theme.colorScheme.onSurface.withOpacity(0.1),
+        child: Container(
+          width: 40,
+          height: 40,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ),
+        ),
+      ),
+      errorWidget: (context, url, error) => SvgPicture.asset(
+        AppIcons.shield, // Changed from Icons.shield
+        width: 40,
+        height: 40,
+        colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+      ),
     );
 
     final text = Text(team.name, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600), overflow: TextOverflow.ellipsis, maxLines: 2);

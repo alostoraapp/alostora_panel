@@ -51,6 +51,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settings => 'الإعدادات';
 
   @override
+  String get competitionSelect => 'اختيار المسابقات';
+
+  @override
+  String get active => 'نشط';
+
+  @override
+  String get inactive => 'غير نشط';
+
+  @override
+  String get saveOrder => 'حفظ الترتيب';
+
+  @override
   String get totalUsers => 'إجمالي المستخدمين';
 
   @override
@@ -164,4 +176,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get matchStatusUnknown => 'غير معروف';
+
+  @override
+  String get addNewCompetition => 'إضافة مسابقة جديدة';
+
+  @override
+  String get enterCompetitionId => 'أدخل معرف المسابقة';
+
+  @override
+  String get pleaseEnterCompetitionId => 'يرجى إدخال معرف المسابقة';
+
+  @override
+  String get competitionId => 'معرف المسابقة';
+
+  @override
+  String get add => 'إضافة';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get noResultsFound => 'لم يتم العثور على نتائج';
+
+  @override
+  String get typeToSearch => 'اكتب للبحث...';
+
+  @override
+  String get searchCompetition => 'بحث عن مسابقة';
 }

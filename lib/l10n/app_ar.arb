@@ -14,6 +14,10 @@
   "loginCredentials": "تسجيل الدخول باستخدام بيانات الاعتماد الخاصة بك",
   "dashboard": "لوحة التحكم",
   "settings": "الإعدادات",
+  "competitionSelect": "اختيار المسابقات",
+  "active": "نشط",
+  "inactive": "غير نشط",
+  "saveOrder": "حفظ الترتيب",
   "totalUsers": "إجمالي المستخدمين",
   "onlineUsers": "المستخدمون المتصلون",
   "todaysMatches": "مباريات اليوم",
@@ -50,5 +54,15 @@
   "matchStatusCutInHalf": "انقطعت",
   "matchStatusCancelled": "ألغيت",
   "matchStatusTbd": "لم يتحدد بعد",
-  "matchStatusUnknown": "غير معروف"
+  "matchStatusUnknown": "غير معروف",
+  "addNewCompetition": "إضافة مسابقة جديدة",
+  "enterCompetitionId": "أدخل معرف المسابقة",
+  "pleaseEnterCompetitionId": "يرجى إدخال معرف المسابقة",
+  "competitionId": "معرف المسابقة",
+  "add": "إضافة",
+  "cancel": "إلغاء",
+  "save": "حفظ",
+  "noResultsFound": "لم يتم العثور على نتائج",
+  "typeToSearch": "اكتب للبحث...",
+  "searchCompetition": "بحث عن مسابقة"
 }

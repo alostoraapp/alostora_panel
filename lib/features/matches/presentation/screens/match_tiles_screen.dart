@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -90,6 +91,7 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
   @override
   Widget build(BuildContext context) {
     final isDesktop = ResponsiveBreakpoints.of(context).isDesktop;
+    final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
 
     final timePicker = _TimePickerCard(
       isLiveSelected: _isLive,
@@ -109,43 +111,46 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
         _fetchMatches();
       },
       child: Scaffold(
-        body: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            if (isDesktop)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: timePicker),
-                  const SizedBox(width: 16),
-                  Expanded(child: searchCard),
-                ],
-              )
-            else
-              Column(
-                children: [
-                  timePicker,
-                  const SizedBox(height: 16),
-                  searchCard,
-                ],
+        body: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+          child: ListView(
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              if (isDesktop)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: timePicker),
+                    const SizedBox(width: 16),
+                    Expanded(child: searchCard),
+                  ],
+                )
+              else
+                Column(
+                  children: [
+                    timePicker,
+                    const SizedBox(height: 16),
+                    searchCard,
+                  ],
+                ),
+              const SizedBox(height: 16),
+              BlocBuilder<MatchesBloc, MatchesState>(
+                bloc: _matchesBloc,
+                builder: (context, state) {
+                  if (state is MatchesLoading) {
+                    return _buildShimmerList();
+                  }
+                  if (state is MatchesLoaded) {
+                    return _buildMatchesList(context, state.competitions);
+                  }
+                  if (state is MatchesError) {
+                    return Center(child: Text(state.message));
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
-            const SizedBox(height: 16),
-            BlocBuilder<MatchesBloc, MatchesState>(
-              bloc: _matchesBloc,
-              builder: (context, state) {
-                if (state is MatchesLoading) {
-                  return _buildShimmerList();
-                }
-                if (state is MatchesLoaded) {
-                  return _buildMatchesList(context, state.competitions);
-                }
-                if (state is MatchesError) {
-                  return Center(child: Text(state.message));
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -502,15 +507,24 @@ class _CompetitionHeader extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: SvgPicture.network(
-                logoUrl,
-                width: 24,
-                height: 16,
-                fit: BoxFit.cover,
-                placeholderBuilder: (context) => const SizedBox(width: 24, height: 16),
+            CachedNetworkImage(
+              imageUrl: logoUrl,
+              width: 24,
+              height: 24,
+              fit: BoxFit.contain,
+              placeholder: (context, url) => Shimmer.fromColors(
+                baseColor: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                highlightColor: isDark ? Colors.grey[600]! : Colors.grey[100]!,
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                ),
               ),
+              errorWidget: (context, url, error) => const Icon(Icons.sports_soccer, color: Colors.white70, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -552,8 +566,11 @@ class _CompetitionHeaderShimmer extends StatelessWidget {
             children: [
               Container(
                 width: 24,
-                height: 16,
-                color: Colors.white,
+                height: 24,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
