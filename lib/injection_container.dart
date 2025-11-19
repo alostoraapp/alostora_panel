@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
-import 'core/config/constants.dart';
 import 'core/presentation/cubit/language_cubit.dart';
 import 'core/presentation/cubit/theme_cubit.dart';
 import 'core/services/api_client.dart';
@@ -24,6 +23,7 @@ import 'features/matches/data/repositories/matches_repository_impl.dart';
 import 'features/matches/domain/repositories/matches_repository.dart';
 import 'features/matches/domain/usecases/get_matches_usecase.dart';
 import 'features/matches/presentation/bloc/matches_bloc.dart';
+import 'core/config/constants.dart';
 
 final sl = GetIt.instance;
 
@@ -37,13 +37,13 @@ Future<void> init() async {
   sl.registerLazySingleton(() => CheckStatusUseCase(sl()));
   sl.registerLazySingleton(() => RefreshTokenUseCase(sl()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(remoteDataSource: sl(), tokenStorageService: sl()));
-  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl()));
 
   // Matches
   sl.registerFactory(() => MatchesBloc(sl()));
   sl.registerLazySingleton(() => GetMatchesUseCase(sl()));
   sl.registerLazySingleton<MatchesRepository>(() => MatchesRepositoryImpl(sl()));
-  sl.registerLazySingleton<MatchesRemoteDataSource>(() => MatchesRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<MatchesRemoteDataSource>(() => MatchesRemoteDataSourceImpl(sl()));
 
 
   // --- Core ---
@@ -57,7 +57,7 @@ Future<void> init() async {
   }
 
   sl.registerLazySingleton(() => ThemeCubit());
-  sl.registerLazySingleton(() => LanguageCubit());
+  sl.registerLazySingleton(() => LanguageCubit(sl()));
 
   // External - Dio
   sl.registerLazySingleton(() {

@@ -1,5 +1,4 @@
 import '../../../../core/config/constants.dart';
-import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../../../core/services/api_client.dart';
 import '../models/competition_model.dart';
 
@@ -15,9 +14,8 @@ abstract class MatchesRemoteDataSource {
 
 class MatchesRemoteDataSourceImpl implements MatchesRemoteDataSource {
   final ApiClient _apiClient;
-  final LanguageCubit _languageCubit;
 
-  MatchesRemoteDataSourceImpl(this._apiClient, this._languageCubit);
+  MatchesRemoteDataSourceImpl(this._apiClient);
 
   @override
   Future<List<CompetitionModel>> getMatches({
@@ -27,9 +25,7 @@ class MatchesRemoteDataSourceImpl implements MatchesRemoteDataSource {
     int? startTimestamp,
     int? endTimestamp,
   }) async {
-    final lang = _languageCubit.state.languageCode == 'ar' ? 'ar' : 'en';
     final queryParameters = <String, dynamic>{
-      'lang': lang,
       if (search != null) 'search': search,
       if (ordering != null) 'ordering': ordering,
       if (isLive != null) 'is_live': isLive,

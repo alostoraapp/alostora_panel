@@ -10,10 +10,15 @@ class ApiClient {
 
   ApiClient(this._dio);
 
+  /// Updates the 'Accept-Language' header.
+  void updateLanguage(String languageCode) {
+    _dio.options.headers['Accept-Language'] = languageCode;
+  }
+
   /// Executes a POST request and handles errors.
-  Future<dynamic> post(String path, {dynamic data}) async {
+  Future<dynamic> post(String path, {dynamic data, Map<String, dynamic>? queryParameters}) async {
     try {
-      final response = await _dio.post(path, data: data);
+      final response = await _dio.post(path, data: data, queryParameters: queryParameters);
       return response.data;
     } on DioException catch (e) {
       _handleDioException(e);

@@ -104,44 +104,49 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
       onOrderingChanged: _onOrderingChanged,
     );
 
-    return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          if (isDesktop)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: timePicker),
-                const SizedBox(width: 16),
-                Expanded(child: searchCard),
-              ],
-            )
-          else
-            Column(
-              children: [
-                timePicker,
-                const SizedBox(height: 16),
-                searchCard,
-              ],
+    return BlocListener<LanguageCubit, Locale>(
+      listener: (context, locale) {
+        _fetchMatches();
+      },
+      child: Scaffold(
+        body: ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            if (isDesktop)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: timePicker),
+                  const SizedBox(width: 16),
+                  Expanded(child: searchCard),
+                ],
+              )
+            else
+              Column(
+                children: [
+                  timePicker,
+                  const SizedBox(height: 16),
+                  searchCard,
+                ],
+              ),
+            const SizedBox(height: 16),
+            BlocBuilder<MatchesBloc, MatchesState>(
+              bloc: _matchesBloc,
+              builder: (context, state) {
+                if (state is MatchesLoading) {
+                  return _buildShimmerList();
+                }
+                if (state is MatchesLoaded) {
+                  return _buildMatchesList(context, state.competitions);
+                }
+                if (state is MatchesError) {
+                  return Center(child: Text(state.message));
+                }
+                return const SizedBox.shrink();
+              },
             ),
-          const SizedBox(height: 16),
-          BlocBuilder<MatchesBloc, MatchesState>(
-            bloc: _matchesBloc,
-            builder: (context, state) {
-              if (state is MatchesLoading) {
-                return _buildShimmerList();
-              }
-              if (state is MatchesLoaded) {
-                return _buildMatchesList(context, state.competitions);
-              }
-              if (state is MatchesError) {
-                return Center(child: Text(state.message));
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

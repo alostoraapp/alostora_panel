@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/config/constants.dart';
-import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../../../core/services/api_client.dart';
 import '../models/token_response_model.dart';
 
@@ -15,16 +14,14 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final ApiClient _apiClient;
-  final LanguageCubit _languageCubit;
 
-  const AuthRemoteDataSourceImpl(this._apiClient, this._languageCubit);
+  const AuthRemoteDataSourceImpl(this._apiClient);
 
   @override
   Future<TokenResponseModel> login(String email, String password) async {
-    final lang = _languageCubit.state.languageCode == 'ar' ? 'ar' : 'en';
     final responseData = await _apiClient.post(
       AppConstants.loginUrl,
-      data: {'email': email, 'password': password, 'lang': lang},
+      data: {'email': email, 'password': password},
     );
     return TokenResponseModel.fromJson(responseData);
   }
