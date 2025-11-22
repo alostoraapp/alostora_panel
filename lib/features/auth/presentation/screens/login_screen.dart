@@ -114,7 +114,7 @@ class LoginScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                           Text(
+                          Text(
                             S.of(context).login,
                             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.bold,
@@ -141,8 +141,8 @@ class LoginScreen extends StatelessWidget {
               child: Image.asset(
                 logoAsset,
                 width: 400,
-                errorBuilder: (context, error, stackTrace) => 
-                    const SizedBox.shrink(),
+                errorBuilder: (context, error, stackTrace) =>
+                const SizedBox.shrink(),
               ),
             ),
           ),

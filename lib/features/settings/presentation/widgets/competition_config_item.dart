@@ -74,9 +74,9 @@ class CompetitionConfigItem extends StatelessWidget {
               children: [
                 Text(
                   config.competitionDetails.name,
-                  style: isMobile 
-                    ? theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)
-                    : theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                  style: isMobile
+                      ? theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)
+                      : theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -116,9 +116,9 @@ class CompetitionConfigItem extends StatelessWidget {
               colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
             ),
             onPressed: () {
-               context.read<CompetitionConfigBloc>().add(
-                    DeleteCompetitionConfigEvent(config.id),
-                  );
+              context.read<CompetitionConfigBloc>().add(
+                DeleteCompetitionConfigEvent(config.id),
+              );
             },
           ),
         ],

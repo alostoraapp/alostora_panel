@@ -294,25 +294,25 @@ class _TimePickerCard extends StatelessWidget {
       height: buttonHeight,
       child: isLiveSelected
           ? ElevatedButton(
-              onPressed: () => onLiveSelected(false),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              ),
-              child: Text(s.liveFilter),
-            )
+        onPressed: () => onLiveSelected(false),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        ),
+        child: Text(s.liveFilter),
+      )
           : OutlinedButton(
-              onPressed: () => onLiveSelected(true),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.red,
-                side: const BorderSide(color: Colors.red),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              ),
-              child: Text(s.liveFilter),
-            ),
+        onPressed: () => onLiveSelected(true),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.red,
+          side: const BorderSide(color: Colors.red),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        ),
+        child: Text(s.liveFilter),
+      ),
     );
 
     return Card(

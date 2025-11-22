@@ -1,14 +1,9 @@
-// Source - https://stackoverflow.com/a
-// Posted by Damian K. Bast
-// Retrieved 2025-11-21, License - CC BY-SA 4.0
-
 #!/usr/bin/expect -f
 
 set timeout -1
 
-
 spawn sh -i -c {
-    flutter run -d web-server --web-port 4000
+    .fvm/flutter_sdk/bin/flutter run -d web-server --web-port 4000 --web-hostname 0.0.0.0
 }
 
 set run_id $spawn_id

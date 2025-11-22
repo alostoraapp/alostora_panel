@@ -79,7 +79,7 @@ class _MatchTileState extends State<MatchTile> {
       final minutes = 90 + difference.inMinutes - 45;
       final secondHalfMinutes = difference.inMinutes;
       final totalMinutes = 45 + secondHalfMinutes;
-      
+
       if (totalMinutes > 90) {
         return '90+${totalMinutes - 90}\'';
       }
@@ -117,9 +117,9 @@ class _MatchTileState extends State<MatchTile> {
           side: isLive
               ? const BorderSide(color: Colors.red, width: 1.5)
               : BorderSide(
-                  color: _isHovering ? theme.colorScheme.primary : Colors.transparent,
-                  width: 1,
-                ),
+            color: _isHovering ? theme.colorScheme.primary : Colors.transparent,
+            width: 1,
+          ),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 16.0, vertical: 6.0),
@@ -204,9 +204,9 @@ class _MatchTileState extends State<MatchTile> {
     final matchMinute = _getMatchMinute(match);
     final startTime = DateFormat('HH:mm').format(match.matchTime.toLocal());
     final isLive = _isLive(match.status);
-    
+
     // Removed MatchStatus.afterPenalties as it doesn't exist in MatchStatus enum
-    final showScore = isLive || match.status == MatchStatus.ended || 
+    final showScore = isLive || match.status == MatchStatus.ended ||
         match.status == MatchStatus.penaltyShootout;
 
     return Expanded(
@@ -230,7 +230,7 @@ class _MatchTileState extends State<MatchTile> {
             textAlign: TextAlign.center,
             text: TextSpan(
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.textTheme.bodySmall?.color, 
+                color: theme.textTheme.bodySmall?.color,
                 fontWeight: isLive ? FontWeight.bold : FontWeight.normal,
               ),
               children: [
@@ -259,7 +259,7 @@ class MatchTileShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
-    
+
     return Shimmer.fromColors(
       baseColor: theme.colorScheme.surfaceVariant,
       highlightColor: theme.colorScheme.onSurface.withOpacity(0.1),
@@ -328,7 +328,7 @@ class MatchTileShimmer extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-           Container(
+          Container(
             height: 14,
             width: 40,
             color: Colors.white,

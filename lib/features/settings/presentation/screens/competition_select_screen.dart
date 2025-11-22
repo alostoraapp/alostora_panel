@@ -60,19 +60,19 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       context.read<CompetitionConfigBloc>().add(
-            SearchCompetitionConfigsEvent(_searchController.text),
-          );
+        SearchCompetitionConfigsEvent(_searchController.text),
+      );
     });
   }
 
   void _refreshConfigs() {
-     if (_searchController.text.isNotEmpty) {
-       context.read<CompetitionConfigBloc>().add(
-            SearchCompetitionConfigsEvent(_searchController.text),
-       );
-     } else {
-       context.read<CompetitionConfigBloc>().add(const GetCompetitionConfigsEvent());
-     }
+    if (_searchController.text.isNotEmpty) {
+      context.read<CompetitionConfigBloc>().add(
+        SearchCompetitionConfigsEvent(_searchController.text),
+      );
+    } else {
+      context.read<CompetitionConfigBloc>().add(const GetCompetitionConfigsEvent());
+    }
   }
 
 
@@ -94,7 +94,7 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
 
     return BlocListener<LanguageCubit, Locale>(
       listener: (context, locale) {
-         _refreshConfigs();
+        _refreshConfigs();
       },
       child: Scaffold(
         body: Padding(
@@ -152,7 +152,7 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
                   filled: true,
                   fillColor: theme.colorScheme.surface,
                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-                   border: OutlineInputBorder(
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
@@ -223,7 +223,7 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
                                 child: ReorderableListView.builder(
                                   scrollController: _scrollController,
                                   buildDefaultDragHandles: false,
-                                  padding: EdgeInsets.zero, 
+                                  padding: EdgeInsets.zero,
                                   itemCount: state.configs.length,
                                   onReorder: (oldIndex, newIndex) {
                                     context.read<CompetitionConfigBloc>().add(
@@ -281,38 +281,38 @@ class _ShimmerCompetitionItem extends StatelessWidget {
         highlightColor: theme.colorScheme.onSurface.withOpacity(0.1),
         child: Row(
           children: [
-             Container(
-               width: 20,
-               height: 20,
-               decoration: const BoxDecoration(
-                 color: Colors.white,
-                 shape: BoxShape.circle,
-               ),
-             ),
-             const SizedBox(width: 12),
-             Container(
-               width: 32,
-               height: 32,
-               decoration: const BoxDecoration(
-                 color: Colors.white,
-                 shape: BoxShape.circle,
-               ),
-             ),
-             const SizedBox(width: 12),
-             Expanded(
-               child: Column(
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                 children: [
-                   Container(width: 150, height: 14, color: Colors.white),
-                   const SizedBox(height: 6),
-                   Container(width: 80, height: 10, color: Colors.white),
-                 ],
-               ),
-             ),
-             const SizedBox(width: 8),
-             Container(width: 30, height: 20, color: Colors.white),
-             const SizedBox(width: 12),
-             Container(width: 20, height: 20, color: Colors.white),
+            Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Container(
+              width: 32,
+              height: 32,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(width: 150, height: 14, color: Colors.white),
+                  const SizedBox(height: 6),
+                  Container(width: 80, height: 10, color: Colors.white),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(width: 30, height: 20, color: Colors.white),
+            const SizedBox(width: 12),
+            Container(width: 20, height: 20, color: Colors.white),
           ],
         ),
       ),

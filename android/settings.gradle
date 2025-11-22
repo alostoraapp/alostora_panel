@@ -22,4 +22,25 @@ plugins {
     id "org.jetbrains.kotlin.android" version "2.2.10" apply false
 }
 
-include ":app.dart"
+include ":app"
+
+// This is the definitive fix.
+// It injects default SDK versions into all sub-projects before they are evaluated.
+// This solves the problem for older plugins like 'path_provider_android' without
+// breaking the main app's configuration.
+gradle.allprojects { project ->
+    project.afterEvaluate {
+        if (project.hasProperty('android')) {
+            android {
+                if (compileSdkVersion == null) {
+                    compileSdkVersion 34
+                }
+                defaultConfig {
+                    if (minSdkVersion == null) {
+                        minSdkVersion 21
+                    }
+                }
+            }
+        }
+    }
+}
