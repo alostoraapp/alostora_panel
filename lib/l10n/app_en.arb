@@ -64,5 +64,8 @@
   "save": "Save",
   "noResultsFound": "No results found",
   "typeToSearch": "Type to search...",
-  "searchCompetition": "Search Competition"
+  "searchCompetition": "Search Competition",
+  "deleteCompetition": "Delete Competition",
+  "deleteCompetitionConfirmation": "Are you sure you want to delete this competition?",
+  "delete": "Delete"
 }

@@ -6,12 +6,14 @@ class TeamModel extends Equatable {
   final String id;
   final String exId;
   final String name;
+  final String shortName;
   final String logo;
 
   const TeamModel({
     required this.id,
     required this.exId,
     required this.name,
+    required this.shortName,
     required this.logo,
   });
 
@@ -20,6 +22,7 @@ class TeamModel extends Equatable {
       id: json['id'],
       exId: json['ex_id'],
       name: json['name'],
+      shortName: json['short_name'],
       logo: json['logo'],
     );
   }
@@ -29,10 +32,11 @@ class TeamModel extends Equatable {
       id: id,
       exId: exId,
       name: name,
+      shortName: shortName,
       logo: logo,
     );
   }
 
   @override
-  List<Object?> get props => [id, exId, name, logo];
+  List<Object?> get props => [id, exId, name, shortName, logo];
 }

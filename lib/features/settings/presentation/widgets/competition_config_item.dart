@@ -23,6 +23,7 @@ class CompetitionConfigItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final theme = Theme.of(context);
     final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
 
@@ -30,7 +31,6 @@ class CompetitionConfigItem extends StatelessWidget {
     final double logoSize = isMobile ? 32.0 : 40.0;
     final double switchContainerWidth = isMobile ? 50.0 : 100.0;
     final int cacheSize = (logoSize * MediaQuery.of(context).devicePixelRatio).round();
-
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -73,7 +73,7 @@ class CompetitionConfigItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  config.competitionDetails.name,
+                  config.competitionDetails.shortName,
                   style: isMobile
                       ? theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)
                       : theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -99,8 +99,8 @@ class CompetitionConfigItem extends StatelessWidget {
                   value: config.isActiveByDefault,
                   onChanged: (value) {
                     context.read<CompetitionConfigBloc>().add(
-                      ToggleCompetitionStatusEvent(config.id, value),
-                    );
+                          ToggleCompetitionStatusEvent(config.id, value),
+                        );
                   },
                 ),
               ),
@@ -116,8 +116,34 @@ class CompetitionConfigItem extends StatelessWidget {
               colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
             ),
             onPressed: () {
-              context.read<CompetitionConfigBloc>().add(
-                DeleteCompetitionConfigEvent(config.id),
+              showDialog(
+                context: context,
+                builder: (BuildContext dialogContext) {
+                  return AlertDialog(
+                    title: Text(s.deleteCompetition),
+                    content: Text(s.deleteCompetitionConfirmation),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text(s.cancel),
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: Text(
+                          s.delete,
+                          style: TextStyle(color: theme.colorScheme.error),
+                        ),
+                        onPressed: () {
+                          context.read<CompetitionConfigBloc>().add(
+                                DeleteCompetitionConfigEvent(config.id),
+                              );
+                          Navigator.of(dialogContext).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
               );
             },
           ),

@@ -22,6 +22,7 @@ class CompetitionDetailsModel extends CompetitionDetailsEntity {
   const CompetitionDetailsModel({
     required super.id,
     required super.name,
+    required super.shortName,
     required super.logo,
     super.country,
   });
@@ -30,6 +31,7 @@ class CompetitionDetailsModel extends CompetitionDetailsEntity {
     return CompetitionDetailsModel(
       id: json['id'],
       name: json['name'],
+      shortName: json['short_name'],
       logo: json['logo'],
       country: json['country'] != null ? CompetitionCountryModel.fromJson(json['country']) : null,
     );

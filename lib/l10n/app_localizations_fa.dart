@@ -206,4 +206,13 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get searchCompetition => 'جستجوی رقابت';
+
+  @override
+  String get deleteCompetition => 'حذف رقابت';
+
+  @override
+  String get deleteCompetitionConfirmation => 'آیا از حذف این رقابت اطمینان دارید؟';
+
+  @override
+  String get delete => 'حذف';
 }

@@ -486,6 +486,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search Competition'**
   String get searchCompetition;
+
+  /// No description provided for @deleteCompetition.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Competition'**
+  String get deleteCompetition;
+
+  /// No description provided for @deleteCompetitionConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this competition?'**
+  String get deleteCompetitionConfirmation;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

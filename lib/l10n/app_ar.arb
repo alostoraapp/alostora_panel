@@ -64,5 +64,8 @@
   "save": "حفظ",
   "noResultsFound": "لم يتم العثور على نتائج",
   "typeToSearch": "اكتب للبحث...",
-  "searchCompetition": "بحث عن مسابقة"
+  "searchCompetition": "بحث عن مسابقة",
+  "deleteCompetition": "حذف المسابقة",
+  "deleteCompetitionConfirmation": "هل أنت متأكد أنك تريد حذف هذه المسابقة؟",
+  "delete": "حذف"
 }

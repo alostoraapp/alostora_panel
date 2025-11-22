@@ -169,7 +169,7 @@ class _MatchTileState extends State<MatchTile> {
         : theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600);
 
     final text = Text(
-      team.name,
+      team.shortName,
       style: textStyle,
       overflow: TextOverflow.ellipsis,
       maxLines: 2,

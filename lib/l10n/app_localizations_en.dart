@@ -206,4 +206,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchCompetition => 'Search Competition';
+
+  @override
+  String get deleteCompetition => 'Delete Competition';
+
+  @override
+  String get deleteCompetitionConfirmation => 'Are you sure you want to delete this competition?';
+
+  @override
+  String get delete => 'Delete';
 }

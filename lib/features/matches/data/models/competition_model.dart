@@ -7,6 +7,7 @@ class CompetitionModel extends Equatable {
   final String id;
   final String exId;
   final String name;
+  final String shortName;
   final String logo;
   final String? countryName;
   final List<MatchModel> matches;
@@ -15,6 +16,7 @@ class CompetitionModel extends Equatable {
     required this.id,
     required this.exId,
     required this.name,
+    required this.shortName,
     required this.logo,
     this.countryName,
     required this.matches,
@@ -26,6 +28,7 @@ class CompetitionModel extends Equatable {
       id: json['id'],
       exId: json['ex_id'],
       name: json['name'],
+      shortName: json['short_name'],
       logo: json['logo'],
       countryName: json['country_name'],
       matches: matchesList
@@ -42,6 +45,7 @@ class CompetitionModel extends Equatable {
       id: id,
       exId: exId,
       name: name,
+      shortName: shortName,
       logo: logo,
       countryName: countryName,
       matches: matches.map((m) => m.toEntity()).toList(),
@@ -49,5 +53,5 @@ class CompetitionModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, exId, name, logo, countryName, matches];
+  List<Object?> get props => [id, exId, name, shortName, logo, countryName, matches];
 }

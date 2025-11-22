@@ -60,21 +60,20 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       context.read<CompetitionConfigBloc>().add(
-        SearchCompetitionConfigsEvent(_searchController.text),
-      );
+            SearchCompetitionConfigsEvent(_searchController.text),
+          );
     });
   }
 
   void _refreshConfigs() {
     if (_searchController.text.isNotEmpty) {
       context.read<CompetitionConfigBloc>().add(
-        SearchCompetitionConfigsEvent(_searchController.text),
-      );
+            SearchCompetitionConfigsEvent(_searchController.text),
+          );
     } else {
       context.read<CompetitionConfigBloc>().add(const GetCompetitionConfigsEvent());
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -82,14 +81,15 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
     final theme = Theme.of(context);
     final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
 
-    // Responsive padding calculation (halved for mobile)
+    // Responsive padding calculation (reduced for a more compact look)
     final responsivePadding = ResponsiveValue<double>(
       context,
       conditionalValues: [
+        const Condition.smallerThan(name: 'MOBILE', value: 2.0),
         const Condition.smallerThan(name: 'TABLET', value: 8.0),
-        const Condition.smallerThan(name: 'DESKTOP', value: 16.0),
+        const Condition.smallerThan(name: 'DESKTOP', value: 12.0),
       ],
-      defaultValue: 24.0,
+      defaultValue: 16.0,
     ).value;
 
     return BlocListener<LanguageCubit, Locale>(
@@ -102,65 +102,67 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
+              // Header: Search Bar and Add Button
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    s.competitionSelect,
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: ResponsiveValue<double>(
-                        context,
-                        conditionalValues: [
-                          const Condition.smallerThan(name: 'TABLET', value: 20.0),
-                        ],
-                        defaultValue: 24.0,
-                      ).value,
+                  Expanded(
+                    child: SizedBox(
+                      height: 55.0,
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: '${s.search}...',
+                          prefixIcon: Icon(Icons.search, size: 20, color: theme.hintColor),
+                          filled: true,
+                          fillColor: theme.colorScheme.surface,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        barrierColor: Colors.black.withOpacity(0.2),
-                        builder: (dialogContext) => BlocProvider.value(
-                          value: context.read<CompetitionConfigBloc>(),
-                          child: const AddCompetitionDialog(),
+                  const SizedBox(width: 12),
+                  SizedBox(
+                    width: 38.0,
+                    height: 38.0,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          barrierColor: Colors.black.withOpacity(0.2),
+                          builder: (dialogContext) => BlocProvider.value(
+                            value: context.read<CompetitionConfigBloc>(),
+                            child: const AddCompetitionDialog(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      );
-                    },
-                    icon: SvgPicture.asset(
-                      AppIcons.add,
-                      width: 24,
-                      height: 24,
-                      colorFilter: ColorFilter.mode(
-                        theme.colorScheme.primary,
-                        BlendMode.srcIn,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                      ),
+                      child: SvgPicture.asset(
+                        AppIcons.add,
+                        width: 24,
+                        height: 24,
+                        colorFilter: ColorFilter.mode(
+                          theme.colorScheme.onPrimary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
                   ),
                 ],
-              ),
-              SizedBox(height: responsivePadding),
-              // Search Bar
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: '${s.search}...',
-                  prefixIcon: Icon(Icons.search, size: 20, color: theme.hintColor),
-                  filled: true,
-                  fillColor: theme.colorScheme.surface,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
               ),
               SizedBox(height: responsivePadding),
               // Content Container
@@ -177,7 +179,7 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
                       ),
                     ],
                   ),
-                  padding: EdgeInsets.all(isMobile ? 12.0 : 16.0),
+                  padding: EdgeInsets.all(isMobile ? 0.0 : 16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -227,12 +229,12 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
                                   itemCount: state.configs.length,
                                   onReorder: (oldIndex, newIndex) {
                                     context.read<CompetitionConfigBloc>().add(
-                                      ReorderCompetitionConfigsEvent(
-                                        state.configs.map((e) => e.id).toList(),
-                                        oldIndex,
-                                        newIndex,
-                                      ),
-                                    );
+                                          ReorderCompetitionConfigsEvent(
+                                            state.configs.map((e) => e.id).toList(),
+                                            oldIndex,
+                                            newIndex,
+                                          ),
+                                        );
                                   },
                                   itemBuilder: (context, index) {
                                     final config = state.configs[index];

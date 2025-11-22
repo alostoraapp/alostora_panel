@@ -206,4 +206,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get searchCompetition => 'بحث عن مسابقة';
+
+  @override
+  String get deleteCompetition => 'حذف المسابقة';
+
+  @override
+  String get deleteCompetitionConfirmation => 'هل أنت متأكد أنك تريد حذف هذه المسابقة؟';
+
+  @override
+  String get delete => 'حذف';
 }

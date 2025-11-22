@@ -114,7 +114,7 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
         body: ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
           child: ListView(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(12.0),
             children: [
               if (isDesktop)
                 Row(
@@ -169,7 +169,7 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _CompetitionHeader(
-              name: competition.name,
+              name: competition.shortName,
               logoUrl: competition.logo,
             ),
             const SizedBox(height: 8),
@@ -288,10 +288,10 @@ class _TimePickerCard extends StatelessWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final isRtl = context.read<LanguageCubit>().isRTL();
-    const buttonHeight = 50.0;
 
     final liveButton = SizedBox(
-      height: buttonHeight,
+      height: 40.0,
+      width: 50.0,
       child: isLiveSelected
           ? ElevatedButton(
         onPressed: () => onLiveSelected(false),
@@ -358,8 +358,8 @@ class _TimePickerCard extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: buttonHeight,
-              width: 50,
+              height: 40.0,
+              width: 40.0,
               child: IconButton(
                 icon: SvgPicture.asset(AppIcons.calendar, colorFilter: ColorFilter.mode(theme.colorScheme.onPrimary, BlendMode.srcIn)),
                 style: IconButton.styleFrom(

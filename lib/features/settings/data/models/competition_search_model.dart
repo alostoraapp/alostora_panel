@@ -4,6 +4,7 @@ class CompetitionSearchModel extends CompetitionSearchEntity {
   const CompetitionSearchModel({
     required super.id,
     required super.name,
+    required super.shortName,
     required super.logo,
   });
 
@@ -11,6 +12,7 @@ class CompetitionSearchModel extends CompetitionSearchEntity {
     return CompetitionSearchModel(
       id: json['id'].toString(),
       name: json['name'] ?? '',
+      shortName: json['short_name'] ?? '',
       logo: json['logo'] ?? '',
     );
   }
