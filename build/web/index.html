@@ -1,75 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="/">
+    <base href="/">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="A new Flutter project.">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="alostora_panel">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="alostora_panel">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#000000">
 
-  <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>alostora_panel</title>
-  <link rel="manifest" href="manifest.json">
+    <title>alostora_panel</title>
+    <link rel="manifest" href="manifest.json">
 
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      background-color: #000; /* Ensure this matches your app's background color */
-    }
-    #flutter_container, flutter-view, #flt-glass-pane {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background-color: #000; /* Ensure this matches your app's background color */
+        }
+        #flutter_container, flutter-view, #flt-glass-pane {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-  <script>
+<script>
     const restoreFullHeight = () => {
-      document.documentElement.style.height = '100%';
-      document.body.style.height = '100%';
-      document.body.style.removeProperty('min-height');
+        document.documentElement.style.height = '100%';
+        document.body.style.height = '100%';
+        document.body.style.removeProperty('min-height');
     };
-  
-    const constrainToViewport = () => {
-      if (!window.visualViewport) return;
-      const vh = window.visualViewport.height;
-      document.body.style.height = `${vh}px`;
-      document.body.style.minHeight = `${vh}px`;
-    };
-  
-    if ('visualViewport' in window) {
-      window.visualViewport.addEventListener('resize', () => {
-        if (window.visualViewport.height >= window.innerHeight - 5) {
-          restoreFullHeight();
-        } else {
-          constrainToViewport();
-        }
-      });
-  
-      document.addEventListener('focusout', () => {
-        setTimeout(() => {
-          if (window.visualViewport.height >= window.innerHeight - 5) {
-            restoreFullHeight();
-          }
-        }, 100);
-      });
-    }
-  
-    restoreFullHeight();
-  </script>
 
-  <script src="flutter_bootstrap.js" async></script>
+    const constrainToViewport = () => {
+        if (!window.visualViewport) return;
+        const vh = window.visualViewport.height;
+        document.body.style.height = `${vh}px`;
+        document.body.style.minHeight = `${vh}px`;
+    };
+
+    if ('visualViewport' in window) {
+        window.visualViewport.addEventListener('resize', () => {
+            if (window.visualViewport.height >= window.innerHeight - 5) {
+                restoreFullHeight();
+            } else {
+                constrainToViewport();
+            }
+        });
+
+        document.addEventListener('focusout', () => {
+            setTimeout(() => {
+                if (window.visualViewport.height >= window.innerHeight - 5) {
+                    restoreFullHeight();
+                }
+            }, 100);
+        });
+    }
+
+    restoreFullHeight();
+</script>
+
+<script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
