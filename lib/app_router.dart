@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/presentation/widgets/go_router_refresh_stream.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/match_detail/presentation/screens/match_detail_screen.dart';
 import 'features/matches/presentation/screens/match_tiles_screen.dart';
 import 'features/overview/presentation/screens/dashboard_screen.dart';
 import 'features/settings/presentation/screens/competition_select_screen.dart';
@@ -19,13 +20,10 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
-
     refreshListenable: GoRouterRefreshStream(
       sl<AuthBloc>().stream,
     ),
-
     initialLocation: AppRoutes.splash,
-
     routes: [
       GoRoute(
         path: AppRoutes.splash,
@@ -53,9 +51,18 @@ class AppRouter {
             builder: (context, state) => const MatchTilesScreen(),
           ),
           GoRoute(
+            path: AppRoutes.matchDetail,
+            name: AppRoutes.matchDetail,
+            builder: (context, state) {
+              final matchId = state.pathParameters['matchId']!;
+              return MatchDetailScreen(matchId: matchId);
+            },
+          ),
+          GoRoute(
             path: AppRoutes.matchesList,
             name: AppRoutes.matchesList,
-            builder: (context, state) => const PlaceholderScreen(title: 'Matches List'),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Matches List'),
           ),
           // Settings
           GoRoute(
@@ -66,7 +73,6 @@ class AppRouter {
         ],
       ),
     ],
-
     redirect: (BuildContext context, GoRouterState state) {
       final authState = context.read<AuthBloc>().state;
 
@@ -106,6 +112,7 @@ class AppRoutes {
   static const String matches = '/matches';
   static const String matchesTiles = '/matches/tiles';
   static const String matchesList = '/matches/list';
+  static const String matchDetail = '/match/:matchId';
 
   // Settings
   static const String settings = '/settings';

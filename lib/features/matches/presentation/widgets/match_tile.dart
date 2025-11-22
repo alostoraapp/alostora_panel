@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../../app_router.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/l10n/s.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
@@ -107,30 +109,37 @@ class _MatchTileState extends State<MatchTile> {
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
       cursor: SystemMouseCursors.click,
-      child: Card(
-        elevation: _isHovering ? 4 : 1,
-        shadowColor: isLive
-            ? Colors.red.withOpacity(0.5)
-            : (_isHovering ? theme.colorScheme.primary.withOpacity(0.3) : Colors.black12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: isLive
-              ? const BorderSide(color: Colors.red, width: 1.5)
-              : BorderSide(
-            color: _isHovering ? theme.colorScheme.primary : Colors.transparent,
-            width: 1,
+      child: GestureDetector(
+        onTap: () {
+          GoRouter.of(context).go(
+            AppRoutes.matchDetail.replaceFirst(':matchId', widget.match.id),
+          );
+        },
+        child: Card(
+          elevation: _isHovering ? 4 : 1,
+          shadowColor: isLive
+              ? Colors.red.withOpacity(0.5)
+              : (_isHovering ? theme.colorScheme.primary.withOpacity(0.3) : Colors.black12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: isLive
+                ? const BorderSide(color: Colors.red, width: 1.5)
+                : BorderSide(
+                    color: _isHovering ? theme.colorScheme.primary : Colors.transparent,
+                    width: 1,
+                  ),
           ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 16.0, vertical: 6.0),
-          child: Row(
-            textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildTeam(theme, team: widget.match.homeTeam, isMobile: isMobile),
-              _buildCenterInfo(theme, match: widget.match, isMobile: isMobile),
-              _buildTeam(theme, team: widget.match.awayTeam, isReversed: true, isMobile: isMobile),
-            ],
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 16.0, vertical: 6.0),
+            child: Row(
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildTeam(theme, team: widget.match.homeTeam, isMobile: isMobile),
+                _buildCenterInfo(theme, match: widget.match, isMobile: isMobile),
+                _buildTeam(theme, team: widget.match.awayTeam, isReversed: true, isMobile: isMobile),
+              ],
+            ),
           ),
         ),
       ),
@@ -206,8 +215,7 @@ class _MatchTileState extends State<MatchTile> {
     final isLive = _isLive(match.status);
 
     // Removed MatchStatus.afterPenalties as it doesn't exist in MatchStatus enum
-    final showScore = isLive || match.status == MatchStatus.ended ||
-        match.status == MatchStatus.penaltyShootout;
+    final showScore = isLive || match.status == MatchStatus.ended || match.status == MatchStatus.penaltyShootout;
 
     return Expanded(
       flex: 2,

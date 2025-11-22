@@ -215,4 +215,19 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get delete => 'حذف';
+
+  @override
+  String get details => 'جزئیات';
+
+  @override
+  String get bestPlayer => 'بهترین بازیکن';
+
+  @override
+  String get highlights => 'خلاصه بازی';
+
+  @override
+  String get events => 'رویدادها';
+
+  @override
+  String get profile => 'پروفایل';
 }

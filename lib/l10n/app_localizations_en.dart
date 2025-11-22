@@ -215,4 +215,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get delete => 'Delete';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get bestPlayer => 'Best Player';
+
+  @override
+  String get highlights => 'Highlights';
+
+  @override
+  String get events => 'Events';
+
+  @override
+  String get profile => 'Profile';
 }

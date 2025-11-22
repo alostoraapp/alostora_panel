@@ -67,5 +67,10 @@
   "searchCompetition": "جستجوی رقابت",
   "deleteCompetition": "حذف رقابت",
   "deleteCompetitionConfirmation": "آیا از حذف این رقابت اطمینان دارید؟",
-  "delete": "حذف"
+  "delete": "حذف",
+  "details": "جزئیات",
+  "bestPlayer": "بهترین بازیکن",
+  "highlights": "خلاصه بازی",
+  "events": "رویدادها",
+  "profile": "پروفایل"
 }

@@ -215,4 +215,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get delete => 'حذف';
+
+  @override
+  String get details => 'تفاصيل';
+
+  @override
+  String get bestPlayer => 'أفضل لاعب';
+
+  @override
+  String get highlights => 'أبرز الأحداث';
+
+  @override
+  String get events => 'الأحداث';
+
+  @override
+  String get profile => 'الملف الشخصي';
 }

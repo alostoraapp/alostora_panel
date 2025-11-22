@@ -67,5 +67,10 @@
   "searchCompetition": "بحث عن مسابقة",
   "deleteCompetition": "حذف المسابقة",
   "deleteCompetitionConfirmation": "هل أنت متأكد أنك تريد حذف هذه المسابقة؟",
-  "delete": "حذف"
+  "delete": "حذف",
+  "details": "تفاصيل",
+  "bestPlayer": "أفضل لاعب",
+  "highlights": "أبرز الأحداث",
+  "events": "الأحداث",
+  "profile": "الملف الشخصي"
 }
