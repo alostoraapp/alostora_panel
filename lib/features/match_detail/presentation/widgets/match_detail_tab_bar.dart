@@ -19,7 +19,8 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    // Update length to 5 for the new 'Media' tab
+    _tabController = TabController(length: 5, vsync: this);
   }
 
   @override
@@ -29,10 +30,11 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
   }
 
   List<String> get _title => [
-        S.of(context).details,
         S.of(context).bestPlayer,
         S.of(context).highlights,
         S.of(context).events,
+        S.of(context).media,
+        S.of(context).details,
       ];
   @override
   Widget build(BuildContext context) {
@@ -74,14 +76,16 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
           child: TabBarView(
             controller: _tabController,
             children: const [
-              // Details View
-              Center(child: Text('Details View')),
               // Best Player View
               Center(child: Text('Best Player View')),
               // Highlights View
               Center(child: Text('Highlights View')),
               // Events View
               Center(child: Text('Events View')),
+              // Details View
+              Center(child: Text('Details View')),
+              // New Media View
+              Center(child: Text('Media View')),
             ],
           ),
         ),

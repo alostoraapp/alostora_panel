@@ -111,8 +111,10 @@ class _MatchTileState extends State<MatchTile> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          GoRouter.of(context).go(
-            AppRoutes.matchDetail.replaceFirst(':matchId', widget.match.id),
+          GoRouter.of(context).goNamed(
+            AppRoutes.matchDetail, // Corrected: Removed .name as AppRoutes.matchDetail is already a String
+            pathParameters: {'matchId': widget.match.id},
+            extra: widget.match,
           );
         },
         child: Card(
@@ -125,9 +127,9 @@ class _MatchTileState extends State<MatchTile> {
             side: isLive
                 ? const BorderSide(color: Colors.red, width: 1.5)
                 : BorderSide(
-                    color: _isHovering ? theme.colorScheme.primary : Colors.transparent,
-                    width: 1,
-                  ),
+              color: _isHovering ? theme.colorScheme.primary : Colors.transparent,
+              width: 1,
+            ),
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 16.0, vertical: 6.0),

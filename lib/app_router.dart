@@ -12,6 +12,7 @@ import 'features/shell/presentation/screens/app_shell.dart';
 import 'features/shell/presentation/screens/placeholder_screen.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
 import 'injection_container.dart';
+import 'features/matches/domain/entities/match_entity.dart'; // Import MatchEntity
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -54,15 +55,21 @@ class AppRouter {
             path: AppRoutes.matchDetail,
             name: AppRoutes.matchDetail,
             builder: (context, state) {
-              final matchId = state.pathParameters['matchId']!;
-              return MatchDetailScreen(matchId: matchId);
+              // Ensure matchId is still available if needed for other purposes
+              // final matchId = state.pathParameters['matchId']!;
+              final match = state.extra as MatchEntity?; // Cast extra to MatchEntity
+              if (match == null) {
+                // Handle error: MatchEntity not passed, maybe navigate back or show an error screen
+                return const PlaceholderScreen(title: 'Error: Match not found');
+              }
+              return MatchDetailScreen(match: match); // Pass MatchEntity
             },
           ),
           GoRoute(
             path: AppRoutes.matchesList,
             name: AppRoutes.matchesList,
             builder: (context, state) =>
-                const PlaceholderScreen(title: 'Matches List'),
+            const PlaceholderScreen(title: 'Matches List'),
           ),
           // Settings
           GoRoute(

@@ -534,6 +534,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Profile'**
   String get profile;
+
+  /// No description provided for @media.
+  ///
+  /// In en, this message translates to:
+  /// **'Media'**
+  String get media;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

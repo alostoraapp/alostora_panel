@@ -230,4 +230,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get profile => 'پروفایل';
+
+  @override
+  String get media => 'رسانه';
 }
