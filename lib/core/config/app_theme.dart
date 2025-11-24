@@ -32,7 +32,7 @@ class AppTheme {
     required _AppThemeColors colors,
   }) {
     final baseTheme = ThemeData(brightness: brightness);
-    final textTheme = GoogleFonts.interTextTheme(baseTheme.textTheme);
+    final textTheme = GoogleFonts.vazirmatnTextTheme(baseTheme.textTheme);
 
     return baseTheme.copyWith(
       primaryColor: colors.colorScheme.primary,

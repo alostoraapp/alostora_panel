@@ -23,4 +23,18 @@ class MatchDetailRepositoryImpl implements MatchDetailRepository {
       return Left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, LineupEntity>> updateManOfTheMatch(
+      String matchId, String playerLineupId) async {
+    try {
+      final remoteLineup =
+          await remoteDataSource.updateManOfTheMatch(matchId, playerLineupId);
+      return Right(remoteLineup);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
 }

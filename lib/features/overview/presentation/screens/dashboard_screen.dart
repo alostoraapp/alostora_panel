@@ -11,62 +11,65 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        ResponsiveGridRow(
-          children: [
-            _buildStatCard(
-              context,
-              icon: AppIcons.user,
-              color: Colors.blue,
-              label: s.totalUsers,
-              value: '1,450',
-              gridSize: 3,
-            ),
-            _buildStatCard(
-              context,
-              icon: AppIcons.wifi,
-              color: Colors.green,
-              label: s.onlineUsers,
-              value: '128',
-              gridSize: 3,
-            ),
-            _buildStatCard(
-              context,
-              icon: AppIcons.calendarDay,
-              color: Colors.orange,
-              label: s.todaysMatches,
-              value: '24',
-              gridSize: 3,
-            ),
-            _buildStatCard(
-              context,
-              icon: AppIcons.satelliteDish,
-              color: Colors.red,
-              label: s.liveMatches,
-              value: '5',
-              gridSize: 3,
-            ),
-            _buildStatCard(
-              context,
-              icon: AppIcons.calendar,
-              color: Colors.purple,
-              label: s.tomorrowsMatches,
-              value: '18',
-              gridSize: 3,
-            ),
-            _buildStatCard(
-              context,
-              icon: AppIcons.calendarWeek,
-              color: Colors.teal,
-              label: s.thisWeeksMatches,
-              value: '76',
-              gridSize: 3,
-            ),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          ResponsiveGridRow(
+            children: [
+              _buildStatCard(
+                context,
+                icon: AppIcons.user,
+                color: Colors.blue,
+                label: s.totalUsers,
+                value: '1,450',
+                gridSize: 3,
+              ),
+              _buildStatCard(
+                context,
+                icon: AppIcons.wifi,
+                color: Colors.green,
+                label: s.onlineUsers,
+                value: '128',
+                gridSize: 3,
+              ),
+              _buildStatCard(
+                context,
+                icon: AppIcons.calendarDay,
+                color: Colors.orange,
+                label: s.todaysMatches,
+                value: '24',
+                gridSize: 3,
+              ),
+              _buildStatCard(
+                context,
+                icon: AppIcons.satelliteDish,
+                color: Colors.red,
+                label: s.liveMatches,
+                value: '5',
+                gridSize: 3,
+              ),
+              _buildStatCard(
+                context,
+                icon: AppIcons.calendar,
+                color: Colors.purple,
+                label: s.tomorrowsMatches,
+                value: '18',
+                gridSize: 3,
+              ),
+              _buildStatCard(
+                context,
+                icon: AppIcons.calendarWeek,
+                color: Colors.teal,
+                label: s.thisWeeksMatches,
+                value: '76',
+                gridSize: 3,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -86,7 +89,7 @@ class DashboardScreen extends StatelessWidget {
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 2,
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(

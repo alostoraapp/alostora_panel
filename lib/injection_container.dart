@@ -22,6 +22,7 @@ import 'features/match_detail/data/datasources/match_detail_remote_data_source.d
 import 'features/match_detail/data/repositories/match_detail_repository_impl.dart';
 import 'features/match_detail/domain/repositories/match_detail_repository.dart';
 import 'features/match_detail/domain/usecases/get_lineup_usecase.dart';
+import 'features/match_detail/domain/usecases/update_man_of_the_match.dart';
 import 'features/match_detail/presentation/bloc/lineup_bloc.dart';
 import 'features/matches/data/datasources/matches_remote_datasource.dart';
 import 'features/matches/data/repositories/matches_repository_impl.dart';
@@ -61,8 +62,9 @@ Future<void> init() async {
   sl.registerLazySingleton<MatchesRemoteDataSource>(() => MatchesRemoteDataSourceImpl(sl()));
 
   // Match Detail
-  sl.registerFactory(() => LineupBloc(getLineupUsecase: sl()));
+  sl.registerFactory(() => LineupBloc(getLineupUsecase: sl(), updateManOfTheMatch: sl()));
   sl.registerLazySingleton(() => GetLineupUsecase(repository: sl()));
+  sl.registerLazySingleton(() => UpdateManOfTheMatch(sl()));
   sl.registerLazySingleton<MatchDetailRepository>(() => MatchDetailRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<MatchDetailRemoteDataSource>(() => MatchDetailRemoteDataSourceImpl(sl()));
 

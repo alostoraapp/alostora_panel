@@ -9,7 +9,8 @@ import 'player_card.dart';
 
 class BestPlayerTab extends StatefulWidget {
   final LineupEntity lineup;
-  const BestPlayerTab({super.key, required this.lineup});
+  final String matchId;
+  const BestPlayerTab({super.key, required this.lineup, required this.matchId});
 
   @override
   State<BestPlayerTab> createState() => _BestPlayerTabState();
@@ -33,31 +34,36 @@ class _BestPlayerTabState extends State<BestPlayerTab> {
         .where((p) => p.teamSide == _selectedTeamSide && !p.isStarter)
         .toList();
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildTeamToggle(context),
-          const SizedBox(height: 24),
-          _buildPlayerSection(
-            context,
-            title: S.of(context).onThePitch,
-            players: starters,
-          ),
-          const SizedBox(height: 24),
-          _buildPlayerSection(
-            context,
-            title: S.of(context).onTheBench,
-            players: bench,
-          ),
-        ],
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            _buildTeamToggle(context),
+            const SizedBox(height: 18),
+            _buildPlayerSection(
+              context,
+              title: S.of(context).onThePitch,
+              players: starters,
+            ),
+            const SizedBox(height: 24),
+            _buildPlayerSection(
+              context,
+              title: S.of(context).onTheBench,
+              players: bench,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildTeamToggle(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: _TeamToggleButton(
@@ -90,6 +96,7 @@ class _BestPlayerTabState extends State<BestPlayerTab> {
         borderRadius: BorderRadius.circular(12),
       ),
       padding: const EdgeInsets.all(16.0),
+      alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -128,6 +135,7 @@ class _BestPlayerTabState extends State<BestPlayerTab> {
                   return PlayerCard(
                     player: player,
                     isManOfTheMatch: isManOfTheMatch,
+                    matchId: widget.matchId,
                   );
                 },
               );

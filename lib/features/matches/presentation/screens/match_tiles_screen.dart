@@ -114,7 +114,7 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
         body: ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
           child: ListView(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(10.0),
             children: [
               if (isDesktop)
                 Row(
@@ -129,7 +129,7 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                 Column(
                   children: [
                     timePicker,
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 2),
                     searchCard,
                   ],
                 ),
@@ -439,7 +439,7 @@ class _SearchCard extends StatelessWidget {
       shadowColor: Colors.black12,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: SizedBox(
-        height: 74,
+        height: 64.0,
         child: Center(
           child: Row(
             children: [
@@ -476,6 +476,7 @@ class _SearchCard extends StatelessWidget {
                     DropdownMenuItem(value: 'time', child: Text(s.sortByTime)),
                   ],
                   onChanged: onOrderingChanged,
+                  style: theme.textTheme.labelMedium,
                 ),
               ),
             ],

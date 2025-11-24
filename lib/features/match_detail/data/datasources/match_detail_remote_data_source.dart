@@ -4,6 +4,8 @@ import '../models/lineup_model.dart';
 
 abstract class MatchDetailRemoteDataSource {
   Future<LineupModel> getLineup(String matchId);
+  Future<LineupModel> updateManOfTheMatch(
+      String matchId, String playerLineupId);
 }
 
 class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
@@ -14,6 +16,16 @@ class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
   @override
   Future<LineupModel> getLineup(String matchId) async {
     final response = await _apiClient.get(AppConstants.getLineupUrl(matchId));
+    return LineupModel.fromJson(response);
+  }
+
+  @override
+  Future<LineupModel> updateManOfTheMatch(
+      String matchId, String playerLineupId) async {
+    final response = await _apiClient.patch(
+      AppConstants.getUpdateManOfTheMatchUrl(matchId),
+      data: {'player_lineup_id': playerLineupId},
+    );
     return LineupModel.fromJson(response);
   }
 }

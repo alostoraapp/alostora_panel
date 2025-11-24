@@ -37,6 +37,7 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
   @override
   void dispose() {
     _tabController.dispose();
+    _lineupBloc.close();
     super.dispose();
   }
 
@@ -84,33 +85,38 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
               .toList(),
         ),
         Expanded(
-          child: BlocListener<LanguageCubit, Locale>(
-            listener: (context, locale) {
-              _lineupBloc.add(GetLineupEvent(matchId: widget.matchId));
-            },
-            child: BlocBuilder<LineupBloc, LineupState>(
-              bloc: _lineupBloc,
-              builder: (context, state) {
-                if (state is LineupLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (state is LineupError) {
-                  return Center(child: Text(state.message));
-                }
-                if (state is LineupLoaded) {
-                  return TabBarView(
-                    controller: _tabController,
-                    children: [
-                      BestPlayerTab(lineup: state.lineup),
-                      const Center(child: Text('Summary View')),
-                      const Center(child: Text('Stats View')),
-                      const Center(child: Text('H2H View')),
-                      const Center(child: Text('Standings View')),
-                    ],
-                  );
-                }
-                return const SizedBox.shrink();
+          child: BlocProvider.value(
+            value: _lineupBloc,
+            child: BlocListener<LanguageCubit, Locale>(
+              listener: (context, locale) {
+                _lineupBloc.add(GetLineupEvent(matchId: widget.matchId));
               },
+              child: BlocBuilder<LineupBloc, LineupState>(
+                builder: (context, state) {
+                  if (state is LineupLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (state is LineupError) {
+                    return Center(child: Text(state.message));
+                  }
+                  if (state is LineupLoaded) {
+                    return TabBarView(
+                      controller: _tabController,
+                      children: [
+                        BestPlayerTab(
+                          lineup: state.lineup,
+                          matchId: widget.matchId,
+                        ),
+                        const Center(child: Text('Summary View')),
+                        const Center(child: Text('Stats View')),
+                        const Center(child: Text('H2H View')),
+                        const Center(child: Text('Standings View')),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ),
         ),

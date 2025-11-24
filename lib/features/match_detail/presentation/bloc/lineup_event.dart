@@ -15,3 +15,14 @@ class GetLineupEvent extends LineupEvent {
   @override
   List<Object> get props => [matchId];
 }
+
+class UpdateManOfTheMatchEvent extends LineupEvent {
+  final String matchId;
+  final String playerLineupId;
+
+  const UpdateManOfTheMatchEvent(
+      {required this.matchId, required this.playerLineupId});
+
+  @override
+  List<Object> get props => [matchId, playerLineupId];
+}

@@ -28,16 +28,10 @@ class AppShell extends StatelessWidget {
               child: Column(
                 children: [
                   // --- Breadcrumb Navigation --- //
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(8.0, 6.0, 8.0, 8.0),
-                    child: RouteBreadcrumb(),
-                  ),
+                  RouteBreadcrumb(),
                   // --- Main Content --- //
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 8.0),
-                      child: child,
-                    ),
+                    child: child,
                   ),
                 ],
               ),
