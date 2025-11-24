@@ -53842,7 +53842,7 @@ jT(a,b,c){return this.aJj(0,b,c)},
 aJj(a,b,c){var s=0,r=A.G(t.H),q,p=2,o=[],n=this,m,l,k,j,i,h
 var $async$jT=A.B(function(d,e){if(d===1){o.push(e)
 s=p}while(true)switch(s){case 0:j=b.a.cx
-i=j==="/v1/users/auth/admin/login/"||j==="/v1/users/auth/token/refresh/"||j==="/v1/users/auth/token/verify/"||j==="/v1/users/auth/admin/logout/"
+i=j==="/v1/admin/users/login/"||j==="/v1/admin/users/token/refresh/"||j==="/v1/admin/users/token/verify/"||j==="/v1/admin/users/logout/"
 j=b.b
 s=(j==null?null:j.c)===401&&!i?3:5
 break
@@ -53944,7 +53944,7 @@ var $async$oJ=A.B(function(c,d){if(c===1)return A.D(d,r)
 while(true)switch(s){case 0:o=t.N
 n=A
 s=3
-return A.C(p.a.qo("/v1/users/auth/admin/login/",A.aD(["email",a,"password",b],o,o)),$async$oJ)
+return A.C(p.a.qo("/v1/admin/users/login/",A.aD(["email",a,"password",b],o,o)),$async$oJ)
 case 3:q=n.baH(d)
 s=1
 break
@@ -53954,7 +53954,7 @@ HV(){var s=0,r=A.G(t.H),q=1,p=[],o=this,n,m
 var $async$HV=A.B(function(a,b){if(a===1){p.push(b)
 s=q}while(true)switch(s){case 0:q=3
 s=6
-return A.C(o.a.a87("/v1/users/auth/token/verify/"),$async$HV)
+return A.C(o.a.a87("/v1/admin/users/token/verify/"),$async$HV)
 case 6:q=1
 s=5
 break
@@ -53973,7 +53973,7 @@ nf(){var s=0,r=A.G(t.H),q=1,p=[],o=this,n,m
 var $async$nf=A.B(function(a,b){if(a===1){p.push(b)
 s=q}while(true)switch(s){case 0:q=3
 s=6
-return A.C(o.a.a87("/v1/users/auth/admin/logout/"),$async$nf)
+return A.C(o.a.a87("/v1/admin/users/logout/"),$async$nf)
 case 6:q=1
 s=5
 break
@@ -53992,7 +53992,7 @@ aL5(a){var s=0,r=A.G(t.L6),q,p=this,o
 var $async$Ho=A.B(function(b,c){if(b===1)return A.D(c,r)
 while(true)switch(s){case 0:o=A
 s=3
-return A.C(p.a.qo("/v1/users/auth/token/refresh/",null),$async$Ho)
+return A.C(p.a.qo("/v1/admin/users/token/refresh/",null),$async$Ho)
 case 3:q=o.baH(c)
 s=1
 break
@@ -54435,7 +54435,7 @@ m.m(0,"is_live",b)
 m.m(0,"start_timestamp",e)
 m.m(0,"end_timestamp",a)
 s=3
-return A.C(p.a.tR(0,"/v1/matches/list/",m),$async$nI)
+return A.C(p.a.tR(0,"/v1/admin/matches/list/",m),$async$nI)
 case 3:o=g
 if(!t.j.b(o)){q=A.b([],t.EG)
 s=1
@@ -54932,7 +54932,7 @@ while(true)switch(s){case 0:o=a!=null?A.aD(["search",a],t.N,t.z):null
 n=J
 m=t.j
 s=3
-return A.C(p.a.tR(0,"/v1/entities/admin/competition/configs/",o),$async$nH)
+return A.C(p.a.tR(0,"/v1/admin/entities/competition/configs/",o),$async$nH)
 case 3:o=n.jY(m.a(c),new A.anx(),t.YA)
 o=A.a0(o,o.$ti.h("av.E"))
 q=o
@@ -54945,7 +54945,7 @@ aAJ(a){var s=0,r=A.G(t.YA),q,p=this,o
 var $async$oa=A.B(function(b,c){if(b===1)return A.D(c,r)
 while(true)switch(s){case 0:o=A
 s=3
-return A.C(p.a.qo("/v1/entities/admin/competition/configs/",A.aD(["competition",a,"is_active_by_default",!0],t.N,t.K)),$async$oa)
+return A.C(p.a.qo("/v1/admin/entities/competition/configs/",A.aD(["competition",a,"is_active_by_default",!0],t.N,t.K)),$async$oa)
 case 3:q=o.b0T(c)
 s=1
 break
@@ -54956,7 +54956,7 @@ aM0(a,b){var s=0,r=A.G(t.YA),q,p=this,o
 var $async$p0=A.B(function(c,d){if(c===1)return A.D(d,r)
 while(true)switch(s){case 0:o=A
 s=3
-return A.C(p.a.H6("/v1/entities/admin/competition/configs/"+a+"/",A.aD(["is_active_by_default",b],t.N,t.y)),$async$p0)
+return A.C(p.a.H6("/v1/admin/entities/competition/configs/"+a+"/",A.aD(["is_active_by_default",b],t.N,t.y)),$async$p0)
 case 3:q=o.b0T(d)
 s=1
 break
@@ -54966,14 +54966,14 @@ or(a){return this.aE5(a)},
 aE5(a){var s=0,r=A.G(t.H),q=this
 var $async$or=A.B(function(b,c){if(b===1)return A.D(c,r)
 while(true)switch(s){case 0:s=2
-return A.C(q.a.FE(0,"/v1/entities/admin/competition/configs/"+a+"/"),$async$or)
+return A.C(q.a.FE(0,"/v1/admin/entities/competition/configs/"+a+"/"),$async$or)
 case 2:return A.E(null,r)}})
 return A.F($async$or,r)},
 oS(a){return this.aLo(a)},
 aLo(a){var s=0,r=A.G(t.H),q=this
 var $async$oS=A.B(function(b,c){if(b===1)return A.D(c,r)
 while(true)switch(s){case 0:s=2
-return A.C(q.a.qo("/v1/entities/admin/competition/configs/reorder/",A.aD(["ordered_ids",a],t.N,t.yp)),$async$oS)
+return A.C(q.a.qo("/v1/admin/entities/competition/configs/reorder/",A.aD(["ordered_ids",a],t.N,t.yp)),$async$oS)
 case 2:return A.E(null,r)}})
 return A.F($async$oS,r)},
 nM(a,b,c){return this.ab5(a,b,c)},

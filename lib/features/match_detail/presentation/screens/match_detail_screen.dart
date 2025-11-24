@@ -14,10 +14,9 @@ class MatchDetailScreen extends StatelessWidget {
     final textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppBar(
-        // Replaced AppBar with MatchTile
         title: MatchTile(match: match),
-        toolbarHeight: 74.0, // Adjust height as needed for MatchTile
-        automaticallyImplyLeading: true, // Keep back button
+        toolbarHeight: 74.0,
+        automaticallyImplyLeading: true,
       ),
       body: MatchDetailTabBar(
         theme: theme,
