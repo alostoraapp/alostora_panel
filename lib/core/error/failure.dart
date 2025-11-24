@@ -9,16 +9,11 @@ abstract class Failure extends Equatable {
   List<Object> get props => [message];
 }
 
-// General failures
+// General failures for server-side and cache-side errors
 class ServerFailure extends Failure {
   const ServerFailure({required super.message});
 }
 
 class CacheFailure extends Failure {
   const CacheFailure({required super.message});
-}
-
-// Specific failure for authentication errors
-class AuthFailure extends Failure {
-  const AuthFailure({required super.message});
 }

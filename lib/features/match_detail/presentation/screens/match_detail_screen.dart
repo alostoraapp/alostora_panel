@@ -5,8 +5,8 @@ import '../../../matches/presentation/widgets/match_tile.dart';
 import '../widgets/match_detail_tab_bar.dart';
 
 class MatchDetailScreen extends StatelessWidget {
-  final MatchEntity match; // Changed from matchId to MatchEntity
-  const MatchDetailScreen({super.key, required this.match}); // Updated constructor
+  final MatchEntity match;
+  const MatchDetailScreen({super.key, required this.match});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +21,7 @@ class MatchDetailScreen extends StatelessWidget {
       body: MatchDetailTabBar(
         theme: theme,
         textTheme: textTheme,
+        matchId: match.id, // Pass the matchId here
       ),
     );
   }

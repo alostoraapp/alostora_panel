@@ -60,7 +60,7 @@ class _MatchTileState extends State<MatchTile> {
       case MatchStatus.cancelled:
         return s.matchStatusCancelled;
       case MatchStatus.tbd:
-        return s.matchStatusTbd;
+        return s.matchStatusTBD;
       case MatchStatus.unknown:
       default:
         return s.matchStatusUnknown;

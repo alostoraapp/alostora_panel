@@ -60,7 +60,7 @@ class CompetitionConfigRemoteDataSourceImpl implements CompetitionConfigRemoteDa
   @override
   Future<List<CompetitionSearchModel>> searchCompetitions({required String query, int page = 1, int pageSize = 10}) async {
     final response = await _apiClient.get(
-      '/v1/entities/admin/competition/search/',
+      AppConstants.competitionSearch,
       queryParameters: {
         'search': query,
         'page': page,

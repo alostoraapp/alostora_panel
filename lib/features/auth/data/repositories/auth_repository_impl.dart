@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/failure.dart';
@@ -30,9 +29,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
       return const Right(null);
     } on AppException catch (e) {
-      return Left(AuthFailure(message: e.errorResponse.firstError));
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(message: e.message));
+      return Left(ServerFailure(message: e.errorResponse.firstError));
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
@@ -71,10 +68,10 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       // For mobile, we need the refresh token to send in the body
       final refreshToken = kIsWeb ? null : await tokenStorageService.getRefreshToken();
-      
+
       // If refresh token is null on mobile, we can't refresh.
       if (!kIsWeb && refreshToken == null) {
-        return const Left(AuthFailure(message: 'No refresh token available.'));
+        return const Left(ServerFailure(message: 'No refresh token available.'));
       }
 
       final tokenModel = await remoteDataSource.refreshToken(refreshToken);
@@ -89,7 +86,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(null);
     } catch (e) {
       // If refresh fails, it's an authentication failure.
-      return Left(AuthFailure(message: 'Failed to refresh token.'));
+      return Left(ServerFailure(message: 'Failed to refresh token.'));
     }
   }
 }

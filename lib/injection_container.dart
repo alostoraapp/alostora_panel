@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
+import 'core/config/constants.dart';
 import 'core/presentation/cubit/language_cubit.dart';
 import 'core/presentation/cubit/theme_cubit.dart';
 import 'core/services/api_client.dart';
@@ -17,6 +18,11 @@ import 'features/auth/domain/usecases/login_usecase.dart';
 import 'features/auth/domain/usecases/logout_usecase.dart';
 import 'features/auth/domain/usecases/refresh_token_usecase.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/match_detail/data/datasources/match_detail_remote_data_source.dart';
+import 'features/match_detail/data/repositories/match_detail_repository_impl.dart';
+import 'features/match_detail/domain/repositories/match_detail_repository.dart';
+import 'features/match_detail/domain/usecases/get_lineup_usecase.dart';
+import 'features/match_detail/presentation/bloc/lineup_bloc.dart';
 import 'features/matches/data/datasources/matches_remote_datasource.dart';
 import 'features/matches/data/repositories/matches_repository_impl.dart';
 import 'features/matches/domain/repositories/matches_repository.dart';
@@ -29,11 +35,10 @@ import 'features/settings/domain/usecases/add_competition_config_usecase.dart';
 import 'features/settings/domain/usecases/delete_competition_config_usecase.dart';
 import 'features/settings/domain/usecases/get_competition_configs_usecase.dart';
 import 'features/settings/domain/usecases/reorder_competition_configs_usecase.dart';
-import 'features/settings/domain/usecases/toggle_competition_status_usecase.dart';
 import 'features/settings/domain/usecases/search_competitions_usecase.dart';
+import 'features/settings/domain/usecases/toggle_competition_status_usecase.dart';
 import 'features/settings/presentation/bloc/competition_config_bloc.dart';
 import 'features/settings/presentation/bloc/search_competitions/search_competitions_bloc.dart';
-import 'core/config/constants.dart';
 
 final sl = GetIt.instance;
 
@@ -55,14 +60,20 @@ Future<void> init() async {
   sl.registerLazySingleton<MatchesRepository>(() => MatchesRepositoryImpl(sl()));
   sl.registerLazySingleton<MatchesRemoteDataSource>(() => MatchesRemoteDataSourceImpl(sl()));
 
+  // Match Detail
+  sl.registerFactory(() => LineupBloc(getLineupUsecase: sl()));
+  sl.registerLazySingleton(() => GetLineupUsecase(repository: sl()));
+  sl.registerLazySingleton<MatchDetailRepository>(() => MatchDetailRepositoryImpl(remoteDataSource: sl()));
+  sl.registerLazySingleton<MatchDetailRemoteDataSource>(() => MatchDetailRemoteDataSourceImpl(sl()));
+
   // Settings (Competition Config)
   sl.registerFactory(() => CompetitionConfigBloc(
-    getCompetitionConfigs: sl(),
-    addCompetitionConfig: sl(),
-    toggleCompetitionStatus: sl(),
-    deleteCompetitionConfig: sl(),
-    reorderCompetitionConfigs: sl(),
-  ));
+        getCompetitionConfigs: sl(),
+        addCompetitionConfig: sl(),
+        toggleCompetitionStatus: sl(),
+        deleteCompetitionConfig: sl(),
+        reorderCompetitionConfigs: sl(),
+      ));
   sl.registerFactory(() => SearchCompetitionsBloc(sl()));
   sl.registerLazySingleton(() => GetCompetitionConfigsUseCase(sl()));
   sl.registerLazySingleton(() => AddCompetitionConfigUseCase(sl()));
@@ -70,7 +81,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DeleteCompetitionConfigUseCase(sl()));
   sl.registerLazySingleton(() => ReorderCompetitionConfigsUseCase(sl()));
   sl.registerLazySingleton(() => SearchCompetitionsUseCase(sl()));
-  
+
   sl.registerLazySingleton<CompetitionConfigRepository>(() => CompetitionConfigRepositoryImpl(sl()));
   sl.registerLazySingleton<CompetitionConfigRemoteDataSource>(() => CompetitionConfigRemoteDataSourceImpl(sl()));
 
