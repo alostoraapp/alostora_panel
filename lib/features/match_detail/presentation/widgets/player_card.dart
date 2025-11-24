@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../core/config/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../domain/entities/player_lineup_entity.dart';
 
 class PlayerCard extends StatelessWidget {
@@ -70,21 +73,21 @@ class PlayerCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isManOfTheMatch
-              ? Colors.amber.shade700
-              : theme.colorScheme.outline.withOpacity(0.5),
-          width: isManOfTheMatch ? 2.0 : 1.0,
+              ? AppColors.kGold
+              : theme.dividerColor,
+          width: isManOfTheMatch ? 1.5 : 1.0,
         ),
         boxShadow: isManOfTheMatch
             ? [
                 BoxShadow(
-                  color: Colors.amber.withOpacity(0.3),
-                  blurRadius: 8,
+                  color: AppColors.kGold.withOpacity(0.25),
+                  blurRadius: 10,
                   spreadRadius: 2,
                 ),
               ]
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withOpacity(0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 )
@@ -108,6 +111,18 @@ class PlayerCard extends StatelessWidget {
                 maxLines: 1,
               ),
             ),
+            if (isManOfTheMatch) ...[
+              const SizedBox(width: 8),
+              SvgPicture.asset(
+                AppIcons.trophyStar,
+                width: 28,
+                height: 28,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.kGold,
+                  BlendMode.srcIn,
+                ),
+              )
+            ]
           ],
         ),
       ),

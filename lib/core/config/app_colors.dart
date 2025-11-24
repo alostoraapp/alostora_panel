@@ -19,6 +19,8 @@ class AppColors {
   // Base Colors
   static const Color kWhiteColor = Color(0xFFFFFFFF);
   static const Color kError = Color(0xFFD32F2F);
+  static const Color kGold = Color(0xFFFFD700); // For highlights, badges, etc.
+
 
   // Dark Theme Specific Colors
   static const Color kDarkSurface = Color(0xFF20232A); // Main background from image

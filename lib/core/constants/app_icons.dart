@@ -30,4 +30,5 @@ class AppIcons {
   static const String trash = '$_basePath/ic_trash.svg';
   static const String settings = '$_basePath/ic_settings.svg';
   static const String shield = '$_basePath/ic_shield.svg';
+  static const String trophyStar = '$_basePath/ic_trophy_star.svg';
 }
