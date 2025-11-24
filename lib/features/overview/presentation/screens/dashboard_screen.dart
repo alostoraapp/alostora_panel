@@ -89,7 +89,7 @@ class DashboardScreen extends StatelessWidget {
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 2,
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(
