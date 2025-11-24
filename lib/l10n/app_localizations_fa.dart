@@ -315,41 +315,53 @@ class AppLocalizationsFa extends AppLocalizations {
   String get matchStatusNotStarted => 'شروع نشده';
 
   @override
-  String get matchStatusFirstHalf => 'نیمه اول';
+  String get matchStatusFirstHalf => 'نیمه ۱';
 
   @override
   String get matchStatusHalfTime => 'بین دو نیمه';
 
   @override
-  String get matchStatusSecondHalf => 'نیمه دوم';
+  String get matchStatusSecondHalf => 'نیمه ۲';
 
   @override
-  String get matchStatusOvertime => 'وقت اضافه';
+  String get matchStatusOvertime => 'و.ا';
 
   @override
-  String get matchStatusOvertimeDeprecated => 'وقت اضافه';
+  String get matchStatusOvertimeDeprecated => 'و.ا';
 
   @override
-  String get matchStatusPenaltyShootout => 'ضربات پنالتی';
+  String get matchStatusPenaltyShootout => 'پنالتی';
 
   @override
-  String get matchStatusEnded => 'پایان یافته';
+  String get matchStatusEnded => 'پایان';
 
   @override
-  String get matchStatusDelayed => 'با تاخیر';
+  String get matchStatusDelayed => 'تاخیر';
 
   @override
-  String get matchStatusInterrupted => 'متوقف شده';
+  String get matchStatusInterrupted => 'متوقف';
 
   @override
   String get matchStatusCutInHalf => 'نیمه تمام';
 
   @override
-  String get matchStatusCancelled => 'لغو شده';
+  String get matchStatusCancelled => 'لغو';
 
   @override
   String get matchStatusTBD => 'نامشخص';
 
   @override
   String get matchStatusUnknown => 'نامشخص';
+
+  @override
+  String get highlights => 'خلاصه بازی';
+
+  @override
+  String get events => 'رویدادها';
+
+  @override
+  String get media => 'رسانه';
+
+  @override
+  String get details => 'جزئیات';
 }

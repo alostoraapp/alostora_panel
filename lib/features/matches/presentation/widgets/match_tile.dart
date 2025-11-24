@@ -68,27 +68,45 @@ class _MatchTileState extends State<MatchTile> {
   }
 
   String _getMatchMinute(MatchEntity match) {
+    // Handle first half minutes
     if (match.status == MatchStatus.firstHalf && match.firstHalfStartTime != null) {
-      final difference = DateTime.now().difference(match.firstHalfStartTime!);
-      final minutes = difference.inMinutes;
-      if (minutes > 45) {
-        return '45+${minutes - 45}\'';
-      }
-      return '$minutes\'';
-    }
-    if (match.status == MatchStatus.secondHalf && match.secondHalfStartTime != null) {
-      final difference = DateTime.now().difference(match.secondHalfStartTime!);
-      final minutes = 90 + difference.inMinutes - 45;
-      final secondHalfMinutes = difference.inMinutes;
-      final totalMinutes = 45 + secondHalfMinutes;
+      final now = DateTime.now();
+      final difference = now.difference(match.firstHalfStartTime!);
+      int minutes = difference.inMinutes;
 
-      if (totalMinutes > 90) {
-        return '90+${totalMinutes - 90}\'';
+      // Regular time for the first half is 1' to 45'
+      if (minutes >= 0 && minutes <= 45) {
+        return '$minutes\'';
       }
-      return '$totalMinutes\'';
+      // Handle stoppage time for the first half
+      else if (minutes > 45) {
+        final stoppageTime = minutes - 45;
+        return '45+${stoppageTime}\'';
+      }
     }
+    // Handle second half minutes
+    else if (match.status == MatchStatus.secondHalf && match.secondHalfStartTime != null) {
+      final now = DateTime.now();
+      final difference = now.difference(match.secondHalfStartTime!);
+      // The second half starts at 45 minutes into the game
+      int minutes = 45 + difference.inMinutes;
+
+      // Regular time for the second half is 46' to 90'
+      if (minutes > 45 && minutes <= 90) {
+        return '$minutes\'';
+      }
+      // Handle stoppage time for the second half
+      else if (minutes > 90) {
+        final stoppageTime = minutes - 90;
+        return '90+${stoppageTime}\'';
+      }
+    }
+
+    // Return an empty string if the match is not in the first or second half,
+    // or if the start times are not available
     return '';
   }
+
 
   bool _isLive(MatchStatus status) {
     return status == MatchStatus.firstHalf ||

@@ -312,28 +312,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get matchStatusAbnormal => 'غير طبيعي';
 
   @override
-  String get matchStatusNotStarted => 'لم تبدأ';
+  String get matchStatusNotStarted => 'ل.ت';
 
   @override
-  String get matchStatusFirstHalf => 'الشوط الأول';
+  String get matchStatusFirstHalf => 'ش.أ';
 
   @override
-  String get matchStatusHalfTime => 'استراحة';
+  String get matchStatusHalfTime => 'ا.ش';
 
   @override
-  String get matchStatusSecondHalf => 'الشوط الثاني';
+  String get matchStatusSecondHalf => 'ش.ث';
 
   @override
-  String get matchStatusOvertime => 'وقت إضافي';
+  String get matchStatusOvertime => 'و.إ';
 
   @override
-  String get matchStatusOvertimeDeprecated => 'وقت إضافي';
+  String get matchStatusOvertimeDeprecated => 'و.إ';
 
   @override
-  String get matchStatusPenaltyShootout => 'ركلات الترجيح';
+  String get matchStatusPenaltyShootout => 'ر.ت';
 
   @override
-  String get matchStatusEnded => 'انتهت';
+  String get matchStatusEnded => 'نهاية';
 
   @override
   String get matchStatusDelayed => 'مؤجلة';
@@ -348,8 +348,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get matchStatusCancelled => 'ملغاة';
 
   @override
-  String get matchStatusTBD => 'سيتم تحديدها';
+  String get matchStatusTBD => 'ل.ي.ت';
 
   @override
-  String get matchStatusUnknown => 'غير معروف';
+  String get matchStatusUnknown => 'غ.م';
+
+  @override
+  String get highlights => 'الأهداف';
+
+  @override
+  String get events => 'الأحداث';
+
+  @override
+  String get media => 'وسائط';
+
+  @override
+  String get details => 'تفاصيل';
 }

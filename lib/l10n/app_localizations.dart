@@ -694,49 +694,49 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusNotStarted.
   ///
   /// In en, this message translates to:
-  /// **'Not Started'**
+  /// **'NS'**
   String get matchStatusNotStarted;
 
   /// No description provided for @matchStatusFirstHalf.
   ///
   /// In en, this message translates to:
-  /// **'First Half'**
+  /// **'1H'**
   String get matchStatusFirstHalf;
 
   /// No description provided for @matchStatusHalfTime.
   ///
   /// In en, this message translates to:
-  /// **'Half Time'**
+  /// **'HT'**
   String get matchStatusHalfTime;
 
   /// No description provided for @matchStatusSecondHalf.
   ///
   /// In en, this message translates to:
-  /// **'Second Half'**
+  /// **'2H'**
   String get matchStatusSecondHalf;
 
   /// No description provided for @matchStatusOvertime.
   ///
   /// In en, this message translates to:
-  /// **'Overtime'**
+  /// **'OT'**
   String get matchStatusOvertime;
 
   /// No description provided for @matchStatusOvertimeDeprecated.
   ///
   /// In en, this message translates to:
-  /// **'Overtime'**
+  /// **'OT'**
   String get matchStatusOvertimeDeprecated;
 
   /// No description provided for @matchStatusPenaltyShootout.
   ///
   /// In en, this message translates to:
-  /// **'Penalty Shootout'**
+  /// **'PEN'**
   String get matchStatusPenaltyShootout;
 
   /// No description provided for @matchStatusEnded.
   ///
   /// In en, this message translates to:
-  /// **'Ended'**
+  /// **'FT'**
   String get matchStatusEnded;
 
   /// No description provided for @matchStatusDelayed.
@@ -748,32 +748,56 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusInterrupted.
   ///
   /// In en, this message translates to:
-  /// **'Interrupted'**
+  /// **'Int'**
   String get matchStatusInterrupted;
 
   /// No description provided for @matchStatusCutInHalf.
   ///
   /// In en, this message translates to:
-  /// **'Cut in Half'**
+  /// **'Cut'**
   String get matchStatusCutInHalf;
 
   /// No description provided for @matchStatusCancelled.
   ///
   /// In en, this message translates to:
-  /// **'Cancelled'**
+  /// **'Can'**
   String get matchStatusCancelled;
 
   /// No description provided for @matchStatusTBD.
   ///
   /// In en, this message translates to:
-  /// **'To Be Determined'**
+  /// **'TBD'**
   String get matchStatusTBD;
 
   /// No description provided for @matchStatusUnknown.
   ///
   /// In en, this message translates to:
-  /// **'Unknown'**
+  /// **'Unk'**
   String get matchStatusUnknown;
+
+  /// No description provided for @highlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlights'**
+  String get highlights;
+
+  /// No description provided for @events.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get events;
+
+  /// No description provided for @media.
+  ///
+  /// In en, this message translates to:
+  /// **'Media'**
+  String get media;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

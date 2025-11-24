@@ -312,44 +312,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchStatusAbnormal => 'Abnormal';
 
   @override
-  String get matchStatusNotStarted => 'Not Started';
+  String get matchStatusNotStarted => 'NS';
 
   @override
-  String get matchStatusFirstHalf => 'First Half';
+  String get matchStatusFirstHalf => '1H';
 
   @override
-  String get matchStatusHalfTime => 'Half Time';
+  String get matchStatusHalfTime => 'HT';
 
   @override
-  String get matchStatusSecondHalf => 'Second Half';
+  String get matchStatusSecondHalf => '2H';
 
   @override
-  String get matchStatusOvertime => 'Overtime';
+  String get matchStatusOvertime => 'OT';
 
   @override
-  String get matchStatusOvertimeDeprecated => 'Overtime';
+  String get matchStatusOvertimeDeprecated => 'OT';
 
   @override
-  String get matchStatusPenaltyShootout => 'Penalty Shootout';
+  String get matchStatusPenaltyShootout => 'PEN';
 
   @override
-  String get matchStatusEnded => 'Ended';
+  String get matchStatusEnded => 'FT';
 
   @override
   String get matchStatusDelayed => 'Delayed';
 
   @override
-  String get matchStatusInterrupted => 'Interrupted';
+  String get matchStatusInterrupted => 'Int';
 
   @override
-  String get matchStatusCutInHalf => 'Cut in Half';
+  String get matchStatusCutInHalf => 'Cut';
 
   @override
-  String get matchStatusCancelled => 'Cancelled';
+  String get matchStatusCancelled => 'Can';
 
   @override
-  String get matchStatusTBD => 'To Be Determined';
+  String get matchStatusTBD => 'TBD';
 
   @override
-  String get matchStatusUnknown => 'Unknown';
+  String get matchStatusUnknown => 'Unk';
+
+  @override
+  String get highlights => 'Highlights';
+
+  @override
+  String get events => 'Events';
+
+  @override
+  String get media => 'Media';
+
+  @override
+  String get details => 'Details';
 }

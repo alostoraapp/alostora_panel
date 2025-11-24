@@ -42,11 +42,11 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
   }
 
   List<String> get _title => [
-        S.of(context).bestPlayer,
-        S.of(context).summary,
-        S.of(context).stats,
-        S.of(context).h2h,
-        S.of(context).standings,
+    S.of(context).bestPlayer,
+    S.of(context).highlights,
+    S.of(context).events,
+    S.of(context).media,
+    S.of(context).details,
       ];
   @override
   Widget build(BuildContext context) {
