@@ -136,5 +136,19 @@
   "highlights": "Highlights",
   "events": "Events",
   "media": "Media",
-  "details": "Details"
+  "details": "Details",
+  "kickOff": "Kick-off",
+  "halfTimeScore": "Half Time",
+  "fullTimeScore": "Full Time",
+  "extraTimeScore": "Extra Time",
+  "penaltyShootoutScore": "Penalties",
+  "ownGoal": "Own Goal",
+  "penaltyMissed": "Penalty Missed",
+  "varCheck": "VAR Check",
+  "substitution": "Substitution",
+  "noDataFound": "No data found",
+  "penalties": "Penalties",
+  "overtime": "Overtime",
+  "secondHalf": "Second Half",
+  "firstHalf": "First Half"
 }

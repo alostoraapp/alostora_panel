@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../../core/l10n/s.dart';
 import '../../domain/entities/lineup_entity.dart';
 import '../../domain/entities/player_lineup_entity.dart';
 import '../../domain/entities/team_lineup_info_entity.dart';
+import '../bloc/lineup_bloc.dart';
 import 'player_card.dart';
 
 class BestPlayerTab extends StatefulWidget {
-  final LineupEntity lineup;
   final String matchId;
-  const BestPlayerTab({super.key, required this.lineup, required this.matchId});
+  const BestPlayerTab({super.key, required this.matchId});
 
   @override
   State<BestPlayerTab> createState() => _BestPlayerTabState();
@@ -27,47 +28,64 @@ class _BestPlayerTabState extends State<BestPlayerTab> {
 
   @override
   Widget build(BuildContext context) {
-    final starters = widget.lineup.players
-        .where((p) => p.teamSide == _selectedTeamSide && p.isStarter)
-        .toList();
-    final bench = widget.lineup.players
-        .where((p) => p.teamSide == _selectedTeamSide && !p.isStarter)
-        .toList();
+    return BlocBuilder<LineupBloc, LineupState>(
+      builder: (context, state) {
+        if (state is LineupLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state is LineupError) {
+          return Center(child: Text(state.message));
+        }
+        if (state is LineupLoaded) {
+          final lineup = state.lineup;
+          final starters = lineup.players
+              .where((p) => p.teamSide == _selectedTeamSide && p.isStarter)
+              .toList();
+          final bench = lineup.players
+              .where((p) => p.teamSide == _selectedTeamSide && !p.isStarter)
+              .toList();
 
-    return ScrollConfiguration(
-      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 8),
-            _buildTeamToggle(context),
-            const SizedBox(height: 18),
-            _buildPlayerSection(
-              context,
-              title: S.of(context).onThePitch,
-              players: starters,
+          return ScrollConfiguration(
+            behavior:
+                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  _buildTeamToggle(context, lineup),
+                  const SizedBox(height: 18),
+                  _buildPlayerSection(
+                    context,
+                    title: S.of(context).onThePitch,
+                    players: starters,
+                    lineup: lineup,
+                  ),
+                  const SizedBox(height: 24),
+                  _buildPlayerSection(
+                    context,
+                    title: S.of(context).onTheBench,
+                    players: bench,
+                    lineup: lineup,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
-            _buildPlayerSection(
-              context,
-              title: S.of(context).onTheBench,
-              players: bench,
-            ),
-          ],
-        ),
-      ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 
-  Widget _buildTeamToggle(BuildContext context) {
+  Widget _buildTeamToggle(BuildContext context, LineupEntity lineup) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: _TeamToggleButton(
-            team: widget.lineup.homeTeam,
+            team: lineup.homeTeam,
             isSelected: _selectedTeamSide == 1,
             onTap: () => setState(() => _selectedTeamSide = 1),
           ),
@@ -75,7 +93,7 @@ class _BestPlayerTabState extends State<BestPlayerTab> {
         const SizedBox(width: 16),
         Expanded(
           child: _TeamToggleButton(
-            team: widget.lineup.awayTeam,
+            team: lineup.awayTeam,
             isSelected: _selectedTeamSide == 2,
             onTap: () => setState(() => _selectedTeamSide = 2),
           ),
@@ -88,11 +106,13 @@ class _BestPlayerTabState extends State<BestPlayerTab> {
     BuildContext context, {
     required String title,
     required List<PlayerLineupEntity> players,
+    required LineupEntity lineup,
   }) {
     final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.5)),
+        border:
+            Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5)),
         borderRadius: BorderRadius.circular(12),
       ),
       padding: const EdgeInsets.all(16.0),
@@ -130,8 +150,7 @@ class _BestPlayerTabState extends State<BestPlayerTab> {
                 itemCount: players.length,
                 itemBuilder: (context, index) {
                   final player = players[index];
-                  final isManOfTheMatch =
-                      player.id == widget.lineup.manOfTheMatchId;
+                  final isManOfTheMatch = player.id == lineup.manOfTheMatchId;
                   return PlayerCard(
                     player: player,
                     isManOfTheMatch: isManOfTheMatch,

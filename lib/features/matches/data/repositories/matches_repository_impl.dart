@@ -31,7 +31,8 @@ class MatchesRepositoryImpl implements MatchesRepository {
       return Right(competitionModels.map((model) => model.toEntity()).toList());
     } on DioException catch (e) {
       if (e.error is AppException) {
-        return Left(ServerFailure(message: (e.error as AppException).toString()));
+        return Left(
+            ServerFailure(message: (e.error as AppException).toString()));
       }
       return Left(ServerFailure(message: e.message ?? 'Unknown Dio Error'));
     } catch (e) {

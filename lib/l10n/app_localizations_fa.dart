@@ -364,4 +364,46 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get details => 'جزئیات';
+
+  @override
+  String get kickOff => 'شروع بازی';
+
+  @override
+  String get halfTimeScore => 'نیمه اول';
+
+  @override
+  String get fullTimeScore => 'پایان بازی';
+
+  @override
+  String get extraTimeScore => 'وقت اضافه';
+
+  @override
+  String get penaltyShootoutScore => 'پنالتی';
+
+  @override
+  String get ownGoal => 'گل به خودی';
+
+  @override
+  String get penaltyMissed => 'پنالتی از دست رفته';
+
+  @override
+  String get varCheck => 'بررسی VAR';
+
+  @override
+  String get substitution => 'تعویض';
+
+  @override
+  String get noDataFound => 'داده‌ای یافت نشد';
+
+  @override
+  String get penalties => 'Penalties';
+
+  @override
+  String get overtime => 'Overtime';
+
+  @override
+  String get secondHalf => 'Second Half';
+
+  @override
+  String get firstHalf => 'First Half';
 }

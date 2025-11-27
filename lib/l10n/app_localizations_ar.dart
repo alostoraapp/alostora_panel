@@ -363,5 +363,47 @@ class AppLocalizationsAr extends AppLocalizations {
   String get media => 'وسائط';
 
   @override
-  String get details => 'تفاصيل';
+  String get details => 'التفاصيل';
+
+  @override
+  String get kickOff => 'بداية المباراة';
+
+  @override
+  String get halfTimeScore => 'استراحة';
+
+  @override
+  String get fullTimeScore => 'نهاية المباراة';
+
+  @override
+  String get extraTimeScore => 'وقت إضافي';
+
+  @override
+  String get penaltyShootoutScore => 'ركلات الترجيح';
+
+  @override
+  String get ownGoal => 'هدف في مرماه';
+
+  @override
+  String get penaltyMissed => 'ركلة ضائعة';
+
+  @override
+  String get varCheck => 'مراجعة VAR';
+
+  @override
+  String get substitution => 'تبديل';
+
+  @override
+  String get noDataFound => 'لا توجد بيانات';
+
+  @override
+  String get penalties => 'Penalties';
+
+  @override
+  String get overtime => 'Overtime';
+
+  @override
+  String get secondHalf => 'Second Half';
+
+  @override
+  String get firstHalf => 'First Half';
 }

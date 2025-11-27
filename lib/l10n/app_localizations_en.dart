@@ -364,4 +364,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get details => 'Details';
+
+  @override
+  String get kickOff => 'Kick-off';
+
+  @override
+  String get halfTimeScore => 'Half Time';
+
+  @override
+  String get fullTimeScore => 'Full Time';
+
+  @override
+  String get extraTimeScore => 'Extra Time';
+
+  @override
+  String get penaltyShootoutScore => 'Penalties';
+
+  @override
+  String get ownGoal => 'Own Goal';
+
+  @override
+  String get penaltyMissed => 'Penalty Missed';
+
+  @override
+  String get varCheck => 'VAR Check';
+
+  @override
+  String get substitution => 'Substitution';
+
+  @override
+  String get noDataFound => 'No data found';
+
+  @override
+  String get penalties => 'Penalties';
+
+  @override
+  String get overtime => 'Overtime';
+
+  @override
+  String get secondHalf => 'Second Half';
+
+  @override
+  String get firstHalf => 'First Half';
 }

@@ -136,5 +136,15 @@
   "highlights": "خلاصه بازی",
   "events": "رویدادها",
   "media": "رسانه",
-  "details": "جزئیات"
+  "details": "جزئیات",
+  "kickOff": "شروع بازی",
+  "halfTimeScore": "نیمه اول",
+  "fullTimeScore": "پایان بازی",
+  "extraTimeScore": "وقت اضافه",
+  "penaltyShootoutScore": "پنالتی",
+  "ownGoal": "گل به خودی",
+  "penaltyMissed": "پنالتی از دست رفته",
+  "varCheck": "بررسی VAR",
+  "substitution": "تعویض",
+  "noDataFound": "داده‌ای یافت نشد"
 }

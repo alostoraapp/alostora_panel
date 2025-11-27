@@ -1,0 +1,11 @@
+{
+    // This forces VS Code to use the FVM version specific to this project
+    "dart.flutterSdkPath": ".fvm/flutter_sdk",
+    // Hides FVM nested files from search results (cleaner workspace)
+    "search.exclude": {
+        "**/.fvm": true
+    },
+    "files.watcherExclude": {
+        "**/.fvm": true
+    }
+}

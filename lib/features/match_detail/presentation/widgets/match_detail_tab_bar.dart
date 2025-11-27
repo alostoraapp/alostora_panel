@@ -6,18 +6,21 @@ import '../../../../core/config/app_colors.dart';
 import '../../../../core/l10n/s.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../../../injection_container.dart';
+import '../../../matches/domain/entities/match_entity.dart';
 import '../bloc/lineup_bloc.dart';
 import 'best_player_tab.dart';
+import 'events_tab.dart';
 
 class MatchDetailTabBar extends StatefulWidget {
-  const MatchDetailTabBar(
-      {super.key,
-      required this.theme,
-      required this.textTheme,
-      required this.matchId});
+  const MatchDetailTabBar({
+    super.key,
+    required this.theme,
+    required this.textTheme,
+    required this.match,
+  });
   final ThemeData theme;
   final TextTheme textTheme;
-  final String matchId;
+  final MatchEntity match;
   @override
   State<MatchDetailTabBar> createState() => _MatchDetailTabBarState();
 }
@@ -30,8 +33,8 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
-    _lineupBloc.add(GetLineupEvent(matchId: widget.matchId));
+    _tabController = TabController(length: 5, vsync: this, initialIndex: 0);
+    _lineupBloc.add(GetLineupEvent(matchId: widget.match.id));
   }
 
   @override
@@ -42,12 +45,17 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
   }
 
   List<String> get _title => [
-    S.of(context).bestPlayer,
-    S.of(context).highlights,
-    S.of(context).events,
-    S.of(context).media,
-    S.of(context).details,
+        S.of(context).bestPlayer,
+        S.of(context).highlights,
+        S.of(context).events,
+        S.of(context).media,
+        S.of(context).details,
       ];
+
+  void _onTabTapped(int index) {
+    _tabController.animateTo(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     final padding = responsiveValue<double>(
@@ -60,6 +68,7 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
     return Column(
       children: [
         TabBar(
+          onTap: _onTabTapped,
           splashBorderRadius: BorderRadius.circular(12),
           isScrollable: true,
           tabAlignment: TabAlignment.start,
@@ -89,33 +98,19 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
             value: _lineupBloc,
             child: BlocListener<LanguageCubit, Locale>(
               listener: (context, locale) {
-                _lineupBloc.add(GetLineupEvent(matchId: widget.matchId));
+                _lineupBloc.add(GetLineupEvent(matchId: widget.match.id));
               },
-              child: BlocBuilder<LineupBloc, LineupState>(
-                builder: (context, state) {
-                  if (state is LineupLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (state is LineupError) {
-                    return Center(child: Text(state.message));
-                  }
-                  if (state is LineupLoaded) {
-                    return TabBarView(
-                      controller: _tabController,
-                      children: [
-                        BestPlayerTab(
-                          lineup: state.lineup,
-                          matchId: widget.matchId,
-                        ),
-                        const Center(child: Text('Summary View')),
-                        const Center(child: Text('Stats View')),
-                        const Center(child: Text('H2H View')),
-                        const Center(child: Text('Standings View')),
-                      ],
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  BestPlayerTab(
+                    matchId: widget.match.id,
+                  ),
+                  const Center(child: Text('Summary View')),
+                  EventsTab(matchId: widget.match.id),
+                  const Center(child: Text('H2H View')),
+                  const Center(child: Text('Standings View')),
+                ],
               ),
             ),
           ),

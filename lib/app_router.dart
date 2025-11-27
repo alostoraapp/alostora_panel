@@ -56,8 +56,8 @@ class AppRouter {
             name: AppRoutes.matchDetail,
             builder: (context, state) {
               // Ensure matchId is still available if needed for other purposes
-              // final matchId = state.pathParameters['matchId']!;
-              final match = state.extra as MatchEntity?; // Cast extra to MatchEntity
+              final match =
+                  state.extra as MatchEntity?; // Cast extra to MatchEntity
               if (match == null) {
                 // Handle error: MatchEntity not passed, maybe navigate back or show an error screen
                 return const PlaceholderScreen(title: 'Error: Match not found');
@@ -69,7 +69,7 @@ class AppRouter {
             path: AppRoutes.matchesList,
             name: AppRoutes.matchesList,
             builder: (context, state) =>
-            const PlaceholderScreen(title: 'Matches List'),
+                const PlaceholderScreen(title: 'Matches List'),
           ),
           // Settings
           GoRoute(
@@ -120,6 +120,11 @@ class AppRoutes {
   static const String matchesTiles = '/matches/tiles';
   static const String matchesList = '/matches/list';
   static const String matchDetail = '/match/:matchId';
+  static const String matchOverview = 'overview';
+  static const String matchHighlights = 'highlights';
+  static const String matchIncidents = 'incidents';
+  static const String matchMedia = 'media';
+  static const String matchDetails = 'details';
 
   // Settings
   static const String settings = '/settings';

@@ -23,7 +23,9 @@ import 'features/match_detail/data/repositories/match_detail_repository_impl.dar
 import 'features/match_detail/domain/repositories/match_detail_repository.dart';
 import 'features/match_detail/domain/usecases/get_lineup_usecase.dart';
 import 'features/match_detail/domain/usecases/update_man_of_the_match.dart';
+import 'features/match_detail/domain/usecases/get_match_incidents_usecase.dart';
 import 'features/match_detail/presentation/bloc/lineup_bloc.dart';
+import 'features/match_detail/presentation/bloc/match_incidents/match_incidents_bloc.dart';
 import 'features/matches/data/datasources/matches_remote_datasource.dart';
 import 'features/matches/data/repositories/matches_repository_impl.dart';
 import 'features/matches/domain/repositories/matches_repository.dart';
@@ -47,26 +49,36 @@ Future<void> init() async {
   // --- Features ---
 
   // Auth
-  sl.registerLazySingleton(() => AuthBloc(loginUseCase: sl(), logoutUseCase: sl(), checkStatusUseCase: sl()));
+  sl.registerLazySingleton(() => AuthBloc(
+      loginUseCase: sl(), logoutUseCase: sl(), checkStatusUseCase: sl()));
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => CheckStatusUseCase(sl()));
   sl.registerLazySingleton(() => RefreshTokenUseCase(sl()));
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(remoteDataSource: sl(), tokenStorageService: sl()));
-  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<AuthRepository>(() =>
+      AuthRepositoryImpl(remoteDataSource: sl(), tokenStorageService: sl()));
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(sl()));
 
   // Matches
   sl.registerFactory(() => MatchesBloc(sl()));
   sl.registerLazySingleton(() => GetMatchesUseCase(sl()));
-  sl.registerLazySingleton<MatchesRepository>(() => MatchesRepositoryImpl(sl()));
-  sl.registerLazySingleton<MatchesRemoteDataSource>(() => MatchesRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<MatchesRepository>(
+      () => MatchesRepositoryImpl(sl()));
+  sl.registerLazySingleton<MatchesRemoteDataSource>(
+      () => MatchesRemoteDataSourceImpl(sl()));
 
   // Match Detail
-  sl.registerFactory(() => LineupBloc(getLineupUsecase: sl(), updateManOfTheMatch: sl()));
+  sl.registerFactory(
+      () => LineupBloc(getLineupUsecase: sl(), updateManOfTheMatch: sl()));
+  sl.registerFactory(() => MatchIncidentsBloc(getMatchIncidentsUseCase: sl()));
   sl.registerLazySingleton(() => GetLineupUsecase(repository: sl()));
   sl.registerLazySingleton(() => UpdateManOfTheMatch(sl()));
-  sl.registerLazySingleton<MatchDetailRepository>(() => MatchDetailRepositoryImpl(remoteDataSource: sl()));
-  sl.registerLazySingleton<MatchDetailRemoteDataSource>(() => MatchDetailRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton(() => GetMatchIncidentsUseCase(sl()));
+  sl.registerLazySingleton<MatchDetailRepository>(
+      () => MatchDetailRepositoryImpl(remoteDataSource: sl()));
+  sl.registerLazySingleton<MatchDetailRemoteDataSource>(
+      () => MatchDetailRemoteDataSourceImpl(sl()));
 
   // Settings (Competition Config)
   sl.registerFactory(() => CompetitionConfigBloc(
@@ -84,8 +96,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => ReorderCompetitionConfigsUseCase(sl()));
   sl.registerLazySingleton(() => SearchCompetitionsUseCase(sl()));
 
-  sl.registerLazySingleton<CompetitionConfigRepository>(() => CompetitionConfigRepositoryImpl(sl()));
-  sl.registerLazySingleton<CompetitionConfigRemoteDataSource>(() => CompetitionConfigRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<CompetitionConfigRepository>(
+      () => CompetitionConfigRepositoryImpl(sl()));
+  sl.registerLazySingleton<CompetitionConfigRemoteDataSource>(
+      () => CompetitionConfigRemoteDataSourceImpl(sl()));
 
   // --- Core ---
   sl.registerLazySingleton(() => ApiClient(sl()));
@@ -93,7 +107,8 @@ Future<void> init() async {
   if (kIsWeb) {
     sl.registerLazySingleton<TokenStorageService>(() => InMemoryTokenStorage());
   } else {
-    sl.registerLazySingleton<TokenStorageService>(() => TokenStorageServiceImpl(sl()));
+    sl.registerLazySingleton<TokenStorageService>(
+        () => TokenStorageServiceImpl(sl()));
     sl.registerLazySingleton(() => const FlutterSecureStorage());
   }
 

@@ -136,5 +136,15 @@
   "highlights": "الأهداف",
   "events": "الأحداث",
   "media": "وسائط",
-  "details": "تفاصيل"
+  "details": "التفاصيل",
+  "kickOff": "بداية المباراة",
+  "halfTimeScore": "استراحة",
+  "fullTimeScore": "نهاية المباراة",
+  "extraTimeScore": "وقت إضافي",
+  "penaltyShootoutScore": "ركلات الترجيح",
+  "ownGoal": "هدف في مرماه",
+  "penaltyMissed": "ركلة ضائعة",
+  "varCheck": "مراجعة VAR",
+  "substitution": "تبديل",
+  "noDataFound": "لا توجد بيانات"
 }

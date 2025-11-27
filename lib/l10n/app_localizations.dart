@@ -798,6 +798,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Details'**
   String get details;
+
+  /// No description provided for @kickOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off'**
+  String get kickOff;
+
+  /// No description provided for @halfTimeScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Half Time'**
+  String get halfTimeScore;
+
+  /// No description provided for @fullTimeScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Time'**
+  String get fullTimeScore;
+
+  /// No description provided for @extraTimeScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra Time'**
+  String get extraTimeScore;
+
+  /// No description provided for @penaltyShootoutScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalties'**
+  String get penaltyShootoutScore;
+
+  /// No description provided for @ownGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Own Goal'**
+  String get ownGoal;
+
+  /// No description provided for @penaltyMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty Missed'**
+  String get penaltyMissed;
+
+  /// No description provided for @varCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'VAR Check'**
+  String get varCheck;
+
+  /// No description provided for @substitution.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitution'**
+  String get substitution;
+
+  /// No description provided for @noDataFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No data found'**
+  String get noDataFound;
+
+  /// No description provided for @penalties.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalties'**
+  String get penalties;
+
+  /// No description provided for @overtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime'**
+  String get overtime;
+
+  /// No description provided for @secondHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Second Half'**
+  String get secondHalf;
+
+  /// No description provided for @firstHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'First Half'**
+  String get firstHalf;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

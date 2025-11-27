@@ -44,7 +44,8 @@ class MatchesRemoteDataSourceImpl implements MatchesRemoteDataSource {
 
     return response
         .where((competition) => competition != null)
-        .map((competition) => CompetitionModel.fromJson(competition as Map<String, dynamic>))
+        .map((competition) =>
+            CompetitionModel.fromJson(competition as Map<String, dynamic>))
         .toList();
   }
 }
