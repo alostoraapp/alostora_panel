@@ -338,8 +338,13 @@ class _IncidentIcon extends StatelessWidget {
         break;
       case StatTypeChoices.penalty:
         // Goal frame
-        icon = Icons.crop_square;
-        color = AppColors.kNeutral700;
+        customIcon = Stack(
+          alignment: Alignment.center,
+          children: [
+            const Icon(Icons.crop_square, size: 24, color: Colors.grey),
+            const Icon(Icons.circle, size: 10, color: Colors.green),
+          ],
+        );
         break;
       case StatTypeChoices.substitution:
         icon = Icons.compare_arrows;
