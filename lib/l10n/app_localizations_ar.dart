@@ -274,4 +274,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get editIncidentMedia => 'تعديل وسائط الحدث';
+
+  @override
+  String get sendNotification => 'إرسال إشعار';
+
+  @override
+  String get sendNotificationSubtitle => 'إذا تم التفعيل، سيتم تعيين الأولوية إلى عاجل.';
+
+  @override
+  String get approve => 'موافقة';
+
+  @override
+  String get incidentApproved => 'تمت الموافقة على الحدث';
+
+  @override
+  String get requestSent => 'تم إرسال الطلب';
+
+  @override
+  String errorPickingImage(String error) {
+    return 'خطأ في اختيار الصورة: $error';
+  }
+
+  @override
+  String error(String error) {
+    return 'خطأ: $error';
+  }
+
+  @override
+  String get hours => 'ساعات';
+
+  @override
+  String get minutes => 'دقائق';
+
+  @override
+  String get seconds => 'ثواني';
 }

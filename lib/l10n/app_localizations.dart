@@ -618,6 +618,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit Incident Media'**
   String get editIncidentMedia;
+
+  /// No description provided for @sendNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Notification'**
+  String get sendNotification;
+
+  /// No description provided for @sendNotificationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'If enabled, priority will be set to Urgent.'**
+  String get sendNotificationSubtitle;
+
+  /// No description provided for @approve.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approve;
+
+  /// No description provided for @incidentApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Incident Approved'**
+  String get incidentApproved;
+
+  /// No description provided for @requestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent'**
+  String get requestSent;
+
+  /// No description provided for @errorPickingImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Error picking image: {error}'**
+  String errorPickingImage(String error);
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String error(String error);
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get hours;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get minutes;
+
+  /// No description provided for @seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get seconds;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

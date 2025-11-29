@@ -19,4 +19,10 @@ abstract class MatchDetailRepository {
       int? videoTime);
   Future<Either<Failure, List<IncidentEntity>>> deleteIncidentMedia(
       String matchId, String incidentId);
+  Future<Either<Failure, void>> approveIncidentMedia({
+    required String matchId,
+    required String incidentId,
+    required String status,
+    required String priority,
+  });
 }

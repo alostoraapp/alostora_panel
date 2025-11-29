@@ -20,6 +20,8 @@ class IncidentEntity extends Equatable {
   final String? mediaCover;
   final int? videoTime;
   final bool isHome; // Helper to easily check if it belongs to home team
+  final MatchIncidentMediaStatusChoices? mediaStatus;
+  final MatchIncidentMediaPriorityChoices? mediaPriority;
 
   const IncidentEntity({
     required this.id,
@@ -39,6 +41,8 @@ class IncidentEntity extends Equatable {
     this.mediaCover,
     this.videoTime,
     required this.isHome,
+    this.mediaStatus,
+    this.mediaPriority,
   });
 
   @override
@@ -60,5 +64,7 @@ class IncidentEntity extends Equatable {
         mediaCover,
         videoTime,
         isHome,
+        mediaStatus,
+        mediaPriority,
       ];
 }

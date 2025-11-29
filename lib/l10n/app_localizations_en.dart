@@ -274,4 +274,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editIncidentMedia => 'Edit Incident Media';
+
+  @override
+  String get sendNotification => 'Send Notification';
+
+  @override
+  String get sendNotificationSubtitle => 'If enabled, priority will be set to Urgent.';
+
+  @override
+  String get approve => 'Approve';
+
+  @override
+  String get incidentApproved => 'Incident Approved';
+
+  @override
+  String get requestSent => 'Request sent';
+
+  @override
+  String errorPickingImage(String error) {
+    return 'Error picking image: $error';
+  }
+
+  @override
+  String error(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get hours => 'Hours';
+
+  @override
+  String get minutes => 'Minutes';
+
+  @override
+  String get seconds => 'Seconds';
 }

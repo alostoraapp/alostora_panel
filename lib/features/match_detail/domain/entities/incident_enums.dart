@@ -220,3 +220,20 @@ enum InjuryTypeChoices {
     );
   }
 }
+
+enum MatchIncidentMediaStatusChoices {
+  draft('draft'),
+  pendingApproval('pending_approval'),
+  published('published');
+
+  final String value;
+  const MatchIncidentMediaStatusChoices(this.value);
+}
+
+enum MatchIncidentMediaPriorityChoices {
+  normal('normal'),
+  urgent('urgent');
+
+  final String value;
+  const MatchIncidentMediaPriorityChoices(this.value);
+}

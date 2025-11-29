@@ -107,6 +107,30 @@
   "mediaUrl": "آدرس رسانه",
   "mediaCover": "تصویر کاور",
   "videoTime": "زمان ویدیو (ثانیه)",
-  "editIncidentMedia": "ویرایش رسانه رویداد"
+  "editIncidentMedia": "ویرایش رسانه رویداد",
+  "sendNotification": "ارسال اعلان",
+  "sendNotificationSubtitle": "در صورت فعال بودن، اولویت روی فوری تنظیم می‌شود.",
+  "approve": "تایید",
+  "incidentApproved": "رویداد تایید شد",
+  "requestSent": "درخواست ارسال شد",
+  "errorPickingImage": "خطا در انتخاب تصویر: {error}",
+  "@errorPickingImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "خطا: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "hours": "ساعت",
+  "minutes": "دقیقه",
+  "seconds": "ثانیه"
 }
 

@@ -15,6 +15,8 @@ abstract class MatchDetailRemoteDataSource {
       String incidentId, String? mediaUrl, XFile? mediaCover, int? videoTime);
   Future<List<IncidentModel>> deleteIncidentMedia(
       String matchId, String incidentId);
+  Future<void> approveIncidentMedia(
+      String matchId, String incidentId, String status, String priority);
 }
 
 class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
@@ -86,5 +88,17 @@ class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
     return (response as List)
         .map((e) => IncidentModel.fromJson(e as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<void> approveIncidentMedia(
+      String matchId, String incidentId, String status, String priority) async {
+    await _apiClient.post(
+      AppConstants.getApproveIncidentMediaUrl(matchId, incidentId),
+      data: {
+        'status': status,
+        'priority': priority,
+      },
+    );
   }
 }

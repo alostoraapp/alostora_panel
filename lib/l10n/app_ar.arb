@@ -107,5 +107,29 @@
   "mediaUrl": "رابط الوسائط",
   "mediaCover": "صورة الغلاف",
   "videoTime": "وقت الفيديو (ثواني)",
-  "editIncidentMedia": "تعديل وسائط الحدث"
+  "editIncidentMedia": "تعديل وسائط الحدث",
+  "sendNotification": "إرسال إشعار",
+  "sendNotificationSubtitle": "إذا تم التفعيل، سيتم تعيين الأولوية إلى عاجل.",
+  "approve": "موافقة",
+  "incidentApproved": "تمت الموافقة على الحدث",
+  "requestSent": "تم إرسال الطلب",
+  "errorPickingImage": "خطأ في اختيار الصورة: {error}",
+  "@errorPickingImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "خطأ: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "hours": "ساعات",
+  "minutes": "دقائق",
+  "seconds": "ثواني"
 }

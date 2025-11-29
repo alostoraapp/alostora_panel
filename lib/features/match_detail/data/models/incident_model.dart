@@ -21,11 +21,13 @@ class IncidentModel extends IncidentEntity {
     super.mediaCover,
     super.videoTime,
     required super.isHome,
+    super.mediaStatus,
+    super.mediaPriority,
   });
 
   factory IncidentModel.fromJson(Map<String, dynamic> json) {
-    // Helper to parse enums from integer values
-    T _parseEnum<T>(List<T> values, int? value) {
+    // Helper to parse enums from integer or string values
+    T _parseEnum<T>(List<T> values, dynamic value) {
       if (value == null) {
         // Return the first value (usually unknown or default) if null
         return values.first;
@@ -68,6 +70,14 @@ class IncidentModel extends IncidentEntity {
       mediaCover: json['media_cover'],
       videoTime: json['video_time'],
       isHome: json['position'] == 1, // 1 is Home in IncidentPositionChoices
+      mediaStatus: json['media_status'] != null
+          ? _parseEnum(
+              MatchIncidentMediaStatusChoices.values, json['media_status'])
+          : null,
+      mediaPriority: json['media_priority'] != null
+          ? _parseEnum(
+              MatchIncidentMediaPriorityChoices.values, json['media_priority'])
+          : null,
     );
   }
 }

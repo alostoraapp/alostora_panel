@@ -48,3 +48,20 @@ class DeleteIncidentMediaEvent extends MatchIncidentsEvent {
   @override
   List<Object> get props => [matchId, incidentId];
 }
+
+class ApproveIncidentMediaEvent extends MatchIncidentsEvent {
+  final String matchId;
+  final String incidentId;
+  final String status;
+  final String priority;
+
+  const ApproveIncidentMediaEvent({
+    required this.matchId,
+    required this.incidentId,
+    required this.status,
+    required this.priority,
+  });
+
+  @override
+  List<Object> get props => [matchId, incidentId, status, priority];
+}

@@ -84,4 +84,22 @@ class MatchDetailRepositoryImpl implements MatchDetailRepository {
       return Left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> approveIncidentMedia({
+    required String matchId,
+    required String incidentId,
+    required String status,
+    required String priority,
+  }) async {
+    try {
+      await remoteDataSource.approveIncidentMedia(
+          matchId, incidentId, status, priority);
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
 }

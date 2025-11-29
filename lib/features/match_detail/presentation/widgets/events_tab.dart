@@ -318,6 +318,36 @@ class _IncidentItem extends StatelessWidget {
     final hasMedia = incident.mediaUrl != null && incident.mediaUrl!.isNotEmpty;
     final primaryColor = Theme.of(context).primaryColor;
 
+    final mediaStatus = incident.mediaStatus;
+    final isDraft = mediaStatus == MatchIncidentMediaStatusChoices.draft;
+    final isPending =
+        mediaStatus == MatchIncidentMediaStatusChoices.pendingApproval;
+
+    Color mediaColor = primaryColor;
+    if (isPending || isDraft) {
+      mediaColor = Colors.orange;
+    }
+
+    Widget? mediaIndicator;
+    if (hasMedia) {
+      if (isDraft) {
+        mediaIndicator = SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(mediaColor),
+          ),
+        );
+      } else {
+        mediaIndicator = Icon(
+          Icons.play_circle_fill,
+          color: mediaColor,
+          size: 24,
+        );
+      }
+    }
+
     Widget content = Row(
       mainAxisAlignment:
           isHome ? MainAxisAlignment.start : MainAxisAlignment.end,
@@ -331,7 +361,15 @@ class _IncidentItem extends StatelessWidget {
           _IncidentIcon(type: incident.type),
           const SizedBox(width: 8),
           Expanded(child: _IncidentDetails(incident: incident, isHome: true)),
+          if (hasMedia && mediaIndicator != null) ...[
+            const SizedBox(width: 8),
+            mediaIndicator,
+          ],
         ] else ...[
+          if (hasMedia && mediaIndicator != null) ...[
+            mediaIndicator,
+            const SizedBox(width: 8),
+          ],
           Expanded(child: _IncidentDetails(incident: incident, isHome: false)),
           const SizedBox(width: 8),
           _IncidentIcon(type: incident.type),
@@ -347,21 +385,13 @@ class _IncidentItem extends StatelessWidget {
     if (hasMedia) {
       content = Container(
         decoration: BoxDecoration(
-          color: primaryColor.withOpacity(0.05),
-          border: Border.all(color: primaryColor.withOpacity(0.5)),
+          color: mediaColor.withOpacity(0.05),
+          border: Border.all(color: mediaColor.withOpacity(0.5)),
           borderRadius: BorderRadius.circular(8),
         ),
         padding: const EdgeInsets.all(6),
         alignment: Alignment.center,
-        child: Stack(
-          children: [
-            content,
-            Center(
-              child: Icon(Icons.play_circle_fill,
-                  color: primaryColor.withOpacity(0.3), size: 32),
-            ),
-          ],
-        ),
+        child: content,
       );
     }
 
@@ -403,6 +433,22 @@ class _IncidentItem extends StatelessWidget {
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Error deleting: $e')),
+                  );
+                }
+              },
+              onApprove: (status, priority) {
+                try {
+                  bloc.add(
+                    ApproveIncidentMediaEvent(
+                      matchId: incident.matchId,
+                      incidentId: incident.id,
+                      status: status,
+                      priority: priority,
+                    ),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error approving: $e')),
                   );
                 }
               },

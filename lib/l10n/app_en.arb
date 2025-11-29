@@ -107,5 +107,29 @@
   "mediaUrl": "Media URL",
   "mediaCover": "Media Cover",
   "videoTime": "Video Time (seconds)",
-  "editIncidentMedia": "Edit Incident Media"
+  "editIncidentMedia": "Edit Incident Media",
+  "sendNotification": "Send Notification",
+  "sendNotificationSubtitle": "If enabled, priority will be set to Urgent.",
+  "approve": "Approve",
+  "incidentApproved": "Incident Approved",
+  "requestSent": "Request sent",
+  "errorPickingImage": "Error picking image: {error}",
+  "@errorPickingImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "Error: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "hours": "Hours",
+  "minutes": "Minutes",
+  "seconds": "Seconds"
 }

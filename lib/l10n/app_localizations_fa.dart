@@ -274,4 +274,38 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get editIncidentMedia => 'ویرایش رسانه رویداد';
+
+  @override
+  String get sendNotification => 'ارسال اعلان';
+
+  @override
+  String get sendNotificationSubtitle => 'در صورت فعال بودن، اولویت روی فوری تنظیم می‌شود.';
+
+  @override
+  String get approve => 'تایید';
+
+  @override
+  String get incidentApproved => 'رویداد تایید شد';
+
+  @override
+  String get requestSent => 'درخواست ارسال شد';
+
+  @override
+  String errorPickingImage(String error) {
+    return 'خطا در انتخاب تصویر: $error';
+  }
+
+  @override
+  String error(String error) {
+    return 'خطا: $error';
+  }
+
+  @override
+  String get hours => 'ساعت';
+
+  @override
+  String get minutes => 'دقیقه';
+
+  @override
+  String get seconds => 'ثانیه';
 }
