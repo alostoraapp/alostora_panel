@@ -8,8 +8,124 @@ import '../../domain/entities/incident_entity.dart';
 import '../../domain/entities/incident_enums.dart';
 import '../bloc/match_incidents/match_incidents_bloc.dart';
 
+// --- Data Structures ---
+
+/// Represents a match period for grouping incidents.
 enum _MatchPeriod { firstHalf, secondHalf, overtime, penalties }
 
+/// A container for incidents grouped by match period.
+class _GroupedIncidents {
+  final List<IncidentEntity> firstHalf;
+  final List<IncidentEntity> secondHalf;
+  final List<IncidentEntity> overtime;
+  final List<IncidentEntity> penalties;
+
+  const _GroupedIncidents({
+    this.firstHalf = const [],
+    this.secondHalf = const [],
+    this.overtime = const [],
+    this.penalties = const [],
+  });
+}
+
+// --- Logic ---
+
+/// Groups a list of match incidents into distinct periods.
+///
+/// This function processes a raw list of incidents, filters out unwanted types,
+/// and uses special "marker" incidents (like 'end' or 'midfield') to categorize
+/// all other incidents into First Half, Second Half, Overtime, or Penalties.
+_GroupedIncidents _groupIncidents(List<IncidentEntity> allIncidents) {
+  // 1. Filter out non-displayable events and sort chronologically descending.
+  final incidents = allIncidents
+      .where((i) => i.type != StatTypeChoices.injuryTime)
+      .toList()
+    ..sort((a, b) => b.order.compareTo(a.order));
+
+  final List<IncidentEntity> penalties = [];
+  final List<IncidentEntity> overtime = [];
+  final List<IncidentEntity> secondHalf = [];
+  final List<IncidentEntity> firstHalf = [];
+
+  // 2. Determine the starting period for the state machine.
+  // We start from the latest part of the match and work backwards.
+  var currentPeriod = _MatchPeriod.firstHalf;
+  final endMarkerIndex =
+      incidents.indexWhere((e) => e.type == StatTypeChoices.end);
+
+  if (incidents.any((e) => e.type == StatTypeChoices.overtimeIsOver)) {
+    currentPeriod = _MatchPeriod.penalties;
+  } else if (endMarkerIndex != -1) {
+    // If 'end' marker exists, check the next event to see if it's penalties or overtime.
+    if (endMarkerIndex > 0) {
+      final firstEventAfterEnd = incidents[endMarkerIndex - 1];
+      if (firstEventAfterEnd.type == StatTypeChoices.penaltyShootout ||
+          firstEventAfterEnd.type == StatTypeChoices.penaltyMissedShootout) {
+        currentPeriod = _MatchPeriod.penalties;
+      } else {
+        currentPeriod = _MatchPeriod.overtime;
+      }
+    } else {
+      // 'end' is the very last event, so we assume the next phase is overtime.
+      currentPeriod = _MatchPeriod.overtime;
+    }
+  } else if (incidents.any((e) => e.type == StatTypeChoices.midfield)) {
+    currentPeriod = _MatchPeriod.secondHalf;
+  }
+
+  // 3. Iterate through incidents and assign them to the correct period list.
+  for (final incident in incidents) {
+    // When a marker is hit, switch the state to the previous period.
+    if (incident.type == StatTypeChoices.overtimeIsOver) {
+      currentPeriod = _MatchPeriod.overtime;
+      continue; // Do not add the marker itself to the list.
+    }
+    if (incident.type == StatTypeChoices.end) {
+      currentPeriod = _MatchPeriod.secondHalf;
+      continue;
+    }
+    if (incident.type == StatTypeChoices.midfield) {
+      currentPeriod = _MatchPeriod.firstHalf;
+      continue;
+    }
+
+    // Skip other non-displayable markers.
+    const skippableMarkers = [
+      StatTypeChoices.start,
+      StatTypeChoices.penaltyKickEnded,
+    ];
+    if (skippableMarkers.contains(incident.type)) {
+      continue;
+    }
+
+    // Add the incident to the list corresponding to the current state.
+    switch (currentPeriod) {
+      case _MatchPeriod.penalties:
+        penalties.add(incident);
+        break;
+      case _MatchPeriod.overtime:
+        overtime.add(incident);
+        break;
+      case _MatchPeriod.secondHalf:
+        secondHalf.add(incident);
+        break;
+      case _MatchPeriod.firstHalf:
+        firstHalf.add(incident);
+        break;
+    }
+  }
+
+  return _GroupedIncidents(
+    firstHalf: firstHalf,
+    secondHalf: secondHalf,
+    overtime: overtime,
+    penalties: penalties,
+  );
+}
+
+// --- UI Widgets ---
+
+/// The main widget for the "Events" tab, responsible for fetching data.
 class EventsTab extends StatelessWidget {
   final String matchId;
 
@@ -39,6 +155,7 @@ class EventsTab extends StatelessWidget {
   }
 }
 
+/// Displays the categorized list of match events.
 class _EventsList extends StatelessWidget {
   final List<IncidentEntity> incidents;
 
@@ -46,98 +163,7 @@ class _EventsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sort incidents by time descending
-    final sortedIncidents = List<IncidentEntity>.from(incidents)
-      ..sort((a, b) => b.order.compareTo(a.order)); // Use order for splitting
-
-    // Grouping logic
-    final List<IncidentEntity> penalties = [];
-    final List<IncidentEntity> overtime = [];
-    final List<IncidentEntity> secondHalf = [];
-    final List<IncidentEntity> firstHalf = [];
-
-    // Markers
-    // 26: overtimeIsOver
-    // 12: end (End of Regular Time / Second Half)
-    // 11: midfield (End of First Half / Start of Second Half)
-    // 10: start (Start of First Half)
-
-    // We iterate descending.
-    // Everything before 'overtimeIsOver' (or end of penalties) is Penalties.
-    // Between 'overtimeIsOver' and 'end' is Overtime.
-    // Between 'end' and 'midfield' is Second Half.
-    // Between 'midfield' and 'start' is First Half.
-
-    // Note: The markers themselves should probably be excluded from the list display or used as headers?
-    // The user wants cards for these periods.
-
-    // Simple state machine based on markers encountered
-    for (var incident in sortedIncidents) {
-      if (incident.type == StatTypeChoices.penaltyKickEnded ||
-          incident.type == StatTypeChoices.penaltyShootout) {
-        // Part of penalties
-        penalties.add(incident);
-      } else if (incident.type == StatTypeChoices.overtimeIsOver) {
-        // Separator
-        continue;
-      } else if (incident.type == StatTypeChoices.end) {
-        // Separator between Overtime/Second Half
-        continue;
-      } else if (incident.type == StatTypeChoices.midfield) {
-        // Separator between Second Half/First Half
-        continue;
-      } else if (incident.type == StatTypeChoices.start) {
-        // Separator
-        continue;
-      } else {
-        // Assign to current bucket based on time/logic?
-        // Since we can't strictly rely on markers being present (e.g. live match),
-        // we might need to use time or just the markers if they exist.
-        // Let's try to use the markers as switch points.
-      }
-    }
-
-    // Re-implementing with strict marker logic
-    // We will iterate and switch lists when we hit a marker.
-    // Default list is Penalties (if match ended in penalties) or Overtime or Second Half?
-    // Safer to just bucket based on ranges if markers exist.
-
-    // Let's try a different approach: Split the list by markers.
-
-    List<IncidentEntity> currentList;
-
-    // Determine the initial list based on the highest phase present
-    if (sortedIncidents.any((e) => e.type == StatTypeChoices.overtimeIsOver)) {
-      currentList = penalties;
-    } else if (sortedIncidents.any((e) => e.type == StatTypeChoices.end)) {
-      currentList = overtime;
-    } else if (sortedIncidents.any((e) => e.type == StatTypeChoices.midfield)) {
-      currentList = secondHalf;
-    } else {
-      currentList = firstHalf;
-    }
-
-    for (var incident in sortedIncidents) {
-      if (incident.type == StatTypeChoices.overtimeIsOver) {
-        currentList = overtime;
-        continue;
-      }
-      if (incident.type == StatTypeChoices.end) {
-        currentList = secondHalf;
-        continue;
-      }
-      if (incident.type == StatTypeChoices.midfield) {
-        currentList = firstHalf;
-        continue;
-      }
-      if (incident.type == StatTypeChoices.start) {
-        continue;
-      }
-      // Filter other markers
-      if (incident.type == StatTypeChoices.penaltyKickEnded) continue;
-
-      currentList.add(incident);
-    }
+    final groupedIncidents = _groupIncidents(incidents);
 
     return Center(
       child: ConstrainedBox(
@@ -148,18 +174,30 @@ class _EventsList extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                if (penalties.isNotEmpty)
-                  _buildSection(context, S.of(context).penalties, penalties,
-                      _MatchPeriod.penalties),
-                if (overtime.isNotEmpty)
-                  _buildSection(context, S.of(context).overtime, overtime,
-                      _MatchPeriod.overtime),
-                if (secondHalf.isNotEmpty)
-                  _buildSection(context, S.of(context).secondHalf, secondHalf,
-                      _MatchPeriod.secondHalf),
-                if (firstHalf.isNotEmpty)
-                  _buildSection(context, S.of(context).firstHalf, firstHalf,
-                      _MatchPeriod.firstHalf),
+                if (groupedIncidents.penalties.isNotEmpty)
+                  _EventSection(
+                    title: S.of(context).penalties,
+                    incidents: groupedIncidents.penalties,
+                    period: _MatchPeriod.penalties,
+                  ),
+                if (groupedIncidents.overtime.isNotEmpty)
+                  _EventSection(
+                    title: S.of(context).overtime,
+                    incidents: groupedIncidents.overtime,
+                    period: _MatchPeriod.overtime,
+                  ),
+                if (groupedIncidents.secondHalf.isNotEmpty)
+                  _EventSection(
+                    title: S.of(context).secondHalf,
+                    incidents: groupedIncidents.secondHalf,
+                    period: _MatchPeriod.secondHalf,
+                  ),
+                if (groupedIncidents.firstHalf.isNotEmpty)
+                  _EventSection(
+                    title: S.of(context).firstHalf,
+                    incidents: groupedIncidents.firstHalf,
+                    period: _MatchPeriod.firstHalf,
+                  ),
               ],
             ),
           ),
@@ -167,9 +205,22 @@ class _EventsList extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildSection(BuildContext context, String title,
-      List<IncidentEntity> incidents, _MatchPeriod period) {
+/// A card that displays a section of events for a specific match period.
+class _EventSection extends StatelessWidget {
+  final String title;
+  final List<IncidentEntity> incidents;
+  final _MatchPeriod period;
+
+  const _EventSection({
+    required this.title,
+    required this.incidents,
+    required this.period,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
@@ -198,6 +249,7 @@ class _EventsList extends StatelessWidget {
   }
 }
 
+/// Displays a single incident item in the event list.
 class _IncidentItem extends StatelessWidget {
   final IncidentEntity incident;
   final _MatchPeriod period;
@@ -265,6 +317,7 @@ class _IncidentItem extends StatelessWidget {
   }
 }
 
+/// Displays the formatted time of an incident.
 class _TimeDisplay extends StatelessWidget {
   final int time;
   final int? addedTime;
@@ -277,7 +330,7 @@ class _TimeDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     String timeStr = '$time\'';
 
-    // Custom time formatting logic
+    // Custom time formatting for injury time at the end of a half.
     if (period == _MatchPeriod.firstHalf && time > 45) {
       timeStr = '45+${time - 45}\'';
     } else if (period == _MatchPeriod.secondHalf && time > 90) {
@@ -287,7 +340,7 @@ class _TimeDisplay extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 45, // Slightly wider for formatted time
+      width: 45, // Fixed width for alignment.
       child: Text(
         timeStr,
         style: const TextStyle(
@@ -298,6 +351,7 @@ class _TimeDisplay extends StatelessWidget {
   }
 }
 
+/// Displays the appropriate icon for an incident type.
 class _IncidentIcon extends StatelessWidget {
   final StatTypeChoices type;
 
@@ -333,44 +387,21 @@ class _IncidentIcon extends StatelessWidget {
         color = AppColors.kNeutral700;
         break;
       case StatTypeChoices.goalKick:
-        icon = Icons.sports_football; // Placeholder
+        icon = Icons.sports_football;
         color = AppColors.kNeutral700;
         break;
       case StatTypeChoices.penalty:
-        // Goal frame
-        customIcon = Stack(
-          alignment: Alignment.center,
-          children: [
-            const Icon(Icons.crop_square, size: 24, color: Colors.grey),
-            const Icon(Icons.circle, size: 10, color: Colors.green),
-          ],
-        );
+        customIcon = _buildPenaltyIcon(isMissed: false);
         break;
       case StatTypeChoices.substitution:
         icon = Icons.compare_arrows;
         color = AppColors.kNeutral500;
         break;
       case StatTypeChoices.cardUpgradeConfirmed:
-        customIcon = Stack(
-          children: [
-            _buildCard(AppColors.kGold),
-            Positioned(
-              left: 4,
-              top: 4,
-              child: _buildCard(AppColors.kError),
-            ),
-          ],
-        );
+        customIcon = _buildCardUpgradeIcon();
         break;
       case StatTypeChoices.penaltyMissed:
-        // Goal frame with red ball
-        customIcon = Stack(
-          alignment: Alignment.center,
-          children: [
-            const Icon(Icons.crop_square, size: 24, color: Colors.grey),
-            const Icon(Icons.circle, size: 10, color: AppColors.kError),
-          ],
-        );
+        customIcon = _buildPenaltyIcon(isMissed: true);
         break;
       case StatTypeChoices.ownGoal:
         icon = Icons.dangerous;
@@ -381,24 +412,10 @@ class _IncidentIcon extends StatelessWidget {
         color = AppColors.kNeutral500;
         break;
       case StatTypeChoices.penaltyShootout:
-        // Goal frame with green ball
-        customIcon = Stack(
-          alignment: Alignment.center,
-          children: [
-            const Icon(Icons.crop_square, size: 24, color: Colors.grey),
-            const Icon(Icons.circle, size: 10, color: Colors.green),
-          ],
-        );
+        customIcon = _buildPenaltyIcon(isMissed: false);
         break;
       case StatTypeChoices.penaltyMissedShootout:
-        // Goal frame with red ball
-        customIcon = Stack(
-          alignment: Alignment.center,
-          children: [
-            const Icon(Icons.crop_square, size: 24, color: Colors.grey),
-            const Icon(Icons.circle, size: 10, color: AppColors.kError),
-          ],
-        );
+        customIcon = _buildPenaltyIcon(isMissed: true);
         break;
       default:
         icon = Icons.circle;
@@ -422,8 +439,33 @@ class _IncidentIcon extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildPenaltyIcon({required bool isMissed}) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        const Icon(Icons.crop_square, size: 24, color: Colors.grey),
+        Icon(Icons.circle,
+            size: 10, color: isMissed ? AppColors.kError : Colors.green),
+      ],
+    );
+  }
+
+  Widget _buildCardUpgradeIcon() {
+    return Stack(
+      children: [
+        _buildCard(AppColors.kGold),
+        Positioned(
+          left: 4,
+          top: 4,
+          child: _buildCard(AppColors.kError),
+        ),
+      ],
+    );
+  }
 }
 
+/// Displays the details of an incident, like player names.
 class _IncidentDetails extends StatelessWidget {
   final IncidentEntity incident;
   final bool isHome;
@@ -440,14 +482,12 @@ class _IncidentDetails extends StatelessWidget {
     final outPlayerName =
         incident.outPlayer?.name ?? incident.outPlayer?.shortName;
 
-    final CrossAxisAlignment alignment =
-        isHome ? CrossAxisAlignment.start : CrossAxisAlignment.end;
-    final TextAlign textAlign = isHome ? TextAlign.start : TextAlign.end;
+    final alignment = isHome ? CrossAxisAlignment.start : CrossAxisAlignment.end;
+    final textAlign = isHome ? TextAlign.start : TextAlign.end;
 
     final List<Widget> children = [];
 
     if (incident.type == StatTypeChoices.substitution) {
-      // Removed "Substitution" text
       if (inPlayerName != null) {
         children.add(Text(
           'In: $inPlayerName',
