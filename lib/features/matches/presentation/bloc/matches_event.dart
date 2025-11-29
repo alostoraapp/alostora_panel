@@ -11,17 +11,22 @@ class GetMatches extends MatchesEvent {
   final String? search;
   final String? ordering;
   final bool? isLive;
-  final int? startTimestamp;
-  final int? endTimestamp;
 
   const GetMatches({
     this.search,
     this.ordering,
     this.isLive,
-    this.startTimestamp,
-    this.endTimestamp,
   });
 
   @override
-  List<Object?> get props => [search, ordering, isLive, startTimestamp, endTimestamp];
+  List<Object?> get props => [search, ordering, isLive];
+}
+
+class ChangeDate extends MatchesEvent {
+  final DateTime newDate;
+
+  const ChangeDate(this.newDate);
+
+  @override
+  List<Object?> get props => [newDate];
 }

@@ -12,10 +12,19 @@ class AppLocalizationsFa extends AppLocalizations {
   String get appName => 'پنل الأسطورة';
 
   @override
+  String get changeTheme => 'تغییر پوسته';
+
+  @override
+  String get changeLanguage => 'تغییر زبان';
+
+  @override
   String get login => 'ورود';
 
   @override
-  String get loginCredentials => 'با اطلاعات کاربری خود وارد شوید';
+  String get loginError => 'ورود ناموفق بود. لطفاً اطلاعات خود را بررسی کنید.';
+
+  @override
+  String get loginCredentials => 'برای ورود اطلاعات خود را وارد کنید';
 
   @override
   String get email => 'ایمیل';
@@ -30,28 +39,58 @@ class AppLocalizationsFa extends AppLocalizations {
   String get passwordHint => 'رمز عبور خود را وارد کنید';
 
   @override
-  String get loginError => 'اطلاعات کاربری نامعتبر است. لطفا دوباره تلاش کنید.';
+  String get logout => 'خروج';
 
   @override
-  String get changeTheme => 'تغییر پوسته';
+  String get dashboard => 'داشبورد';
 
   @override
-  String get changeLanguage => 'تغییر زبان';
+  String get overview => 'نمای کلی';
+
+  @override
+  String get totalUsers => 'کل کاربران';
+
+  @override
+  String get onlineUsers => 'کاربران آنلاین';
+
+  @override
+  String get todaysMatches => 'مسابقات امروز';
+
+  @override
+  String get liveMatches => 'مسابقات زنده';
+
+  @override
+  String get tomorrowsMatches => 'مسابقات فردا';
+
+  @override
+  String get thisWeeksMatches => 'مسابقات این هفته';
 
   @override
   String get matches => 'مسابقات';
 
   @override
-  String get matchDetails => 'جزئیات بازی';
+  String get matchesTiles => 'مسابقات (کاشی)';
 
   @override
-  String get matchTime => 'زمان بازی';
+  String get matchesList => 'مسابقات (لیست)';
 
   @override
-  String get matchStatus => 'وضعیت بازی';
+  String get settings => 'تنظیمات';
 
   @override
-  String get matchActions => 'عملیات';
+  String get competitionSelect => 'انتخاب رقابت‌ها';
+
+  @override
+  String get active => 'فعال';
+
+  @override
+  String get addNewCompetition => 'افزودن رقابت جدید';
+
+  @override
+  String get competitionId => 'شناسه رقابت';
+
+  @override
+  String get pleaseEnterCompetitionId => 'لطفاً شناسه رقابت را وارد کنید';
 
   @override
   String get save => 'ذخیره';
@@ -63,148 +102,88 @@ class AppLocalizationsFa extends AppLocalizations {
   String get delete => 'حذف';
 
   @override
-  String get edit => 'ویرایش';
+  String get deleteCompetition => 'حذف رقابت';
 
   @override
-  String get add => 'افزودن';
+  String get deleteCompetitionConfirmation => 'آیا از حذف این رقابت اطمینان دارید؟';
 
   @override
-  String get search => 'جستجو';
+  String get searchCompetition => 'جستجوی یک رقابت';
 
   @override
-  String get logout => 'خروج';
+  String get noResultsFound => 'نتیجه‌ای یافت نشد';
 
   @override
-  String get settings => 'تنظیمات';
+  String get typeToSearch => 'برای جستجو تایپ کنید';
 
   @override
-  String get dashboard => 'داشبورد';
+  String get matchStatusAbnormal => 'غیرعادی';
 
   @override
-  String get home => 'خانه';
+  String get matchStatusNotStarted => 'شروع نشده';
 
   @override
-  String get away => 'مهمان';
+  String get matchStatusFirstHalf => 'نیمه اول';
 
   @override
-  String get team => 'تیم';
+  String get matchStatusHalfTime => 'بین دو نیمه';
 
   @override
-  String get teams => 'تیم‌ها';
+  String get matchStatusSecondHalf => 'نیمه دوم';
 
   @override
-  String get player => 'بازیکن';
+  String get matchStatusOvertime => 'وقت اضافه';
 
   @override
-  String get players => 'بازیکنان';
+  String get matchStatusOvertimeDeprecated => 'وقت اضافه';
 
   @override
-  String get competition => 'رقابت';
+  String get matchStatusPenaltyShootout => 'ضربات پنالتی';
 
   @override
-  String get competitions => 'رقابت‌ها';
+  String get matchStatusEnded => 'پایان یافته';
 
   @override
-  String get channel => 'کانال';
+  String get matchStatusDelayed => 'با تاخیر';
 
   @override
-  String get channels => 'کانال‌ها';
+  String get matchStatusInterrupted => 'متوقف شده';
 
   @override
-  String get broadcaster => 'پخش‌کننده';
+  String get matchStatusCutInHalf => 'نیمه تمام';
 
   @override
-  String get broadcasters => 'پخش‌کنندگان';
+  String get matchStatusCancelled => 'لغو شده';
 
   @override
-  String get name => 'نام';
+  String get matchStatusTBD => 'نامشخص';
 
   @override
-  String get shortName => 'نام کوتاه';
-
-  @override
-  String get displayName => 'نام نمایشی';
-
-  @override
-  String get logo => 'لوگو';
-
-  @override
-  String get country => 'کشور';
-
-  @override
-  String get successTitle => 'موفقیت';
-
-  @override
-  String get errorTitle => 'خطا';
-
-  @override
-  String get confirmTitle => 'تایید';
-
-  @override
-  String get deleteConfirmation => 'آیا از حذف این مورد اطمینان دارید؟';
-
-  @override
-  String get saveChangesSuccess => 'تغییرات با موفقیت ذخیره شد.';
-
-  @override
-  String get addSuccess => 'با موفقیت اضافه شد.';
-
-  @override
-  String get deleteSuccess => 'با موفقیت حذف شد.';
-
-  @override
-  String get anErrorOccurred => 'خطایی رخ داد. لطفا دوباره تلاش کنید.';
-
-  @override
-  String get selectCompetition => 'انتخاب رقابت';
-
-  @override
-  String get selectTeam => 'انتخاب تیم';
-
-  @override
-  String get selectBroadcaster => 'انتخاب پخش‌کننده';
-
-  @override
-  String get selectChannel => 'انتخاب کانال';
-
-  @override
-  String get noOptions => 'گزینه‌ای در دسترس نیست';
-
-  @override
-  String get homeTeam => 'تیم میزبان';
-
-  @override
-  String get awayTeam => 'تیم مهمان';
-
-  @override
-  String get competitionConfig => 'پیکربندی رقابت';
-
-  @override
-  String get visible => 'قابل مشاهده';
-
-  @override
-  String get hidden => 'مخفی';
+  String get matchStatusUnknown => 'وضعیت نامشخص';
 
   @override
   String get bestPlayer => 'بهترین بازیکن';
 
   @override
-  String get summary => 'خلاصه';
+  String get highlights => 'خلاصه بازی';
 
   @override
-  String get stats => 'آمار';
+  String get events => 'رویدادها';
 
   @override
-  String get h2h => 'رو در رو';
+  String get media => 'رسانه';
 
   @override
-  String get standings => 'جدول رده‌بندی';
+  String get details => 'جزئیات';
 
   @override
   String get onThePitch => 'در زمین';
 
   @override
   String get onTheBench => 'روی نیمکت';
+
+  @override
+  String get unknownPlayer => 'بازیکن نامشخص';
 
   @override
   String get confirmMOTMTitle => 'تایید بهترین بازیکن زمین';
@@ -221,7 +200,28 @@ class AppLocalizationsFa extends AppLocalizations {
   String get no => 'خیر';
 
   @override
-  String get unknownPlayer => 'بازیکن ناشناس';
+  String get noDataFound => 'داده‌ای یافت نشد';
+
+  @override
+  String get penalties => 'پنالتی‌ها';
+
+  @override
+  String get overtime => 'وقت اضافه';
+
+  @override
+  String get secondHalf => 'نیمه دوم';
+
+  @override
+  String get firstHalf => 'نیمه اول';
+
+  @override
+  String get ownGoal => '(گل به خودی)';
+
+  @override
+  String get penaltyMissed => '(پنالتی از دست رفته)';
+
+  @override
+  String get varCheck => 'بررسی VAR';
 
   @override
   String get today => 'امروز';
@@ -246,164 +246,14 @@ class AppLocalizationsFa extends AppLocalizations {
   String get liveFilter => 'زنده';
 
   @override
+  String get search => 'جستجو...';
+
+  @override
   String get sortByImportance => 'مرتب‌سازی بر اساس اهمیت';
 
   @override
   String get sortByTime => 'مرتب‌سازی بر اساس زمان';
 
   @override
-  String get totalUsers => 'کل کاربران';
-
-  @override
-  String get onlineUsers => 'کاربران آنلاین';
-
-  @override
-  String get todaysMatches => 'مسابقات امروز';
-
-  @override
-  String get liveMatches => 'مسابقات زنده';
-
-  @override
-  String get tomorrowsMatches => 'مسابقات فردا';
-
-  @override
-  String get thisWeeksMatches => 'مسابقات این هفته';
-
-  @override
-  String get competitionSelect => 'انتخاب رقابت';
-
-  @override
-  String get active => 'فعال';
-
-  @override
-  String get addNewCompetition => 'افزودن رقابت جدید';
-
-  @override
-  String get competitionId => 'شناسه رقابت';
-
-  @override
-  String get pleaseEnterCompetitionId => 'لطفا شناسه رقابت را وارد کنید';
-
-  @override
-  String get deleteCompetition => 'حذف رقابت';
-
-  @override
-  String get deleteCompetitionConfirmation => 'آیا از حذف این پیکربندی رقابت اطمینان دارید؟';
-
-  @override
-  String get overview => 'نمای کلی';
-
-  @override
-  String get matchesTiles => 'مسابقات (کاشی)';
-
-  @override
-  String get matchesList => 'مسابقات (لیست)';
-
-  @override
-  String get noResultsFound => 'نتیجه‌ای یافت نشد';
-
-  @override
-  String get typeToSearch => 'برای جستجوی رقابت‌ها تایپ کنید';
-
-  @override
-  String get searchCompetition => 'جستجوی رقابت';
-
-  @override
-  String get matchStatusAbnormal => 'غیرطبیعی';
-
-  @override
-  String get matchStatusNotStarted => 'شروع نشده';
-
-  @override
-  String get matchStatusFirstHalf => 'نیمه ۱';
-
-  @override
-  String get matchStatusHalfTime => 'بین دو نیمه';
-
-  @override
-  String get matchStatusSecondHalf => 'نیمه ۲';
-
-  @override
-  String get matchStatusOvertime => 'و.ا';
-
-  @override
-  String get matchStatusOvertimeDeprecated => 'و.ا';
-
-  @override
-  String get matchStatusPenaltyShootout => 'پنالتی';
-
-  @override
-  String get matchStatusEnded => 'پایان';
-
-  @override
-  String get matchStatusDelayed => 'تاخیر';
-
-  @override
-  String get matchStatusInterrupted => 'متوقف';
-
-  @override
-  String get matchStatusCutInHalf => 'نیمه تمام';
-
-  @override
-  String get matchStatusCancelled => 'لغو';
-
-  @override
-  String get matchStatusTBD => 'نامشخص';
-
-  @override
-  String get matchStatusUnknown => 'نامشخص';
-
-  @override
-  String get highlights => 'خلاصه بازی';
-
-  @override
-  String get events => 'رویدادها';
-
-  @override
-  String get media => 'رسانه';
-
-  @override
-  String get details => 'جزئیات';
-
-  @override
-  String get kickOff => 'شروع بازی';
-
-  @override
-  String get halfTimeScore => 'نیمه اول';
-
-  @override
-  String get fullTimeScore => 'پایان بازی';
-
-  @override
-  String get extraTimeScore => 'وقت اضافه';
-
-  @override
-  String get penaltyShootoutScore => 'پنالتی';
-
-  @override
-  String get ownGoal => 'گل به خودی';
-
-  @override
-  String get penaltyMissed => 'پنالتی از دست رفته';
-
-  @override
-  String get varCheck => 'بررسی VAR';
-
-  @override
-  String get substitution => 'تعویض';
-
-  @override
-  String get noDataFound => 'داده‌ای یافت نشد';
-
-  @override
-  String get penalties => 'Penalties';
-
-  @override
-  String get overtime => 'Overtime';
-
-  @override
-  String get secondHalf => 'Second Half';
-
-  @override
-  String get firstHalf => 'First Half';
+  String get noMatchesFound => 'هیچ مسابقه‌ای یافت نشد';
 }

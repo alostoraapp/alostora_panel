@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/l10n/s.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
-import '../../../../injection_container.dart';
 import '../../domain/entities/competition_entity.dart';
 import '../bloc/matches_bloc.dart';
 import '../bloc/matches_event.dart';
@@ -27,16 +26,21 @@ class MatchTilesScreen extends StatefulWidget {
 }
 
 class _MatchTilesScreenState extends State<MatchTilesScreen> {
-  final _matchesBloc = sl<MatchesBloc>();
   final _searchController = TextEditingController();
+  // Local state for UI controls that trigger BLoC events
   String _ordering = 'importance';
   bool _isLive = false;
-  DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    _fetchMatches();
+    // Initial fetch when the screen loads for the first time.
+    // The BLoC is now managed by the ShellRoute's BlocProvider.
+    // We only add the event if no matches have been loaded yet for the current date.
+    final matchesBloc = context.read<MatchesBloc>();
+    if (matchesBloc.state is MatchesInitial) {
+      matchesBloc.add(const GetMatches());
+    }
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -44,7 +48,6 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
-    _matchesBloc.close();
     super.dispose();
   }
 
@@ -53,110 +56,113 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
   }
 
   void _fetchMatches() {
-    final startTimestamp = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day).toUtc().millisecondsSinceEpoch ~/ 1000;
-    final endTimestamp = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, 23, 59, 59).toUtc().millisecondsSinceEpoch ~/ 1000;
-
-    _matchesBloc.add(GetMatches(
-      search: _searchController.text.isNotEmpty ? _searchController.text : null,
-      ordering: _ordering,
-      isLive: _isLive,
-      startTimestamp: startTimestamp,
-      endTimestamp: endTimestamp,
-    ));
+    context.read<MatchesBloc>().add(GetMatches(
+          search: _searchController.text.isNotEmpty ? _searchController.text : null,
+          ordering: _ordering,
+          isLive: _isLive,
+        ));
   }
 
   void _onDateChanged(DateTime newDate) {
-    setState(() {
-      _selectedDate = newDate;
-      _fetchMatches();
-    });
+    context.read<MatchesBloc>().add(ChangeDate(newDate));
   }
 
   void _onOrderingChanged(String? newOrdering) {
-    if (newOrdering != null) {
+    if (newOrdering != null && _ordering != newOrdering) {
       setState(() {
         _ordering = newOrdering;
-        _fetchMatches();
       });
+      _fetchMatches();
     }
   }
 
   void _onLiveFilterChanged(bool isSelected) {
-    setState(() {
-      _isLive = isSelected;
+    if (_isLive != isSelected) {
+      setState(() {
+        _isLive = isSelected;
+      });
       _fetchMatches();
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = ResponsiveBreakpoints.of(context).isDesktop;
-    final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
+    // The MatchesBloc is now accessed from the context.
+    return BlocBuilder<MatchesBloc, MatchesState>(
+      builder: (context, state) {
+        final selectedDate = state.selectedDate ?? DateTime.now();
 
-    final timePicker = _TimePickerCard(
-      isLiveSelected: _isLive,
-      selectedDate: _selectedDate,
-      onLiveSelected: _onLiveFilterChanged,
-      onDateChanged: _onDateChanged,
-    );
+        final timePicker = _TimePickerCard(
+          isLiveSelected: _isLive,
+          selectedDate: selectedDate,
+          onLiveSelected: _onLiveFilterChanged,
+          onDateChanged: _onDateChanged,
+        );
 
-    final searchCard = _SearchCard(
-      controller: _searchController,
-      ordering: _ordering,
-      onOrderingChanged: _onOrderingChanged,
-    );
+        final searchCard = _SearchCard(
+          controller: _searchController,
+          ordering: _ordering,
+          onOrderingChanged: _onOrderingChanged,
+        );
 
-    return BlocListener<LanguageCubit, Locale>(
-      listener: (context, locale) {
-        _fetchMatches();
-      },
-      child: Scaffold(
-        body: ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: ListView(
-            padding: const EdgeInsets.all(10.0),
-            children: [
-              if (isDesktop)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: timePicker),
-                    const SizedBox(width: 16),
-                    Expanded(child: searchCard),
-                  ],
-                )
-              else
-                Column(
-                  children: [
-                    timePicker,
-                    const SizedBox(height: 2),
-                    searchCard,
-                  ],
-                ),
-              const SizedBox(height: 16),
-              BlocBuilder<MatchesBloc, MatchesState>(
-                bloc: _matchesBloc,
-                builder: (context, state) {
-                  if (state is MatchesLoading) {
-                    return _buildShimmerList();
-                  }
-                  if (state is MatchesLoaded) {
-                    return _buildMatchesList(context, state.competitions);
-                  }
-                  if (state is MatchesError) {
-                    return Center(child: Text(state.message));
-                  }
-                  return const SizedBox.shrink();
-                },
+        return BlocListener<LanguageCubit, Locale>(
+          listener: (context, locale) {
+            _fetchMatches();
+          },
+          child: Scaffold(
+            body: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: ListView(
+                padding: const EdgeInsets.all(10.0),
+                children: [
+                  if (ResponsiveBreakpoints.of(context).isDesktop)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: timePicker),
+                        const SizedBox(width: 16),
+                        Expanded(child: searchCard),
+                      ],
+                    )
+                  else
+                    Column(
+                      children: [
+                        timePicker,
+                        const SizedBox(height: 2),
+                        searchCard,
+                      ],
+                    ),
+                  const SizedBox(height: 16),
+                  // Handle different states from the BLoC
+                  if (state is MatchesLoading)
+                    _buildShimmerList()
+                  else if (state is MatchesLoaded)
+                    _buildMatchesList(context, state.competitions)
+                  else if (state is MatchesError)
+                    Center(child: Text(state.message))
+                  else if (state is MatchesInitial)
+                    // Show shimmer or an empty state during initial load
+                    _buildShimmerList()
+                  else
+                    const SizedBox.shrink(),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget _buildMatchesList(BuildContext context, List<CompetitionEntity> competitions) {
+    if (competitions.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Text(S.of(context).noMatchesFound, style: Theme.of(context).textTheme.titleMedium),
+        ),
+      );
+    }
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

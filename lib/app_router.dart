@@ -5,6 +5,7 @@ import 'core/presentation/widgets/go_router_refresh_stream.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/match_detail/presentation/screens/match_detail_screen.dart';
+import 'features/matches/presentation/bloc/matches_bloc.dart';
 import 'features/matches/presentation/screens/match_tiles_screen.dart';
 import 'features/overview/presentation/screens/dashboard_screen.dart';
 import 'features/settings/presentation/screens/competition_select_screen.dart';
@@ -38,7 +39,11 @@ class AppRouter {
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
         builder: (context, state, child) {
-          return AppShell(child: child);
+          // Provide MatchesBloc to the entire shell
+          return BlocProvider(
+            create: (context) => sl<MatchesBloc>(),
+            child: AppShell(child: child),
+          );
         },
         routes: [
           GoRoute(
@@ -55,14 +60,11 @@ class AppRouter {
             path: AppRoutes.matchDetail,
             name: AppRoutes.matchDetail,
             builder: (context, state) {
-              // Ensure matchId is still available if needed for other purposes
-              final match =
-                  state.extra as MatchEntity?; // Cast extra to MatchEntity
+              final match = state.extra as MatchEntity?;
               if (match == null) {
-                // Handle error: MatchEntity not passed, maybe navigate back or show an error screen
                 return const PlaceholderScreen(title: 'Error: Match not found');
               }
-              return MatchDetailScreen(match: match); // Pass MatchEntity
+              return MatchDetailScreen(match: match);
             },
           ),
           GoRoute(
@@ -95,13 +97,10 @@ class AppRouter {
       }
 
       if (authState is AuthAuthenticated) {
-        // If authenticated, redirect from splash or login to the overview page.
         if (isSplash || isLoggingIn) return AppRoutes.dashboardOverview;
-        // If at the root, also redirect to the overview page.
         if (state.matchedLocation == '/') return AppRoutes.dashboardOverview;
       }
 
-      // No redirect needed for other cases
       return null;
     },
   );
@@ -119,7 +118,7 @@ class AppRoutes {
   static const String matches = '/matches';
   static const String matchesTiles = '/matches/tiles';
   static const String matchesList = '/matches/list';
-  static const String matchDetail = '/match/:matchId';
+  static const String matchDetail = '/matches/:matchId';
   static const String matchOverview = 'overview';
   static const String matchHighlights = 'highlights';
   static const String matchIncidents = 'incidents';

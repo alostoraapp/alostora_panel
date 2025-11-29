@@ -100,8 +100,20 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Alostora Panel'**
+  /// **'Al Ostora Panel'**
   String get appName;
+
+  /// No description provided for @changeTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Theme'**
+  String get changeTheme;
+
+  /// No description provided for @changeLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Language'**
+  String get changeLanguage;
 
   /// No description provided for @login.
   ///
@@ -109,10 +121,16 @@ abstract class AppLocalizations {
   /// **'Login'**
   String get login;
 
+  /// No description provided for @loginError.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed. Please check your credentials.'**
+  String get loginError;
+
   /// No description provided for @loginCredentials.
   ///
   /// In en, this message translates to:
-  /// **'Login with your credentials'**
+  /// **'Enter your credentials to login'**
   String get loginCredentials;
 
   /// No description provided for @email.
@@ -139,101 +157,11 @@ abstract class AppLocalizations {
   /// **'Enter your password'**
   String get passwordHint;
 
-  /// No description provided for @loginError.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid credentials. Please try again.'**
-  String get loginError;
-
-  /// No description provided for @changeTheme.
-  ///
-  /// In en, this message translates to:
-  /// **'Change Theme'**
-  String get changeTheme;
-
-  /// No description provided for @changeLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'Change Language'**
-  String get changeLanguage;
-
-  /// No description provided for @matches.
-  ///
-  /// In en, this message translates to:
-  /// **'Matches'**
-  String get matches;
-
-  /// No description provided for @matchDetails.
-  ///
-  /// In en, this message translates to:
-  /// **'Match Details'**
-  String get matchDetails;
-
-  /// No description provided for @matchTime.
-  ///
-  /// In en, this message translates to:
-  /// **'Match Time'**
-  String get matchTime;
-
-  /// No description provided for @matchStatus.
-  ///
-  /// In en, this message translates to:
-  /// **'Match Status'**
-  String get matchStatus;
-
-  /// No description provided for @matchActions.
-  ///
-  /// In en, this message translates to:
-  /// **'Match Actions'**
-  String get matchActions;
-
-  /// No description provided for @save.
-  ///
-  /// In en, this message translates to:
-  /// **'Save'**
-  String get save;
-
-  /// No description provided for @cancel.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
-
-  /// No description provided for @delete.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete'**
-  String get delete;
-
-  /// No description provided for @edit.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit'**
-  String get edit;
-
-  /// No description provided for @add.
-  ///
-  /// In en, this message translates to:
-  /// **'Add'**
-  String get add;
-
-  /// No description provided for @search.
-  ///
-  /// In en, this message translates to:
-  /// **'Search'**
-  String get search;
-
   /// No description provided for @logout.
   ///
   /// In en, this message translates to:
   /// **'Logout'**
   String get logout;
-
-  /// No description provided for @settings.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get settings;
 
   /// No description provided for @dashboard.
   ///
@@ -241,335 +169,11 @@ abstract class AppLocalizations {
   /// **'Dashboard'**
   String get dashboard;
 
-  /// No description provided for @home.
+  /// No description provided for @overview.
   ///
   /// In en, this message translates to:
-  /// **'Home'**
-  String get home;
-
-  /// No description provided for @away.
-  ///
-  /// In en, this message translates to:
-  /// **'Away'**
-  String get away;
-
-  /// No description provided for @team.
-  ///
-  /// In en, this message translates to:
-  /// **'Team'**
-  String get team;
-
-  /// No description provided for @teams.
-  ///
-  /// In en, this message translates to:
-  /// **'Teams'**
-  String get teams;
-
-  /// No description provided for @player.
-  ///
-  /// In en, this message translates to:
-  /// **'Player'**
-  String get player;
-
-  /// No description provided for @players.
-  ///
-  /// In en, this message translates to:
-  /// **'Players'**
-  String get players;
-
-  /// No description provided for @competition.
-  ///
-  /// In en, this message translates to:
-  /// **'Competition'**
-  String get competition;
-
-  /// No description provided for @competitions.
-  ///
-  /// In en, this message translates to:
-  /// **'Competitions'**
-  String get competitions;
-
-  /// No description provided for @channel.
-  ///
-  /// In en, this message translates to:
-  /// **'Channel'**
-  String get channel;
-
-  /// No description provided for @channels.
-  ///
-  /// In en, this message translates to:
-  /// **'Channels'**
-  String get channels;
-
-  /// No description provided for @broadcaster.
-  ///
-  /// In en, this message translates to:
-  /// **'Broadcaster'**
-  String get broadcaster;
-
-  /// No description provided for @broadcasters.
-  ///
-  /// In en, this message translates to:
-  /// **'Broadcasters'**
-  String get broadcasters;
-
-  /// No description provided for @name.
-  ///
-  /// In en, this message translates to:
-  /// **'Name'**
-  String get name;
-
-  /// No description provided for @shortName.
-  ///
-  /// In en, this message translates to:
-  /// **'Short Name'**
-  String get shortName;
-
-  /// No description provided for @displayName.
-  ///
-  /// In en, this message translates to:
-  /// **'Display Name'**
-  String get displayName;
-
-  /// No description provided for @logo.
-  ///
-  /// In en, this message translates to:
-  /// **'Logo'**
-  String get logo;
-
-  /// No description provided for @country.
-  ///
-  /// In en, this message translates to:
-  /// **'Country'**
-  String get country;
-
-  /// No description provided for @successTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Success'**
-  String get successTitle;
-
-  /// No description provided for @errorTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Error'**
-  String get errorTitle;
-
-  /// No description provided for @confirmTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm'**
-  String get confirmTitle;
-
-  /// No description provided for @deleteConfirmation.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to delete this item?'**
-  String get deleteConfirmation;
-
-  /// No description provided for @saveChangesSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Changes saved successfully.'**
-  String get saveChangesSuccess;
-
-  /// No description provided for @addSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Added successfully.'**
-  String get addSuccess;
-
-  /// No description provided for @deleteSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Deleted successfully.'**
-  String get deleteSuccess;
-
-  /// No description provided for @anErrorOccurred.
-  ///
-  /// In en, this message translates to:
-  /// **'An error occurred. Please try again.'**
-  String get anErrorOccurred;
-
-  /// No description provided for @selectCompetition.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Competition'**
-  String get selectCompetition;
-
-  /// No description provided for @selectTeam.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Team'**
-  String get selectTeam;
-
-  /// No description provided for @selectBroadcaster.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Broadcaster'**
-  String get selectBroadcaster;
-
-  /// No description provided for @selectChannel.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Channel'**
-  String get selectChannel;
-
-  /// No description provided for @noOptions.
-  ///
-  /// In en, this message translates to:
-  /// **'No options available'**
-  String get noOptions;
-
-  /// No description provided for @homeTeam.
-  ///
-  /// In en, this message translates to:
-  /// **'Home Team'**
-  String get homeTeam;
-
-  /// No description provided for @awayTeam.
-  ///
-  /// In en, this message translates to:
-  /// **'Away Team'**
-  String get awayTeam;
-
-  /// No description provided for @competitionConfig.
-  ///
-  /// In en, this message translates to:
-  /// **'Competition Config'**
-  String get competitionConfig;
-
-  /// No description provided for @visible.
-  ///
-  /// In en, this message translates to:
-  /// **'Visible'**
-  String get visible;
-
-  /// No description provided for @hidden.
-  ///
-  /// In en, this message translates to:
-  /// **'Hidden'**
-  String get hidden;
-
-  /// No description provided for @bestPlayer.
-  ///
-  /// In en, this message translates to:
-  /// **'Best Player'**
-  String get bestPlayer;
-
-  /// No description provided for @summary.
-  ///
-  /// In en, this message translates to:
-  /// **'Summary'**
-  String get summary;
-
-  /// No description provided for @stats.
-  ///
-  /// In en, this message translates to:
-  /// **'Stats'**
-  String get stats;
-
-  /// No description provided for @h2h.
-  ///
-  /// In en, this message translates to:
-  /// **'H2H'**
-  String get h2h;
-
-  /// No description provided for @standings.
-  ///
-  /// In en, this message translates to:
-  /// **'Standings'**
-  String get standings;
-
-  /// No description provided for @onThePitch.
-  ///
-  /// In en, this message translates to:
-  /// **'On the Pitch'**
-  String get onThePitch;
-
-  /// No description provided for @onTheBench.
-  ///
-  /// In en, this message translates to:
-  /// **'On the Bench'**
-  String get onTheBench;
-
-  /// No description provided for @confirmMOTMTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm Man of the Match'**
-  String get confirmMOTMTitle;
-
-  /// No description provided for @confirmMOTMMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to select {playerName} as the Man of the Match?'**
-  String confirmMOTMMessage(String playerName);
-
-  /// No description provided for @yes.
-  ///
-  /// In en, this message translates to:
-  /// **'Yes'**
-  String get yes;
-
-  /// No description provided for @no.
-  ///
-  /// In en, this message translates to:
-  /// **'No'**
-  String get no;
-
-  /// No description provided for @unknownPlayer.
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown Player'**
-  String get unknownPlayer;
-
-  /// No description provided for @today.
-  ///
-  /// In en, this message translates to:
-  /// **'Today'**
-  String get today;
-
-  /// No description provided for @tomorrow.
-  ///
-  /// In en, this message translates to:
-  /// **'Tomorrow'**
-  String get tomorrow;
-
-  /// No description provided for @yesterday.
-  ///
-  /// In en, this message translates to:
-  /// **'Yesterday'**
-  String get yesterday;
-
-  /// No description provided for @inXDays.
-  ///
-  /// In en, this message translates to:
-  /// **'In {count} days'**
-  String inXDays(int count);
-
-  /// No description provided for @xDaysAgo.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} days ago'**
-  String xDaysAgo(int count);
-
-  /// No description provided for @liveFilter.
-  ///
-  /// In en, this message translates to:
-  /// **'Live'**
-  String get liveFilter;
-
-  /// No description provided for @sortByImportance.
-  ///
-  /// In en, this message translates to:
-  /// **'Sort by Importance'**
-  String get sortByImportance;
-
-  /// No description provided for @sortByTime.
-  ///
-  /// In en, this message translates to:
-  /// **'Sort by Time'**
-  String get sortByTime;
+  /// **'Overview'**
+  String get overview;
 
   /// No description provided for @totalUsers.
   ///
@@ -607,10 +211,34 @@ abstract class AppLocalizations {
   /// **'This Week\'s Matches'**
   String get thisWeeksMatches;
 
+  /// No description provided for @matches.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches'**
+  String get matches;
+
+  /// No description provided for @matchesTiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches (Tiles)'**
+  String get matchesTiles;
+
+  /// No description provided for @matchesList.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches (List)'**
+  String get matchesList;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
   /// No description provided for @competitionSelect.
   ///
   /// In en, this message translates to:
-  /// **'Competition Select'**
+  /// **'Select Competitions'**
   String get competitionSelect;
 
   /// No description provided for @active.
@@ -637,6 +265,24 @@ abstract class AppLocalizations {
   /// **'Please enter a competition ID'**
   String get pleaseEnterCompetitionId;
 
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
   /// No description provided for @deleteCompetition.
   ///
   /// In en, this message translates to:
@@ -646,26 +292,14 @@ abstract class AppLocalizations {
   /// No description provided for @deleteCompetitionConfirmation.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete this competition configuration?'**
+  /// **'Are you sure you want to delete this competition?'**
   String get deleteCompetitionConfirmation;
 
-  /// No description provided for @overview.
+  /// No description provided for @searchCompetition.
   ///
   /// In en, this message translates to:
-  /// **'Overview'**
-  String get overview;
-
-  /// No description provided for @matchesTiles.
-  ///
-  /// In en, this message translates to:
-  /// **'Matches (Tiles)'**
-  String get matchesTiles;
-
-  /// No description provided for @matchesList.
-  ///
-  /// In en, this message translates to:
-  /// **'Matches (List)'**
-  String get matchesList;
+  /// **'Search for a competition'**
+  String get searchCompetition;
 
   /// No description provided for @noResultsFound.
   ///
@@ -676,14 +310,8 @@ abstract class AppLocalizations {
   /// No description provided for @typeToSearch.
   ///
   /// In en, this message translates to:
-  /// **'Type to search for competitions'**
+  /// **'Type to search'**
   String get typeToSearch;
-
-  /// No description provided for @searchCompetition.
-  ///
-  /// In en, this message translates to:
-  /// **'Search Competition'**
-  String get searchCompetition;
 
   /// No description provided for @matchStatusAbnormal.
   ///
@@ -694,49 +322,49 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusNotStarted.
   ///
   /// In en, this message translates to:
-  /// **'NS'**
+  /// **'Not Started'**
   String get matchStatusNotStarted;
 
   /// No description provided for @matchStatusFirstHalf.
   ///
   /// In en, this message translates to:
-  /// **'1H'**
+  /// **'1st Half'**
   String get matchStatusFirstHalf;
 
   /// No description provided for @matchStatusHalfTime.
   ///
   /// In en, this message translates to:
-  /// **'HT'**
+  /// **'Half Time'**
   String get matchStatusHalfTime;
 
   /// No description provided for @matchStatusSecondHalf.
   ///
   /// In en, this message translates to:
-  /// **'2H'**
+  /// **'2nd Half'**
   String get matchStatusSecondHalf;
 
   /// No description provided for @matchStatusOvertime.
   ///
   /// In en, this message translates to:
-  /// **'OT'**
+  /// **'Overtime'**
   String get matchStatusOvertime;
 
   /// No description provided for @matchStatusOvertimeDeprecated.
   ///
   /// In en, this message translates to:
-  /// **'OT'**
+  /// **'Extra Time'**
   String get matchStatusOvertimeDeprecated;
 
   /// No description provided for @matchStatusPenaltyShootout.
   ///
   /// In en, this message translates to:
-  /// **'PEN'**
+  /// **'Penalties'**
   String get matchStatusPenaltyShootout;
 
   /// No description provided for @matchStatusEnded.
   ///
   /// In en, this message translates to:
-  /// **'FT'**
+  /// **'Ended'**
   String get matchStatusEnded;
 
   /// No description provided for @matchStatusDelayed.
@@ -748,32 +376,38 @@ abstract class AppLocalizations {
   /// No description provided for @matchStatusInterrupted.
   ///
   /// In en, this message translates to:
-  /// **'Int'**
+  /// **'Interrupted'**
   String get matchStatusInterrupted;
 
   /// No description provided for @matchStatusCutInHalf.
   ///
   /// In en, this message translates to:
-  /// **'Cut'**
+  /// **'Cut in Half'**
   String get matchStatusCutInHalf;
 
   /// No description provided for @matchStatusCancelled.
   ///
   /// In en, this message translates to:
-  /// **'Can'**
+  /// **'Cancelled'**
   String get matchStatusCancelled;
 
   /// No description provided for @matchStatusTBD.
   ///
   /// In en, this message translates to:
-  /// **'TBD'**
+  /// **'To Be Defined'**
   String get matchStatusTBD;
 
   /// No description provided for @matchStatusUnknown.
   ///
   /// In en, this message translates to:
-  /// **'Unk'**
+  /// **'Unknown Status'**
   String get matchStatusUnknown;
+
+  /// No description provided for @bestPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Player'**
+  String get bestPlayer;
 
   /// No description provided for @highlights.
   ///
@@ -799,64 +433,52 @@ abstract class AppLocalizations {
   /// **'Details'**
   String get details;
 
-  /// No description provided for @kickOff.
+  /// No description provided for @onThePitch.
   ///
   /// In en, this message translates to:
-  /// **'Kick-off'**
-  String get kickOff;
+  /// **'On the Pitch'**
+  String get onThePitch;
 
-  /// No description provided for @halfTimeScore.
+  /// No description provided for @onTheBench.
   ///
   /// In en, this message translates to:
-  /// **'Half Time'**
-  String get halfTimeScore;
+  /// **'On the Bench'**
+  String get onTheBench;
 
-  /// No description provided for @fullTimeScore.
+  /// No description provided for @unknownPlayer.
   ///
   /// In en, this message translates to:
-  /// **'Full Time'**
-  String get fullTimeScore;
+  /// **'Unknown Player'**
+  String get unknownPlayer;
 
-  /// No description provided for @extraTimeScore.
+  /// No description provided for @confirmMOTMTitle.
   ///
   /// In en, this message translates to:
-  /// **'Extra Time'**
-  String get extraTimeScore;
+  /// **'Confirm Man of the Match'**
+  String get confirmMOTMTitle;
 
-  /// No description provided for @penaltyShootoutScore.
+  /// No description provided for @confirmMOTMMessage.
   ///
   /// In en, this message translates to:
-  /// **'Penalties'**
-  String get penaltyShootoutScore;
+  /// **'Are you sure you want to set {playerName} as the Man of the Match?'**
+  String confirmMOTMMessage(String playerName);
 
-  /// No description provided for @ownGoal.
+  /// No description provided for @yes.
   ///
   /// In en, this message translates to:
-  /// **'Own Goal'**
-  String get ownGoal;
+  /// **'Yes'**
+  String get yes;
 
-  /// No description provided for @penaltyMissed.
+  /// No description provided for @no.
   ///
   /// In en, this message translates to:
-  /// **'Penalty Missed'**
-  String get penaltyMissed;
-
-  /// No description provided for @varCheck.
-  ///
-  /// In en, this message translates to:
-  /// **'VAR Check'**
-  String get varCheck;
-
-  /// No description provided for @substitution.
-  ///
-  /// In en, this message translates to:
-  /// **'Substitution'**
-  String get substitution;
+  /// **'No'**
+  String get no;
 
   /// No description provided for @noDataFound.
   ///
   /// In en, this message translates to:
-  /// **'No data found'**
+  /// **'No Data Found'**
   String get noDataFound;
 
   /// No description provided for @penalties.
@@ -882,6 +504,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'First Half'**
   String get firstHalf;
+
+  /// No description provided for @ownGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'(Own Goal)'**
+  String get ownGoal;
+
+  /// No description provided for @penaltyMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'(Penalty Missed)'**
+  String get penaltyMissed;
+
+  /// No description provided for @varCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'VAR Check'**
+  String get varCheck;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @inXDays.
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} days'**
+  String inXDays(int count);
+
+  /// No description provided for @xDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days ago'**
+  String xDaysAgo(int count);
+
+  /// No description provided for @liveFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get liveFilter;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search...'**
+  String get search;
+
+  /// No description provided for @sortByImportance.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Importance'**
+  String get sortByImportance;
+
+  /// No description provided for @sortByTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Time'**
+  String get sortByTime;
+
+  /// No description provided for @noMatchesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Matches Found'**
+  String get noMatchesFound;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

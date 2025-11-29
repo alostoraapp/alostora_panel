@@ -13,25 +13,50 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
   MatchesBloc(this._getMatchesUseCase) : super(MatchesInitial()) {
     on<GetMatches>(
       _onGetMatches,
-      transformer: (events, mapper) => events.debounceTime(const Duration(milliseconds: 500)).asyncExpand(mapper),
+      // Use switchMap to cancel previous requests and only handle the latest.
+      transformer: (events, mapper) => events.debounceTime(const Duration(milliseconds: 300)).switchMap(mapper),
     );
+    on<ChangeDate>(_onChangeDate);
+  }
+
+  void _onChangeDate(ChangeDate event, Emitter<MatchesState> emit) {
+    // Do nothing if the date is the same
+    if (state.selectedDate == event.newDate) return;
+
+    // Emit a new state with the new date. This will be the current state
+    // when _onGetMatches is called.
+    emit(MatchesLoading(selectedDate: event.newDate));
+    
+    // Trigger fetching matches for the new date.
+    add(const GetMatches());
   }
 
   Future<void> _onGetMatches(GetMatches event, Emitter<MatchesState> emit) async {
-    emit(MatchesLoading());
+    final date = state.selectedDate ?? DateTime.now();
+
+    // Ensure we are in a loading state before fetching data.
+    if (state is! MatchesLoading) {
+      emit(MatchesLoading(selectedDate: date));
+    }
+
+    final startTimestamp = DateTime(date.year, date.month, date.day).toUtc().millisecondsSinceEpoch ~/ 1000;
+    final endTimestamp = DateTime(date.year, date.month, date.day, 23, 59, 59).toUtc().millisecondsSinceEpoch ~/ 1000;
+
     final failureOrCompetitions = await _getMatchesUseCase(
       GetMatchesParams(
         search: event.search,
         ordering: event.ordering,
         isLive: event.isLive,
-        startTimestamp: event.startTimestamp,
-        endTimestamp: event.endTimestamp,
+        startTimestamp: startTimestamp,
+        endTimestamp: endTimestamp,
       ),
     );
 
+    // After fetching, emit either an error or the loaded state.
+    // The selectedDate from the current state is passed along.
     failureOrCompetitions.fold(
-      (failure) => emit(MatchesError(failure.message)),
-      (competitions) => emit(MatchesLoaded(competitions)),
+      (failure) => emit(MatchesError(failure.message, selectedDate: state.selectedDate)),
+      (competitions) => emit(MatchesLoaded(competitions, selectedDate: state.selectedDate)),
     );
   }
 }

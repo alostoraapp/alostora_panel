@@ -9,13 +9,22 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Alostora Panel';
+  String get appName => 'Al Ostora Panel';
+
+  @override
+  String get changeTheme => 'Change Theme';
+
+  @override
+  String get changeLanguage => 'Change Language';
 
   @override
   String get login => 'Login';
 
   @override
-  String get loginCredentials => 'Login with your credentials';
+  String get loginError => 'Login failed. Please check your credentials.';
+
+  @override
+  String get loginCredentials => 'Enter your credentials to login';
 
   @override
   String get email => 'Email';
@@ -30,28 +39,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordHint => 'Enter your password';
 
   @override
-  String get loginError => 'Invalid credentials. Please try again.';
+  String get logout => 'Logout';
 
   @override
-  String get changeTheme => 'Change Theme';
+  String get dashboard => 'Dashboard';
 
   @override
-  String get changeLanguage => 'Change Language';
+  String get overview => 'Overview';
+
+  @override
+  String get totalUsers => 'Total Users';
+
+  @override
+  String get onlineUsers => 'Online Users';
+
+  @override
+  String get todaysMatches => 'Today\'s Matches';
+
+  @override
+  String get liveMatches => 'Live Matches';
+
+  @override
+  String get tomorrowsMatches => 'Tomorrow\'s Matches';
+
+  @override
+  String get thisWeeksMatches => 'This Week\'s Matches';
 
   @override
   String get matches => 'Matches';
 
   @override
-  String get matchDetails => 'Match Details';
+  String get matchesTiles => 'Matches (Tiles)';
 
   @override
-  String get matchTime => 'Match Time';
+  String get matchesList => 'Matches (List)';
 
   @override
-  String get matchStatus => 'Match Status';
+  String get settings => 'Settings';
 
   @override
-  String get matchActions => 'Match Actions';
+  String get competitionSelect => 'Select Competitions';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get addNewCompetition => 'Add New Competition';
+
+  @override
+  String get competitionId => 'Competition ID';
+
+  @override
+  String get pleaseEnterCompetitionId => 'Please enter a competition ID';
 
   @override
   String get save => 'Save';
@@ -63,142 +102,79 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
-  String get edit => 'Edit';
+  String get deleteCompetition => 'Delete Competition';
 
   @override
-  String get add => 'Add';
+  String get deleteCompetitionConfirmation => 'Are you sure you want to delete this competition?';
 
   @override
-  String get search => 'Search';
+  String get searchCompetition => 'Search for a competition';
 
   @override
-  String get logout => 'Logout';
+  String get noResultsFound => 'No results found';
 
   @override
-  String get settings => 'Settings';
+  String get typeToSearch => 'Type to search';
 
   @override
-  String get dashboard => 'Dashboard';
+  String get matchStatusAbnormal => 'Abnormal';
 
   @override
-  String get home => 'Home';
+  String get matchStatusNotStarted => 'Not Started';
 
   @override
-  String get away => 'Away';
+  String get matchStatusFirstHalf => '1st Half';
 
   @override
-  String get team => 'Team';
+  String get matchStatusHalfTime => 'Half Time';
 
   @override
-  String get teams => 'Teams';
+  String get matchStatusSecondHalf => '2nd Half';
 
   @override
-  String get player => 'Player';
+  String get matchStatusOvertime => 'Overtime';
 
   @override
-  String get players => 'Players';
+  String get matchStatusOvertimeDeprecated => 'Extra Time';
 
   @override
-  String get competition => 'Competition';
+  String get matchStatusPenaltyShootout => 'Penalties';
 
   @override
-  String get competitions => 'Competitions';
+  String get matchStatusEnded => 'Ended';
 
   @override
-  String get channel => 'Channel';
+  String get matchStatusDelayed => 'Delayed';
 
   @override
-  String get channels => 'Channels';
+  String get matchStatusInterrupted => 'Interrupted';
 
   @override
-  String get broadcaster => 'Broadcaster';
+  String get matchStatusCutInHalf => 'Cut in Half';
 
   @override
-  String get broadcasters => 'Broadcasters';
+  String get matchStatusCancelled => 'Cancelled';
 
   @override
-  String get name => 'Name';
+  String get matchStatusTBD => 'To Be Defined';
 
   @override
-  String get shortName => 'Short Name';
-
-  @override
-  String get displayName => 'Display Name';
-
-  @override
-  String get logo => 'Logo';
-
-  @override
-  String get country => 'Country';
-
-  @override
-  String get successTitle => 'Success';
-
-  @override
-  String get errorTitle => 'Error';
-
-  @override
-  String get confirmTitle => 'Confirm';
-
-  @override
-  String get deleteConfirmation => 'Are you sure you want to delete this item?';
-
-  @override
-  String get saveChangesSuccess => 'Changes saved successfully.';
-
-  @override
-  String get addSuccess => 'Added successfully.';
-
-  @override
-  String get deleteSuccess => 'Deleted successfully.';
-
-  @override
-  String get anErrorOccurred => 'An error occurred. Please try again.';
-
-  @override
-  String get selectCompetition => 'Select Competition';
-
-  @override
-  String get selectTeam => 'Select Team';
-
-  @override
-  String get selectBroadcaster => 'Select Broadcaster';
-
-  @override
-  String get selectChannel => 'Select Channel';
-
-  @override
-  String get noOptions => 'No options available';
-
-  @override
-  String get homeTeam => 'Home Team';
-
-  @override
-  String get awayTeam => 'Away Team';
-
-  @override
-  String get competitionConfig => 'Competition Config';
-
-  @override
-  String get visible => 'Visible';
-
-  @override
-  String get hidden => 'Hidden';
+  String get matchStatusUnknown => 'Unknown Status';
 
   @override
   String get bestPlayer => 'Best Player';
 
   @override
-  String get summary => 'Summary';
+  String get highlights => 'Highlights';
 
   @override
-  String get stats => 'Stats';
+  String get events => 'Events';
 
   @override
-  String get h2h => 'H2H';
+  String get media => 'Media';
 
   @override
-  String get standings => 'Standings';
+  String get details => 'Details';
 
   @override
   String get onThePitch => 'On the Pitch';
@@ -207,11 +183,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onTheBench => 'On the Bench';
 
   @override
+  String get unknownPlayer => 'Unknown Player';
+
+  @override
   String get confirmMOTMTitle => 'Confirm Man of the Match';
 
   @override
   String confirmMOTMMessage(String playerName) {
-    return 'Are you sure you want to select $playerName as the Man of the Match?';
+    return 'Are you sure you want to set $playerName as the Man of the Match?';
   }
 
   @override
@@ -221,7 +200,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no => 'No';
 
   @override
-  String get unknownPlayer => 'Unknown Player';
+  String get noDataFound => 'No Data Found';
+
+  @override
+  String get penalties => 'Penalties';
+
+  @override
+  String get overtime => 'Overtime';
+
+  @override
+  String get secondHalf => 'Second Half';
+
+  @override
+  String get firstHalf => 'First Half';
+
+  @override
+  String get ownGoal => '(Own Goal)';
+
+  @override
+  String get penaltyMissed => '(Penalty Missed)';
+
+  @override
+  String get varCheck => 'VAR Check';
 
   @override
   String get today => 'Today';
@@ -246,164 +246,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get liveFilter => 'Live';
 
   @override
+  String get search => 'Search...';
+
+  @override
   String get sortByImportance => 'Sort by Importance';
 
   @override
   String get sortByTime => 'Sort by Time';
 
   @override
-  String get totalUsers => 'Total Users';
-
-  @override
-  String get onlineUsers => 'Online Users';
-
-  @override
-  String get todaysMatches => 'Today\'s Matches';
-
-  @override
-  String get liveMatches => 'Live Matches';
-
-  @override
-  String get tomorrowsMatches => 'Tomorrow\'s Matches';
-
-  @override
-  String get thisWeeksMatches => 'This Week\'s Matches';
-
-  @override
-  String get competitionSelect => 'Competition Select';
-
-  @override
-  String get active => 'Active';
-
-  @override
-  String get addNewCompetition => 'Add New Competition';
-
-  @override
-  String get competitionId => 'Competition ID';
-
-  @override
-  String get pleaseEnterCompetitionId => 'Please enter a competition ID';
-
-  @override
-  String get deleteCompetition => 'Delete Competition';
-
-  @override
-  String get deleteCompetitionConfirmation => 'Are you sure you want to delete this competition configuration?';
-
-  @override
-  String get overview => 'Overview';
-
-  @override
-  String get matchesTiles => 'Matches (Tiles)';
-
-  @override
-  String get matchesList => 'Matches (List)';
-
-  @override
-  String get noResultsFound => 'No results found';
-
-  @override
-  String get typeToSearch => 'Type to search for competitions';
-
-  @override
-  String get searchCompetition => 'Search Competition';
-
-  @override
-  String get matchStatusAbnormal => 'Abnormal';
-
-  @override
-  String get matchStatusNotStarted => 'NS';
-
-  @override
-  String get matchStatusFirstHalf => '1H';
-
-  @override
-  String get matchStatusHalfTime => 'HT';
-
-  @override
-  String get matchStatusSecondHalf => '2H';
-
-  @override
-  String get matchStatusOvertime => 'OT';
-
-  @override
-  String get matchStatusOvertimeDeprecated => 'OT';
-
-  @override
-  String get matchStatusPenaltyShootout => 'PEN';
-
-  @override
-  String get matchStatusEnded => 'FT';
-
-  @override
-  String get matchStatusDelayed => 'Delayed';
-
-  @override
-  String get matchStatusInterrupted => 'Int';
-
-  @override
-  String get matchStatusCutInHalf => 'Cut';
-
-  @override
-  String get matchStatusCancelled => 'Can';
-
-  @override
-  String get matchStatusTBD => 'TBD';
-
-  @override
-  String get matchStatusUnknown => 'Unk';
-
-  @override
-  String get highlights => 'Highlights';
-
-  @override
-  String get events => 'Events';
-
-  @override
-  String get media => 'Media';
-
-  @override
-  String get details => 'Details';
-
-  @override
-  String get kickOff => 'Kick-off';
-
-  @override
-  String get halfTimeScore => 'Half Time';
-
-  @override
-  String get fullTimeScore => 'Full Time';
-
-  @override
-  String get extraTimeScore => 'Extra Time';
-
-  @override
-  String get penaltyShootoutScore => 'Penalties';
-
-  @override
-  String get ownGoal => 'Own Goal';
-
-  @override
-  String get penaltyMissed => 'Penalty Missed';
-
-  @override
-  String get varCheck => 'VAR Check';
-
-  @override
-  String get substitution => 'Substitution';
-
-  @override
-  String get noDataFound => 'No data found';
-
-  @override
-  String get penalties => 'Penalties';
-
-  @override
-  String get overtime => 'Overtime';
-
-  @override
-  String get secondHalf => 'Second Half';
-
-  @override
-  String get firstHalf => 'First Half';
+  String get noMatchesFound => 'No Matches Found';
 }
