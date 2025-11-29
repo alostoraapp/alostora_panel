@@ -16,6 +16,8 @@ class AppConstants {
       '/v1/admin/matches/$matchId/lineup/motm/';
   static String getMatchIncidentsUrl(String matchId) =>
       '/v1/admin/matches/$matchId/incidents/';
+  static String getIncidentMediaUrl(String matchId, String incidentId) =>
+      '/v1/admin/matches/$matchId/incidents/$incidentId/media/';
 
   // Settings - Competition Config
   static const String competitionConfigsUrl =

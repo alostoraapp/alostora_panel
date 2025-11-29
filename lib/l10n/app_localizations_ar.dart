@@ -256,4 +256,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noMatchesFound => 'لم يتم العثور على مباريات';
+
+  @override
+  String get importantEvents => 'المهمة';
+
+  @override
+  String get refresh => 'تحديث';
+
+  @override
+  String get mediaUrl => 'رابط الوسائط';
+
+  @override
+  String get mediaCover => 'صورة الغلاف';
+
+  @override
+  String get videoTime => 'وقت الفيديو (ثواني)';
+
+  @override
+  String get editIncidentMedia => 'تعديل وسائط الحدث';
 }

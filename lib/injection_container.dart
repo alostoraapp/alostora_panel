@@ -24,6 +24,8 @@ import 'features/match_detail/domain/repositories/match_detail_repository.dart';
 import 'features/match_detail/domain/usecases/get_lineup_usecase.dart';
 import 'features/match_detail/domain/usecases/update_man_of_the_match.dart';
 import 'features/match_detail/domain/usecases/get_match_incidents_usecase.dart';
+import 'features/match_detail/domain/usecases/delete_incident_media_usecase.dart';
+import 'features/match_detail/domain/usecases/update_incident_media_usecase.dart';
 import 'features/match_detail/presentation/bloc/lineup_bloc.dart';
 import 'features/match_detail/presentation/bloc/match_incidents/match_incidents_bloc.dart';
 import 'features/matches/data/datasources/matches_remote_datasource.dart';
@@ -71,10 +73,16 @@ Future<void> init() async {
   // Match Detail
   sl.registerFactory(
       () => LineupBloc(getLineupUsecase: sl(), updateManOfTheMatch: sl()));
-  sl.registerFactory(() => MatchIncidentsBloc(getMatchIncidentsUseCase: sl()));
+  sl.registerFactory(() => MatchIncidentsBloc(
+        getMatchIncidentsUseCase: sl(),
+        updateIncidentMediaUseCase: sl(),
+        deleteIncidentMediaUseCase: sl(),
+      ));
   sl.registerLazySingleton(() => GetLineupUsecase(repository: sl()));
   sl.registerLazySingleton(() => UpdateManOfTheMatch(sl()));
   sl.registerLazySingleton(() => GetMatchIncidentsUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateIncidentMediaUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteIncidentMediaUseCase(sl()));
   sl.registerLazySingleton<MatchDetailRepository>(
       () => MatchDetailRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<MatchDetailRemoteDataSource>(

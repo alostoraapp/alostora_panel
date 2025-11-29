@@ -101,5 +101,12 @@
   "search": "جستجو...",
   "sortByImportance": "مرتب‌سازی بر اساس اهمیت",
   "sortByTime": "مرتب‌سازی بر اساس زمان",
-  "noMatchesFound": "هیچ مسابقه‌ای یافت نشد"
+  "noMatchesFound": "هیچ مسابقه‌ای یافت نشد",
+  "importantEvents": "مهم ها",
+  "refresh": "بازخوانی",
+  "mediaUrl": "آدرس رسانه",
+  "mediaCover": "تصویر کاور",
+  "videoTime": "زمان ویدیو (ثانیه)",
+  "editIncidentMedia": "ویرایش رسانه رویداد"
 }
+

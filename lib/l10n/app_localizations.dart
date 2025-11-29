@@ -582,6 +582,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No Matches Found'**
   String get noMatchesFound;
+
+  /// No description provided for @importantEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Important'**
+  String get importantEvents;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @mediaUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Media URL'**
+  String get mediaUrl;
+
+  /// No description provided for @mediaCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Media Cover'**
+  String get mediaCover;
+
+  /// No description provided for @videoTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Video Time (seconds)'**
+  String get videoTime;
+
+  /// No description provided for @editIncidentMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Incident Media'**
+  String get editIncidentMedia;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

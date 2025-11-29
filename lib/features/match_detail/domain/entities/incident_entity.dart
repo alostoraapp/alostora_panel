@@ -17,6 +17,8 @@ class IncidentEntity extends Equatable {
   final PlayerInfoEntity? outPlayer; // For substitutions
   final IncidentReasonTypeChoices? reason;
   final String? mediaUrl;
+  final String? mediaCover;
+  final int? videoTime;
   final bool isHome; // Helper to easily check if it belongs to home team
 
   const IncidentEntity({
@@ -34,6 +36,8 @@ class IncidentEntity extends Equatable {
     this.outPlayer,
     this.reason,
     this.mediaUrl,
+    this.mediaCover,
+    this.videoTime,
     required this.isHome,
   });
 
@@ -53,6 +57,8 @@ class IncidentEntity extends Equatable {
         outPlayer,
         reason,
         mediaUrl,
+        mediaCover,
+        videoTime,
         isHome,
       ];
 }

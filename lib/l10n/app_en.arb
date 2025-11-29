@@ -101,5 +101,11 @@
   "search": "Search...",
   "sortByImportance": "Sort by Importance",
   "sortByTime": "Sort by Time",
-  "noMatchesFound": "No Matches Found"
+  "noMatchesFound": "No Matches Found",
+  "importantEvents": "Important",
+  "refresh": "Refresh",
+  "mediaUrl": "Media URL",
+  "mediaCover": "Media Cover",
+  "videoTime": "Video Time (seconds)",
+  "editIncidentMedia": "Edit Incident Media"
 }

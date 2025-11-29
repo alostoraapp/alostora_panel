@@ -101,5 +101,11 @@
   "search": "بحث...",
   "sortByImportance": "ترتيب حسب الأهمية",
   "sortByTime": "ترتيب حسب الوقت",
-  "noMatchesFound": "لم يتم العثور على مباريات"
+  "noMatchesFound": "لم يتم العثور على مباريات",
+  "importantEvents": "المهمة",
+  "refresh": "تحديث",
+  "mediaUrl": "رابط الوسائط",
+  "mediaCover": "صورة الغلاف",
+  "videoTime": "وقت الفيديو (ثواني)",
+  "editIncidentMedia": "تعديل وسائط الحدث"
 }

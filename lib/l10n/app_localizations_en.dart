@@ -256,4 +256,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noMatchesFound => 'No Matches Found';
+
+  @override
+  String get importantEvents => 'Important';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get mediaUrl => 'Media URL';
+
+  @override
+  String get mediaCover => 'Media Cover';
+
+  @override
+  String get videoTime => 'Video Time (seconds)';
+
+  @override
+  String get editIncidentMedia => 'Edit Incident Media';
 }

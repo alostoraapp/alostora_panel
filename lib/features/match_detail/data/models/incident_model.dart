@@ -18,6 +18,8 @@ class IncidentModel extends IncidentEntity {
     super.outPlayer,
     super.reason,
     super.mediaUrl,
+    super.mediaCover,
+    super.videoTime,
     required super.isHome,
   });
 
@@ -63,6 +65,8 @@ class IncidentModel extends IncidentEntity {
           ? _parseEnum(IncidentReasonTypeChoices.values, json['reason_type'])
           : null,
       mediaUrl: json['media_url'],
+      mediaCover: json['media_cover'],
+      videoTime: json['video_time'],
       isHome: json['position'] == 1, // 1 is Home in IncidentPositionChoices
     );
   }

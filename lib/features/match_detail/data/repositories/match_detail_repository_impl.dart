@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/either.dart';
@@ -44,6 +45,38 @@ class MatchDetailRepositoryImpl implements MatchDetailRepository {
       String matchId) async {
     try {
       final remoteIncidents = await remoteDataSource.getMatchIncidents(matchId);
+      return Right(remoteIncidents);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<IncidentEntity>>> updateIncidentMedia(
+      String matchId,
+      String incidentId,
+      String? mediaUrl,
+      XFile? mediaCover,
+      int? videoTime) async {
+    try {
+      final result = await remoteDataSource.updateIncidentMedia(
+          matchId, incidentId, mediaUrl, mediaCover, videoTime);
+      return Right(result);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<IncidentEntity>>> deleteIncidentMedia(
+      String matchId, String incidentId) async {
+    try {
+      final remoteIncidents =
+          await remoteDataSource.deleteIncidentMedia(matchId, incidentId);
       return Right(remoteIncidents);
     } on AppException catch (e) {
       return Left(ServerFailure(message: e.errorResponse.firstError));

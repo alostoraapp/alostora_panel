@@ -256,4 +256,22 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get noMatchesFound => 'هیچ مسابقه‌ای یافت نشد';
+
+  @override
+  String get importantEvents => 'مهم ها';
+
+  @override
+  String get refresh => 'بازخوانی';
+
+  @override
+  String get mediaUrl => 'آدرس رسانه';
+
+  @override
+  String get mediaCover => 'تصویر کاور';
+
+  @override
+  String get videoTime => 'زمان ویدیو (ثانیه)';
+
+  @override
+  String get editIncidentMedia => 'ویرایش رسانه رویداد';
 }

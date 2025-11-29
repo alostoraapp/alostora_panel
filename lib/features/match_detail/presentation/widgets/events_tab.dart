@@ -7,6 +7,7 @@ import '../../../../injection_container.dart';
 import '../../domain/entities/incident_entity.dart';
 import '../../domain/entities/incident_enums.dart';
 import '../bloc/match_incidents/match_incidents_bloc.dart';
+import 'incident_media_dialog.dart';
 
 // --- Data Structures ---
 
@@ -146,7 +147,7 @@ class EventsTab extends StatelessWidget {
             if (state.incidents.isEmpty) {
               return Center(child: Text(S.of(context).noDataFound));
             }
-            return _EventsList(incidents: state.incidents);
+            return _EventsList(incidents: state.incidents, matchId: matchId);
           }
           return const SizedBox.shrink();
         },
@@ -156,53 +157,108 @@ class EventsTab extends StatelessWidget {
 }
 
 /// Displays the categorized list of match events.
-class _EventsList extends StatelessWidget {
+class _EventsList extends StatefulWidget {
   final List<IncidentEntity> incidents;
+  final String matchId;
 
-  const _EventsList({required this.incidents});
+  const _EventsList({required this.incidents, required this.matchId});
+
+  @override
+  State<_EventsList> createState() => _EventsListState();
+}
+
+class _EventsListState extends State<_EventsList> {
+  bool _showImportantOnly = false;
 
   @override
   Widget build(BuildContext context) {
-    final groupedIncidents = _groupIncidents(incidents);
+    // Filter incidents if the switch is on.
+    final filteredIncidents = _showImportantOnly
+        ? widget.incidents.where((incident) {
+            return incident.type != StatTypeChoices.substitution &&
+                incident.type != StatTypeChoices.yellowCard;
+          }).toList()
+        : widget.incidents;
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 800),
-        child: ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                if (groupedIncidents.penalties.isNotEmpty)
-                  _EventSection(
-                    title: S.of(context).penalties,
-                    incidents: groupedIncidents.penalties,
-                    period: _MatchPeriod.penalties,
+    final groupedIncidents = _groupIncidents(filteredIncidents);
+
+    return Column(
+      children: [
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 16, 0),
+              child: Row(
+                children: [
+                  Text(S.of(context).importantEvents),
+                  const SizedBox(width: 8),
+                  Switch(
+                    value: _showImportantOnly,
+                    onChanged: (value) {
+                      setState(() {
+                        _showImportantOnly = value;
+                      });
+                    },
                   ),
-                if (groupedIncidents.overtime.isNotEmpty)
-                  _EventSection(
-                    title: S.of(context).overtime,
-                    incidents: groupedIncidents.overtime,
-                    period: _MatchPeriod.overtime,
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () {
+                      context
+                          .read<MatchIncidentsBloc>()
+                          .add(GetMatchIncidentsEvent(widget.matchId));
+                    },
+                    tooltip: S.of(context).refresh,
                   ),
-                if (groupedIncidents.secondHalf.isNotEmpty)
-                  _EventSection(
-                    title: S.of(context).secondHalf,
-                    incidents: groupedIncidents.secondHalf,
-                    period: _MatchPeriod.secondHalf,
-                  ),
-                if (groupedIncidents.firstHalf.isNotEmpty)
-                  _EventSection(
-                    title: S.of(context).firstHalf,
-                    incidents: groupedIncidents.firstHalf,
-                    period: _MatchPeriod.firstHalf,
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
+        Expanded(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: ScrollConfiguration(
+                behavior:
+                    ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      if (groupedIncidents.penalties.isNotEmpty)
+                        _EventSection(
+                          title: S.of(context).penalties,
+                          incidents: groupedIncidents.penalties,
+                          period: _MatchPeriod.penalties,
+                        ),
+                      if (groupedIncidents.overtime.isNotEmpty)
+                        _EventSection(
+                          title: S.of(context).overtime,
+                          incidents: groupedIncidents.overtime,
+                          period: _MatchPeriod.overtime,
+                        ),
+                      if (groupedIncidents.secondHalf.isNotEmpty)
+                        _EventSection(
+                          title: S.of(context).secondHalf,
+                          incidents: groupedIncidents.secondHalf,
+                          period: _MatchPeriod.secondHalf,
+                        ),
+                      if (groupedIncidents.firstHalf.isNotEmpty)
+                        _EventSection(
+                          title: S.of(context).firstHalf,
+                          incidents: groupedIncidents.firstHalf,
+                          period: _MatchPeriod.firstHalf,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -295,24 +351,66 @@ class _IncidentItem extends StatelessWidget {
           border: Border.all(color: primaryColor.withOpacity(0.5)),
           borderRadius: BorderRadius.circular(8),
         ),
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(6),
+        alignment: Alignment.center,
         child: Stack(
           children: [
             content,
-            Positioned.fill(
-              child: Center(
-                child: Icon(Icons.play_circle_fill,
-                    color: primaryColor.withOpacity(0.3), size: 32),
-              ),
+            Center(
+              child: Icon(Icons.play_circle_fill,
+                  color: primaryColor.withOpacity(0.3), size: 32),
             ),
           ],
         ),
       );
     }
 
+    final bloc = context.read<MatchIncidentsBloc>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: content,
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (dialogContext) => IncidentMediaDialog(
+              incident: incident,
+              onSave: (mediaUrl, mediaCover, videoTime) {
+                try {
+                  bloc.add(
+                    UpdateIncidentMediaEvent(
+                      matchId: incident.matchId,
+                      incidentId: incident.id,
+                      mediaUrl: mediaUrl,
+                      mediaCover: mediaCover,
+                      videoTime: videoTime,
+                    ),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error saving: $e')),
+                  );
+                }
+              },
+              onDelete: () {
+                try {
+                  bloc.add(
+                    DeleteIncidentMediaEvent(
+                      matchId: incident.matchId,
+                      incidentId: incident.id,
+                    ),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error deleting: $e')),
+                  );
+                }
+              },
+            ),
+          );
+        },
+        child: content,
+      ),
     );
   }
 }
@@ -482,7 +580,8 @@ class _IncidentDetails extends StatelessWidget {
     final outPlayerName =
         incident.outPlayer?.name ?? incident.outPlayer?.shortName;
 
-    final alignment = isHome ? CrossAxisAlignment.start : CrossAxisAlignment.end;
+    final alignment =
+        isHome ? CrossAxisAlignment.start : CrossAxisAlignment.end;
     final textAlign = isHome ? TextAlign.start : TextAlign.end;
 
     final List<Widget> children = [];

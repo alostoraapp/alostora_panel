@@ -15,3 +15,36 @@ class GetMatchIncidentsEvent extends MatchIncidentsEvent {
   @override
   List<Object> get props => [matchId];
 }
+
+class UpdateIncidentMediaEvent extends MatchIncidentsEvent {
+  final String matchId;
+  final String incidentId;
+  final String? mediaUrl;
+  final XFile? mediaCover;
+  final int? videoTime;
+
+  const UpdateIncidentMediaEvent({
+    required this.matchId,
+    required this.incidentId,
+    this.mediaUrl,
+    this.mediaCover,
+    this.videoTime,
+  });
+
+  @override
+  List<Object> get props =>
+      [matchId, incidentId, mediaUrl ?? '', mediaCover ?? '', videoTime ?? 0];
+}
+
+class DeleteIncidentMediaEvent extends MatchIncidentsEvent {
+  final String matchId;
+  final String incidentId;
+
+  const DeleteIncidentMediaEvent({
+    required this.matchId,
+    required this.incidentId,
+  });
+
+  @override
+  List<Object> get props => [matchId, incidentId];
+}
