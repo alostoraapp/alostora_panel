@@ -97,27 +97,45 @@ class _IncidentMediaDialogState extends State<IncidentMediaDialog> {
     // "After status becomes pending_approve... show all fields".
     final showAllFields = hasMediaUrl || isPendingApproval;
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final dialogWidth = isMobile ? screenWidth : 400.0;
+    final fontSize = isMobile ? 13.0 : null;
+
+    final textStyle = TextStyle(fontSize: fontSize);
+    final inputDecoration = InputDecoration(
+      isDense: true,
+      labelStyle: textStyle,
+      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+    );
+
     return AlertDialog(
-      title: Text(s.editIncidentMedia),
+      title: Text(s.editIncidentMedia,
+          style: TextStyle(fontSize: isMobile ? 16 : 20)),
+      contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
       content: SizedBox(
-        width: 400,
+        width: dialogWidth,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
                 controller: _mediaUrlController,
-                decoration: InputDecoration(labelText: s.mediaUrl),
+                style: textStyle,
+                decoration: inputDecoration.copyWith(labelText: s.mediaUrl),
               ),
               if (showAllFields) ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: _mediaCoverController,
-                  decoration: InputDecoration(
+                  style: textStyle,
+                  decoration: inputDecoration.copyWith(
                     labelText: s.mediaCover,
                     suffixIcon: IconButton(
-                      icon: const Icon(Icons.image),
+                      icon: const Icon(Icons.image, size: 20),
                       onPressed: _pickImage,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
                   ),
                 ),
@@ -127,35 +145,41 @@ class _IncidentMediaDialogState extends State<IncidentMediaDialog> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: _buildImagePreview(),
                   ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(
                       child: TextFormField(
                         controller: _hoursController,
-                        decoration: InputDecoration(labelText: s.hours),
+                        style: textStyle,
+                        decoration:
+                            inputDecoration.copyWith(labelText: s.hours),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
                         ],
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: TextFormField(
                         controller: _minutesController,
-                        decoration: InputDecoration(labelText: s.minutes),
+                        style: textStyle,
+                        decoration:
+                            inputDecoration.copyWith(labelText: s.minutes),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
                         ],
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: TextFormField(
                         controller: _secondsController,
-                        decoration: InputDecoration(labelText: s.seconds),
+                        style: textStyle,
+                        decoration:
+                            inputDecoration.copyWith(labelText: s.seconds),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
@@ -165,11 +189,14 @@ class _IncidentMediaDialogState extends State<IncidentMediaDialog> {
                   ],
                 ),
                 if (isPendingApproval) ...[
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   const Divider(),
                   SwitchListTile(
-                    title: Text(s.sendNotification),
-                    subtitle: Text(s.sendNotificationSubtitle),
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(s.sendNotification, style: textStyle),
+                    subtitle: Text(s.sendNotificationSubtitle,
+                        style:
+                            textStyle.copyWith(fontSize: isMobile ? 11 : null)),
                     value: _sendNotification,
                     onChanged: (value) {
                       setState(() {
@@ -183,65 +210,92 @@ class _IncidentMediaDialogState extends State<IncidentMediaDialog> {
           ),
         ),
       ),
+      actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       actions: [
-        if (isPendingApproval)
-          ElevatedButton(
-            onPressed: () {
-              widget.onApprove(
-                MatchIncidentMediaStatusChoices.published.value,
-                _sendNotification
-                    ? MatchIncidentMediaPriorityChoices.urgent.value
-                    : MatchIncidentMediaPriorityChoices.normal.value,
-              );
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(s.incidentApproved)),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
+        Wrap(
+          spacing: 8,
+          alignment: WrapAlignment.end,
+          children: [
+            if (isPendingApproval)
+              ElevatedButton(
+                onPressed: () {
+                  widget.onApprove(
+                    MatchIncidentMediaStatusChoices.published.value,
+                    _sendNotification
+                        ? MatchIncidentMediaPriorityChoices.urgent.value
+                        : MatchIncidentMediaPriorityChoices.normal.value,
+                  );
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(s.incidentApproved)),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  textStyle: textStyle,
+                  minimumSize: const Size(0, 36),
+                ),
+                child: Text(s.approve),
+              ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                textStyle: textStyle,
+                minimumSize: const Size(0, 36),
+              ),
+              child: Text(s.cancel),
             ),
-            child: Text(s.approve),
-          ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(s.cancel),
-        ),
-        TextButton(
-          onPressed: () {
-            widget.onDelete();
-            Navigator.pop(context);
-          },
-          style: TextButton.styleFrom(foregroundColor: Colors.red),
-          child: Text(s.delete),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            try {
-              final hours = int.tryParse(_hoursController.text) ?? 0;
-              final minutes = int.tryParse(_minutesController.text) ?? 0;
-              final seconds = int.tryParse(_secondsController.text) ?? 0;
-              final totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+            if (hasMediaUrl)
+              TextButton(
+                onPressed: () {
+                  widget.onDelete();
+                  Navigator.pop(context);
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  textStyle: textStyle,
+                  minimumSize: const Size(0, 36),
+                ),
+                child: Text(s.delete),
+              ),
+            ElevatedButton(
+              onPressed: () {
+                try {
+                  final hours = int.tryParse(_hoursController.text) ?? 0;
+                  final minutes = int.tryParse(_minutesController.text) ?? 0;
+                  final seconds = int.tryParse(_secondsController.text) ?? 0;
+                  final totalSeconds =
+                      (hours * 3600) + (minutes * 60) + seconds;
 
-              widget.onSave(
-                _mediaUrlController.text.isEmpty
-                    ? null
-                    : _mediaUrlController.text,
-                _pickedFile,
-                totalSeconds > 0 ? totalSeconds : null,
-              );
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(s.requestSent)),
-              );
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(s.error(e.toString()))),
-              );
-            }
-          },
-          child: Text(s.save),
+                  widget.onSave(
+                    _mediaUrlController.text.isEmpty
+                        ? null
+                        : _mediaUrlController.text,
+                    _pickedFile,
+                    totalSeconds > 0 ? totalSeconds : null,
+                  );
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(s.requestSent)),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(s.error(e.toString()))),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                textStyle: textStyle,
+                minimumSize: const Size(0, 36),
+              ),
+              child: Text(s.save),
+            ),
+          ],
         ),
       ],
     );
