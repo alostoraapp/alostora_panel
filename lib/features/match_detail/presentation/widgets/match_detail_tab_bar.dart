@@ -45,12 +45,12 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
   }
 
   List<String> get _title => [
-        S.of(context).bestPlayer,
-        S.of(context).highlights,
-        S.of(context).events,
-        S.of(context).media,
-        S.of(context).details,
-      ];
+    S.of(context).events,
+    S.of(context).bestPlayer,
+    S.of(context).highlights,
+    S.of(context).live,
+    S.of(context).details,
+  ];
 
   void _onTabTapped(int index) {
     _tabController.animateTo(index);
@@ -103,11 +103,11 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
               child: TabBarView(
                 controller: _tabController,
                 children: [
+                  EventsTab(matchId: widget.match.id),
                   BestPlayerTab(
                     matchId: widget.match.id,
                   ),
                   const Center(child: Text('Summary View')),
-                  EventsTab(matchId: widget.match.id),
                   const Center(child: Text('H2H View')),
                   const Center(child: Text('Standings View')),
                 ],

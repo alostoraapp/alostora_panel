@@ -262,39 +262,40 @@ class _IncidentMediaDialogState extends State<IncidentMediaDialog> {
                 ),
                 child: Text(s.delete),
               ),
-            ElevatedButton(
-              onPressed: () {
-                try {
-                  final hours = int.tryParse(_hoursController.text) ?? 0;
-                  final minutes = int.tryParse(_minutesController.text) ?? 0;
-                  final seconds = int.tryParse(_secondsController.text) ?? 0;
-                  final totalSeconds =
-                      (hours * 3600) + (minutes * 60) + seconds;
+            if (!hasMediaUrl || _pickedFile != null)
+              ElevatedButton(
+                onPressed: () {
+                  try {
+                    final hours = int.tryParse(_hoursController.text) ?? 0;
+                    final minutes = int.tryParse(_minutesController.text) ?? 0;
+                    final seconds = int.tryParse(_secondsController.text) ?? 0;
+                    final totalSeconds =
+                        (hours * 3600) + (minutes * 60) + seconds;
 
-                  widget.onSave(
-                    _mediaUrlController.text.isEmpty
-                        ? null
-                        : _mediaUrlController.text,
-                    _pickedFile,
-                    totalSeconds > 0 ? totalSeconds : null,
-                  );
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(s.requestSent)),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(s.error(e.toString()))),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                textStyle: textStyle,
-                minimumSize: const Size(0, 36),
+                    widget.onSave(
+                      _mediaUrlController.text.isEmpty
+                          ? null
+                          : _mediaUrlController.text,
+                      _pickedFile,
+                      totalSeconds > 0 ? totalSeconds : null,
+                    );
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(s.requestSent)),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(s.error(e.toString()))),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  textStyle: textStyle,
+                  minimumSize: const Size(0, 36),
+                ),
+                child: Text(s.save),
               ),
-              child: Text(s.save),
-            ),
           ],
         ),
       ],

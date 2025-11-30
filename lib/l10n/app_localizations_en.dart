@@ -171,7 +171,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get events => 'Events';
 
   @override
-  String get media => 'Media';
+  String get live => 'Live';
 
   @override
   String get details => 'Details';

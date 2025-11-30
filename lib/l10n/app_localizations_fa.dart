@@ -171,7 +171,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get events => 'رویدادها';
 
   @override
-  String get media => 'رسانه';
+  String get live => 'زنده';
 
   @override
   String get details => 'جزئیات';

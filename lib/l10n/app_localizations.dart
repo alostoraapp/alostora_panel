@@ -421,11 +421,11 @@ abstract class AppLocalizations {
   /// **'Events'**
   String get events;
 
-  /// No description provided for @media.
+  /// No description provided for @live.
   ///
   /// In en, this message translates to:
-  /// **'Media'**
-  String get media;
+  /// **'Live'**
+  String get live;
 
   /// No description provided for @details.
   ///

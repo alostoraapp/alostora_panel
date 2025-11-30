@@ -171,7 +171,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get events => 'الأحداث';
 
   @override
-  String get media => 'الوسائط';
+  String get live => 'مباشر';
 
   @override
   String get details => 'التفاصيل';
