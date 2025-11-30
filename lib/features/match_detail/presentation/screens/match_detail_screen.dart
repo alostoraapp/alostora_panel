@@ -1,30 +1,28 @@
+import 'package:alostora/core/l10n/s.dart';
+import 'package:alostora/features/matches/domain/entities/match_entity.dart';
+import 'package:alostora/features/match_detail/presentation/widgets/match_detail_tab_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../../matches/domain/entities/match_entity.dart';
-import '../../../matches/presentation/widgets/match_tile.dart';
-import '../widgets/match_detail_tab_bar.dart';
-
-class MatchDetailScreen extends StatelessWidget {
+class MatchDetailScreen extends StatefulWidget {
   final MatchEntity match;
-  const MatchDetailScreen({
-    super.key,
-    required this.match,
-  });
+
+  const MatchDetailScreen({super.key, required this.match});
 
   @override
+  State<MatchDetailScreen> createState() => _MatchDetailScreenState();
+}
+
+class _MatchDetailScreenState extends State<MatchDetailScreen> {
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppBar(
-        title: MatchTile(match: match),
-        toolbarHeight: 74.0,
-        automaticallyImplyLeading: true,
+        title: Text(S.of(context).matchDetails),
       ),
       body: MatchDetailTabBar(
-        theme: theme,
-        textTheme: textTheme,
-        match: match,
+        theme: Theme.of(context),
+        textTheme: Theme.of(context).textTheme,
+        match: widget.match,
       ),
     );
   }

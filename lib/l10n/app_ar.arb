@@ -113,6 +113,21 @@
   "approve": "موافقة",
   "incidentApproved": "تمت الموافقة على الحدث",
   "requestSent": "تم إرسال الطلب",
+  "highlightTypeSummary": "ملخص",
+  "highlightTypeGoals": "أهداف",
+  "highlightTypeFullMatch": "مباراة كاملة",
+  "highlightTypePenalties": "ركلات ترجيح",
+  "highlightTypeCelebration": "احتفال",
+  "highlightTypeOther": "أخرى",
+  "highlightStatusDraft": "مسودة",
+  "highlightStatusPendingApproval": "بانتظار الموافقة",
+  "highlightStatusPublished": "منشور",
+  "highlightPriorityNormal": "عادي",
+  "highlightPriorityImportant": "مهم (بدون إشعار)",
+  "highlightPriorityUrgent": "عاجل (مع إشعار)",
+  "highlightType": "النوع",
+  "highlightPriority": "الأولوية",
+  "highlightStatus": "الحالة",
   "errorPickingImage": "خطأ في اختيار الصورة: {error}",
   "@errorPickingImage": {
     "placeholders": {
@@ -131,5 +146,9 @@
   },
   "hours": "ساعات",
   "minutes": "دقائق",
-  "seconds": "ثواني"
+  "seconds": "ثواني",
+  "addMedia": "إضافة وسائط",
+  "editMedia": "تعديل الوسائط",
+  "lineup": "التشكيلة",
+  "matchDetails": "تفاصيل المباراة"
 }

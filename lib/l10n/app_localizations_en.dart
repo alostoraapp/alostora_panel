@@ -291,6 +291,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get requestSent => 'Request sent';
 
   @override
+  String get highlightTypeSummary => 'Summary';
+
+  @override
+  String get highlightTypeGoals => 'Goals';
+
+  @override
+  String get highlightTypeFullMatch => 'Full Match';
+
+  @override
+  String get highlightTypePenalties => 'Penalties';
+
+  @override
+  String get highlightTypeCelebration => 'Celebration';
+
+  @override
+  String get highlightTypeOther => 'Other';
+
+  @override
+  String get highlightStatusDraft => 'Draft';
+
+  @override
+  String get highlightStatusPendingApproval => 'Pending Approval';
+
+  @override
+  String get highlightStatusPublished => 'Published';
+
+  @override
+  String get highlightPriorityNormal => 'Normal';
+
+  @override
+  String get highlightPriorityImportant => 'Important (No Notification)';
+
+  @override
+  String get highlightPriorityUrgent => 'Urgent (With Notification)';
+
+  @override
+  String get highlightType => 'Type';
+
+  @override
+  String get highlightPriority => 'Priority';
+
+  @override
+  String get highlightStatus => 'Status';
+
+  @override
   String errorPickingImage(String error) {
     return 'Error picking image: $error';
   }
@@ -308,4 +353,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seconds => 'Seconds';
+
+  @override
+  String get addMedia => 'Add Media';
+
+  @override
+  String get editMedia => 'Edit Media';
+
+  @override
+  String get lineup => 'Lineup';
+
+  @override
+  String get matchDetails => 'Match Details';
 }

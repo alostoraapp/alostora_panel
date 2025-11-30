@@ -291,6 +291,51 @@ class AppLocalizationsFa extends AppLocalizations {
   String get requestSent => 'درخواست ارسال شد';
 
   @override
+  String get highlightTypeSummary => 'خلاصه';
+
+  @override
+  String get highlightTypeGoals => 'گل‌ها';
+
+  @override
+  String get highlightTypeFullMatch => 'بازی کامل';
+
+  @override
+  String get highlightTypePenalties => 'پنالتی‌ها';
+
+  @override
+  String get highlightTypeCelebration => 'خوشحالی';
+
+  @override
+  String get highlightTypeOther => 'سایر';
+
+  @override
+  String get highlightStatusDraft => 'پیش‌نویس';
+
+  @override
+  String get highlightStatusPendingApproval => 'در انتظار تایید';
+
+  @override
+  String get highlightStatusPublished => 'منتشر شده';
+
+  @override
+  String get highlightPriorityNormal => 'عادی';
+
+  @override
+  String get highlightPriorityImportant => 'مهم (بدون اعلان)';
+
+  @override
+  String get highlightPriorityUrgent => 'فوری (با اعلان)';
+
+  @override
+  String get highlightType => 'نوع';
+
+  @override
+  String get highlightPriority => 'اولویت';
+
+  @override
+  String get highlightStatus => 'وضعیت';
+
+  @override
   String errorPickingImage(String error) {
     return 'خطا در انتخاب تصویر: $error';
   }
@@ -308,4 +353,16 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get seconds => 'ثانیه';
+
+  @override
+  String get addMedia => 'افزودن رسانه';
+
+  @override
+  String get editMedia => 'ویرایش رسانه';
+
+  @override
+  String get lineup => 'ترکیب';
+
+  @override
+  String get matchDetails => 'جزئیات مسابقه';
 }

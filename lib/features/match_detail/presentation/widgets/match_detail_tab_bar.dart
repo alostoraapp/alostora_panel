@@ -10,6 +10,7 @@ import '../../../matches/domain/entities/match_entity.dart';
 import '../bloc/lineup_bloc.dart';
 import 'best_player_tab.dart';
 import 'events_tab.dart';
+import 'highlights_tab.dart';
 
 class MatchDetailTabBar extends StatefulWidget {
   const MatchDetailTabBar({
@@ -45,12 +46,12 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
   }
 
   List<String> get _title => [
-    S.of(context).events,
-    S.of(context).bestPlayer,
-    S.of(context).highlights,
-    S.of(context).live,
-    S.of(context).details,
-  ];
+        S.of(context).events,
+        S.of(context).bestPlayer,
+        S.of(context).highlights,
+        S.of(context).live,
+        S.of(context).details,
+      ];
 
   void _onTabTapped(int index) {
     _tabController.animateTo(index);
@@ -107,7 +108,7 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
                   BestPlayerTab(
                     matchId: widget.match.id,
                   ),
-                  const Center(child: Text('Summary View')),
+                  HighlightsTab(matchId: widget.match.id),
                   const Center(child: Text('H2H View')),
                   const Center(child: Text('Standings View')),
                 ],

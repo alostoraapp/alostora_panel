@@ -3,6 +3,7 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/services/api_client.dart';
 import '../models/incident_model.dart';
 import '../models/lineup_model.dart';
+import '../models/highlight_model.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -17,6 +18,15 @@ abstract class MatchDetailRemoteDataSource {
       String matchId, String incidentId);
   Future<void> approveIncidentMedia(
       String matchId, String incidentId, String status, String priority);
+
+  // Highlights
+  Future<List<HighlightModel>> getHighlights(String matchId);
+  Future<void> createHighlight(String matchId, Map<String, dynamic> params);
+  Future<void> updateHighlight(
+      String matchId, String highlightId, Map<String, dynamic> params);
+  Future<void> deleteHighlight(String matchId, String highlightId);
+  Future<void> approveHighlight(
+      String matchId, String highlightId, String status, String priority);
 }
 
 class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
@@ -95,10 +105,61 @@ class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
       String matchId, String incidentId, String status, String priority) async {
     await _apiClient.post(
       AppConstants.getApproveIncidentMediaUrl(matchId, incidentId),
-      data: {
-        'status': status,
-        'priority': priority,
-      },
+      data: {},
+    );
+  }
+
+  @override
+  Future<List<HighlightModel>> getHighlights(String matchId) async {
+    final response =
+        await _apiClient.get(AppConstants.getHighlightsUrl(matchId));
+    return (response as List).map((e) => HighlightModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<void> createHighlight(
+      String matchId, Map<String, dynamic> params) async {
+    final formData = FormData.fromMap(params);
+    if (params['cover'] is XFile) {
+      final XFile file = params['cover'];
+      final bytes = await file.readAsBytes();
+      formData.files.add(MapEntry(
+        'cover',
+        MultipartFile.fromBytes(bytes, filename: file.name),
+      ));
+    }
+
+    await _apiClient.post(AppConstants.getHighlightsUrl(matchId),
+        data: formData);
+  }
+
+  @override
+  Future<void> updateHighlight(
+      String matchId, String highlightId, Map<String, dynamic> params) async {
+    final formData = FormData.fromMap(params);
+    if (params['cover'] is XFile) {
+      final XFile file = params['cover'];
+      final bytes = await file.readAsBytes();
+      formData.files.add(MapEntry(
+        'cover',
+        MultipartFile.fromBytes(bytes, filename: file.name),
+      ));
+    }
+    await _apiClient.patch(AppConstants.getHighlightUrl(matchId, highlightId),
+        data: formData);
+  }
+
+  @override
+  Future<void> deleteHighlight(String matchId, String highlightId) async {
+    await _apiClient.delete(AppConstants.getHighlightUrl(matchId, highlightId));
+  }
+
+  @override
+  Future<void> approveHighlight(String matchId, String highlightId,
+      String status, String priority) async {
+    await _apiClient.post(
+      AppConstants.getApproveHighlightUrl(matchId, highlightId),
+      data: {'status': status, 'priority': priority},
     );
   }
 }

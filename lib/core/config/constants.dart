@@ -21,6 +21,14 @@ class AppConstants {
   static String getApproveIncidentMediaUrl(String matchId, String incidentId) =>
       '/v1/admin/matches/$matchId/incidents/$incidentId/media/approve/';
 
+  // Highlights
+  static String getHighlightsUrl(String matchId) =>
+      '/v1/admin/matches/$matchId/highlights/';
+  static String getHighlightUrl(String matchId, String highlightId) =>
+      '/v1/admin/matches/$matchId/highlights/$highlightId/';
+  static String getApproveHighlightUrl(String matchId, String highlightId) =>
+      '/v1/admin/matches/$matchId/highlights/$highlightId/approve/';
+
   // Settings - Competition Config
   static const String competitionConfigsUrl =
       '/v1/admin/entities/competition/configs/';

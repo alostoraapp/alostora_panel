@@ -649,6 +649,96 @@ abstract class AppLocalizations {
   /// **'Request sent'**
   String get requestSent;
 
+  /// No description provided for @highlightTypeSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get highlightTypeSummary;
+
+  /// No description provided for @highlightTypeGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals'**
+  String get highlightTypeGoals;
+
+  /// No description provided for @highlightTypeFullMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Match'**
+  String get highlightTypeFullMatch;
+
+  /// No description provided for @highlightTypePenalties.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalties'**
+  String get highlightTypePenalties;
+
+  /// No description provided for @highlightTypeCelebration.
+  ///
+  /// In en, this message translates to:
+  /// **'Celebration'**
+  String get highlightTypeCelebration;
+
+  /// No description provided for @highlightTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get highlightTypeOther;
+
+  /// No description provided for @highlightStatusDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get highlightStatusDraft;
+
+  /// No description provided for @highlightStatusPendingApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Approval'**
+  String get highlightStatusPendingApproval;
+
+  /// No description provided for @highlightStatusPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get highlightStatusPublished;
+
+  /// No description provided for @highlightPriorityNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get highlightPriorityNormal;
+
+  /// No description provided for @highlightPriorityImportant.
+  ///
+  /// In en, this message translates to:
+  /// **'Important (No Notification)'**
+  String get highlightPriorityImportant;
+
+  /// No description provided for @highlightPriorityUrgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent (With Notification)'**
+  String get highlightPriorityUrgent;
+
+  /// No description provided for @highlightType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get highlightType;
+
+  /// No description provided for @highlightPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get highlightPriority;
+
+  /// No description provided for @highlightStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get highlightStatus;
+
   /// No description provided for @errorPickingImage.
   ///
   /// In en, this message translates to:
@@ -678,6 +768,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Seconds'**
   String get seconds;
+
+  /// No description provided for @addMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Media'**
+  String get addMedia;
+
+  /// No description provided for @editMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Media'**
+  String get editMedia;
+
+  /// No description provided for @lineup.
+  ///
+  /// In en, this message translates to:
+  /// **'Lineup'**
+  String get lineup;
+
+  /// No description provided for @matchDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Match Details'**
+  String get matchDetails;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

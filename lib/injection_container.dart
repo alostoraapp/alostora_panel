@@ -29,6 +29,13 @@ import 'features/match_detail/domain/usecases/update_incident_media_usecase.dart
 import 'features/match_detail/domain/usecases/approve_incident_media_usecase.dart';
 import 'features/match_detail/presentation/bloc/lineup_bloc.dart';
 import 'features/match_detail/presentation/bloc/match_incidents/match_incidents_bloc.dart';
+import 'features/match_detail/presentation/bloc/match_highlights/match_highlights_bloc.dart';
+import 'features/match_detail/domain/usecases/get_highlights_usecase.dart';
+import 'features/match_detail/domain/usecases/create_highlight_usecase.dart';
+import 'features/match_detail/domain/usecases/update_highlight_usecase.dart';
+import 'features/match_detail/domain/usecases/delete_highlight_usecase.dart';
+import 'features/match_detail/domain/usecases/approve_highlight_usecase.dart';
+
 import 'features/matches/data/datasources/matches_remote_datasource.dart';
 import 'features/matches/data/repositories/matches_repository_impl.dart';
 import 'features/matches/domain/repositories/matches_repository.dart';
@@ -72,24 +79,49 @@ Future<void> init() async {
       () => MatchesRemoteDataSourceImpl(sl()));
 
   // Match Detail
-  sl.registerFactory(
-      () => LineupBloc(getLineupUsecase: sl(), updateManOfTheMatch: sl()));
+  // Blocs
+  sl.registerFactory(() => LineupBloc(
+        getLineupUsecase: sl(),
+        updateManOfTheMatch: sl(),
+      ));
   sl.registerFactory(() => MatchIncidentsBloc(
         getMatchIncidentsUseCase: sl(),
         updateIncidentMediaUseCase: sl(),
         deleteIncidentMediaUseCase: sl(),
         approveIncidentMediaUseCase: sl(),
       ));
+  sl.registerFactory(() => MatchHighlightsBloc(
+        getHighlightsUseCase: sl(),
+        createHighlightUseCase: sl(),
+        updateHighlightUseCase: sl(),
+        deleteHighlightUseCase: sl(),
+        approveHighlightUseCase: sl(),
+      ));
+
+  // Use cases
   sl.registerLazySingleton(() => GetLineupUsecase(repository: sl()));
   sl.registerLazySingleton(() => UpdateManOfTheMatch(sl()));
   sl.registerLazySingleton(() => GetMatchIncidentsUseCase(sl()));
   sl.registerLazySingleton(() => UpdateIncidentMediaUseCase(sl()));
   sl.registerLazySingleton(() => DeleteIncidentMediaUseCase(sl()));
   sl.registerLazySingleton(() => ApproveIncidentMediaUseCase(sl()));
+
+  // Highlights Use Cases
+  sl.registerLazySingleton(() => GetHighlightsUseCase(sl()));
+  sl.registerLazySingleton(() => CreateHighlightUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateHighlightUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteHighlightUseCase(sl()));
+  sl.registerLazySingleton(() => ApproveHighlightUseCase(sl()));
+
+  // Repository
   sl.registerLazySingleton<MatchDetailRepository>(
-      () => MatchDetailRepositoryImpl(remoteDataSource: sl()));
+    () => MatchDetailRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
   sl.registerLazySingleton<MatchDetailRemoteDataSource>(
-      () => MatchDetailRemoteDataSourceImpl(sl()));
+    () => MatchDetailRemoteDataSourceImpl(sl()),
+  );
 
   // Settings (Competition Config)
   sl.registerFactory(() => CompetitionConfigBloc(

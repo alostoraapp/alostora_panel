@@ -291,6 +291,51 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestSent => 'تم إرسال الطلب';
 
   @override
+  String get highlightTypeSummary => 'ملخص';
+
+  @override
+  String get highlightTypeGoals => 'أهداف';
+
+  @override
+  String get highlightTypeFullMatch => 'مباراة كاملة';
+
+  @override
+  String get highlightTypePenalties => 'ركلات ترجيح';
+
+  @override
+  String get highlightTypeCelebration => 'احتفال';
+
+  @override
+  String get highlightTypeOther => 'أخرى';
+
+  @override
+  String get highlightStatusDraft => 'مسودة';
+
+  @override
+  String get highlightStatusPendingApproval => 'بانتظار الموافقة';
+
+  @override
+  String get highlightStatusPublished => 'منشور';
+
+  @override
+  String get highlightPriorityNormal => 'عادي';
+
+  @override
+  String get highlightPriorityImportant => 'مهم (بدون إشعار)';
+
+  @override
+  String get highlightPriorityUrgent => 'عاجل (مع إشعار)';
+
+  @override
+  String get highlightType => 'النوع';
+
+  @override
+  String get highlightPriority => 'الأولوية';
+
+  @override
+  String get highlightStatus => 'الحالة';
+
+  @override
   String errorPickingImage(String error) {
     return 'خطأ في اختيار الصورة: $error';
   }
@@ -308,4 +353,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get seconds => 'ثواني';
+
+  @override
+  String get addMedia => 'إضافة وسائط';
+
+  @override
+  String get editMedia => 'تعديل الوسائط';
+
+  @override
+  String get lineup => 'التشكيلة';
+
+  @override
+  String get matchDetails => 'تفاصيل المباراة';
 }

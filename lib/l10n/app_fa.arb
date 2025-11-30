@@ -113,6 +113,21 @@
   "approve": "تایید",
   "incidentApproved": "رویداد تایید شد",
   "requestSent": "درخواست ارسال شد",
+  "highlightTypeSummary": "خلاصه",
+  "highlightTypeGoals": "گل‌ها",
+  "highlightTypeFullMatch": "بازی کامل",
+  "highlightTypePenalties": "پنالتی‌ها",
+  "highlightTypeCelebration": "خوشحالی",
+  "highlightTypeOther": "سایر",
+  "highlightStatusDraft": "پیش‌نویس",
+  "highlightStatusPendingApproval": "در انتظار تایید",
+  "highlightStatusPublished": "منتشر شده",
+  "highlightPriorityNormal": "عادی",
+  "highlightPriorityImportant": "مهم (بدون اعلان)",
+  "highlightPriorityUrgent": "فوری (با اعلان)",
+  "highlightType": "نوع",
+  "highlightPriority": "اولویت",
+  "highlightStatus": "وضعیت",
   "errorPickingImage": "خطا در انتخاب تصویر: {error}",
   "@errorPickingImage": {
     "placeholders": {
@@ -131,6 +146,10 @@
   },
   "hours": "ساعت",
   "minutes": "دقیقه",
-  "seconds": "ثانیه"
+  "seconds": "ثانیه",
+  "addMedia": "افزودن رسانه",
+  "editMedia": "ویرایش رسانه",
+  "lineup": "ترکیب",
+  "matchDetails": "جزئیات مسابقه"
 }
 

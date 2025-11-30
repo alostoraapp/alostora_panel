@@ -113,6 +113,21 @@
   "approve": "Approve",
   "incidentApproved": "Incident Approved",
   "requestSent": "Request sent",
+  "highlightTypeSummary": "Summary",
+  "highlightTypeGoals": "Goals",
+  "highlightTypeFullMatch": "Full Match",
+  "highlightTypePenalties": "Penalties",
+  "highlightTypeCelebration": "Celebration",
+  "highlightTypeOther": "Other",
+  "highlightStatusDraft": "Draft",
+  "highlightStatusPendingApproval": "Pending Approval",
+  "highlightStatusPublished": "Published",
+  "highlightPriorityNormal": "Normal",
+  "highlightPriorityImportant": "Important (No Notification)",
+  "highlightPriorityUrgent": "Urgent (With Notification)",
+  "highlightType": "Type",
+  "highlightPriority": "Priority",
+  "highlightStatus": "Status",
   "errorPickingImage": "Error picking image: {error}",
   "@errorPickingImage": {
     "placeholders": {
@@ -131,5 +146,9 @@
   },
   "hours": "Hours",
   "minutes": "Minutes",
-  "seconds": "Seconds"
+  "seconds": "Seconds",
+  "addMedia": "Add Media",
+  "editMedia": "Edit Media",
+  "lineup": "Lineup",
+  "matchDetails": "Match Details"
 }
