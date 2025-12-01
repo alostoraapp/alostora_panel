@@ -327,6 +327,33 @@ class _HighlightEditScreenState extends State<HighlightEditScreen>
       appBar: AppBar(
         title: Text(widget.highlight == null ? s.addMedia : s.editMedia),
         actions: [
+          if (widget.highlight?.status == 'pending_approval')
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: FilledButton(
+                onPressed: _approve,
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(s.approve),
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: FilledButton(
+              onPressed: _save,
+              style: FilledButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(s.save),
+            ),
+          ),
           if (widget.highlight != null) ...[
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
@@ -483,36 +510,40 @@ class _HighlightEditScreenState extends State<HighlightEditScreen>
             const SizedBox(height: 24),
 
             // Cover Image
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _mediaCoverController,
-                    decoration: InputDecoration(
-                      labelText: s.mediaCover,
-                      border: OutlineInputBorder(
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _mediaCoverController,
+                      decoration: InputDecoration(
+                        labelText: s.mediaCover,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        prefixIcon: const Icon(Icons.image),
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      prefixIcon: const Icon(Icons.image),
+                      child: IconButton(
+                        onPressed: _pickImage,
+                        icon: Icon(Icons.upload_file,
+                            color: theme.colorScheme.onPrimaryContainer),
+                      ),
                     ),
-                    readOnly: true,
                   ),
-                ),
-                const SizedBox(width: 12),
-                Container(
-                  height: 56,
-                  width: 56,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: IconButton(
-                    onPressed: _pickImage,
-                    icon: Icon(Icons.upload_file,
-                        color: theme.colorScheme.onPrimaryContainer),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 12),
             if (_pickedFile != null || _mediaCoverController.text.isNotEmpty)
@@ -616,29 +647,24 @@ class _HighlightEditScreenState extends State<HighlightEditScreen>
 
             const SizedBox(height: 40),
 
-            // Save Button
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: _save,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 2,
-                ),
-                child: Text(s.save,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-            ),
             const SizedBox(height: 20), // Extra padding at bottom
           ],
         ),
       ),
+    );
+  }
+
+  void _approve() {
+    final s = S.of(context);
+    widget.matchHighlightsBloc.add(ApproveHighlightEvent(
+      matchId: widget.matchId,
+      highlightId: widget.highlight!.id,
+      status: 'published',
+      priority: _sendNotification ? 'urgent' : 'normal',
+    ));
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(s.incidentApproved)),
     );
   }
 }

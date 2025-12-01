@@ -17,10 +17,12 @@ import '../../domain/entities/team_entity.dart';
 
 class MatchTile extends StatefulWidget {
   final MatchEntity match;
+  final bool isInteractive;
 
   const MatchTile({
     super.key,
     required this.match,
+    this.isInteractive = true,
   });
 
   @override
@@ -69,7 +71,8 @@ class _MatchTileState extends State<MatchTile> {
 
   String _getMatchMinute(MatchEntity match) {
     // Handle first half minutes
-    if (match.status == MatchStatus.firstHalf && match.firstHalfStartTime != null) {
+    if (match.status == MatchStatus.firstHalf &&
+        match.firstHalfStartTime != null) {
       final now = DateTime.now();
       final difference = now.difference(match.firstHalfStartTime!);
       int minutes = difference.inMinutes;
@@ -85,7 +88,8 @@ class _MatchTileState extends State<MatchTile> {
       }
     }
     // Handle second half minutes
-    else if (match.status == MatchStatus.secondHalf && match.secondHalfStartTime != null) {
+    else if (match.status == MatchStatus.secondHalf &&
+        match.secondHalfStartTime != null) {
       final now = DateTime.now();
       final difference = now.difference(match.secondHalfStartTime!);
       // The second half starts at 45 minutes into the game
@@ -107,7 +111,6 @@ class _MatchTileState extends State<MatchTile> {
     return '';
   }
 
-
   bool _isLive(MatchStatus status) {
     return status == MatchStatus.firstHalf ||
         status == MatchStatus.secondHalf ||
@@ -126,38 +129,56 @@ class _MatchTileState extends State<MatchTile> {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
-      cursor: SystemMouseCursors.click,
+      cursor: widget.isInteractive
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
       child: GestureDetector(
-        onTap: () {
-          GoRouter.of(context).goNamed(
-            AppRoutes.matchDetail, // Corrected: Removed .name as AppRoutes.matchDetail is already a String
-            pathParameters: {'matchId': widget.match.id},
-            extra: widget.match,
-          );
-        },
+        onTap: widget.isInteractive
+            ? () {
+                GoRouter.of(context).goNamed(
+                  AppRoutes.matchDetail,
+                  pathParameters: {'matchId': widget.match.id},
+                  extra: widget.match,
+                );
+              }
+            : null,
         child: Card(
-          elevation: _isHovering ? 4 : 1,
-          shadowColor: isLive
+          elevation: _isHovering && widget.isInteractive ? 4 : 1,
+          shadowColor: isLive && widget.isInteractive
               ? Colors.red.withOpacity(0.5)
-              : (_isHovering ? theme.colorScheme.primary.withOpacity(0.3) : Colors.black12),
+              : (_isHovering && widget.isInteractive
+                  ? theme.colorScheme.primary.withOpacity(0.3)
+                  : Colors.black12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: isLive
+            side: isLive && widget.isInteractive
                 ? const BorderSide(color: Colors.red, width: 1.5)
                 : BorderSide(
-              color: _isHovering ? theme.colorScheme.primary : Colors.transparent,
-              width: 1,
-            ),
+                    color: _isHovering && widget.isInteractive
+                        ? theme.colorScheme.primary
+                        : Colors.transparent,
+                    width: 1,
+                  ),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 16.0, vertical: 6.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 8.0 : 16.0,
+              vertical: widget.isInteractive
+                  ? 6.0
+                  : 2.0, // Reduced padding when not interactive
+            ),
             child: Row(
               textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildTeam(theme, team: widget.match.homeTeam, isMobile: isMobile),
-                _buildCenterInfo(theme, match: widget.match, isMobile: isMobile),
-                _buildTeam(theme, team: widget.match.awayTeam, isReversed: true, isMobile: isMobile),
+                _buildTeam(theme,
+                    team: widget.match.homeTeam, isMobile: isMobile),
+                _buildCenterInfo(theme,
+                    match: widget.match, isMobile: isMobile),
+                _buildTeam(theme,
+                    team: widget.match.awayTeam,
+                    isReversed: true,
+                    isMobile: isMobile),
               ],
             ),
           ),
@@ -166,8 +187,12 @@ class _MatchTileState extends State<MatchTile> {
     );
   }
 
-  Widget _buildTeam(ThemeData theme, {required TeamEntity team, bool isReversed = false, required bool isMobile}) {
-    final double logoSize = isMobile ? 32 : 40;
+  Widget _buildTeam(ThemeData theme,
+      {required TeamEntity team,
+      bool isReversed = false,
+      required bool isMobile}) {
+    // Reduced logo size when not interactive (e.g. in AppBar)
+    final double logoSize = isMobile ? 32 : (widget.isInteractive ? 40 : 32);
 
     final logo = CachedNetworkImage(
       imageUrl: team.logo,
@@ -223,19 +248,32 @@ class _MatchTileState extends State<MatchTile> {
     return Expanded(
       flex: 3,
       child: isReversed
-          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [Expanded(child: Align(alignment: AlignmentDirectional.centerEnd, child: text)), const SizedBox(width: 8), logo])
-          : Row(children: [logo, const SizedBox(width: 8), Expanded(child: text)]),
+          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Expanded(
+                  child: Align(
+                      alignment: AlignmentDirectional.centerEnd, child: text)),
+              const SizedBox(width: 8),
+              logo
+            ])
+          : Row(children: [
+              logo,
+              const SizedBox(width: 8),
+              Expanded(child: text)
+            ]),
     );
   }
 
-  Widget _buildCenterInfo(ThemeData theme, {required MatchEntity match, required bool isMobile}) {
+  Widget _buildCenterInfo(ThemeData theme,
+      {required MatchEntity match, required bool isMobile}) {
     final statusText = _getMatchStatusText(match.status, context);
     final matchMinute = _getMatchMinute(match);
     final startTime = DateFormat('HH:mm').format(match.matchTime.toLocal());
     final isLive = _isLive(match.status);
 
     // Removed MatchStatus.afterPenalties as it doesn't exist in MatchStatus enum
-    final showScore = isLive || match.status == MatchStatus.ended || match.status == MatchStatus.penaltyShootout;
+    final showScore = isLive ||
+        match.status == MatchStatus.ended ||
+        match.status == MatchStatus.penaltyShootout;
 
     return Expanded(
       flex: 2,
@@ -297,7 +335,8 @@ class MatchTileShimmer extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 16.0, vertical: 8.0),
+          padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 8.0 : 16.0, vertical: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -311,7 +350,8 @@ class MatchTileShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildTeamShimmer(ThemeData theme, {bool isReversed = false, required bool isMobile}) {
+  Widget _buildTeamShimmer(ThemeData theme,
+      {bool isReversed = false, required bool isMobile}) {
     final double logoSize = isMobile ? 32 : 40;
     final logo = Container(
       width: logoSize,
@@ -345,7 +385,9 @@ class MatchTileShimmer extends StatelessWidget {
     return Expanded(
       flex: 3,
       child: isReversed
-          ? Row(mainAxisAlignment: MainAxisAlignment.end, children: [text, const SizedBox(width: 8), logo])
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [text, const SizedBox(width: 8), logo])
           : Row(children: [logo, const SizedBox(width: 8), text]),
     );
   }

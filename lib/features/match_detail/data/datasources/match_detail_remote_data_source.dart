@@ -119,34 +119,77 @@ class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
   @override
   Future<void> createHighlight(
       String matchId, Map<String, dynamic> params) async {
-    final formData = FormData.fromMap(params);
-    if (params['cover'] is XFile) {
-      final XFile file = params['cover'];
-      final bytes = await file.readAsBytes();
-      formData.files.add(MapEntry(
-        'cover',
-        MultipartFile.fromBytes(bytes, filename: file.name),
-      ));
-    }
+    // Check if we need to upload a file
+    bool hasFile = params.values.any((value) => value is XFile);
 
-    await _apiClient.post(AppConstants.getHighlightsUrl(matchId),
-        data: formData);
+    if (!hasFile) {
+      // Send as JSON
+      await _apiClient.post(AppConstants.getHighlightsUrl(matchId),
+          data: params);
+    } else {
+      // Send as FormData
+      final data = <String, dynamic>{};
+
+      for (var entry in params.entries) {
+        if (entry.key == 'title_translations' && entry.value is List) {
+          List list = entry.value;
+          for (int i = 0; i < list.length; i++) {
+            Map item = list[i];
+            item.forEach((key, value) {
+              data['title_translations[$i][$key]'] = value;
+            });
+          }
+        } else if (entry.value is XFile) {
+          final XFile file = entry.value;
+          final bytes = await file.readAsBytes();
+          data[entry.key] = MultipartFile.fromBytes(bytes, filename: file.name);
+        } else {
+          data[entry.key] = entry.value;
+        }
+      }
+
+      final formData = FormData.fromMap(data);
+      await _apiClient.post(AppConstants.getHighlightsUrl(matchId),
+          data: formData);
+    }
   }
 
   @override
   Future<void> updateHighlight(
       String matchId, String highlightId, Map<String, dynamic> params) async {
-    final formData = FormData.fromMap(params);
-    if (params['cover'] is XFile) {
-      final XFile file = params['cover'];
-      final bytes = await file.readAsBytes();
-      formData.files.add(MapEntry(
-        'cover',
-        MultipartFile.fromBytes(bytes, filename: file.name),
-      ));
+    // Check if we need to upload a file
+    bool hasFile = params.values.any((value) => value is XFile);
+
+    if (!hasFile) {
+      // Send as JSON
+      await _apiClient.patch(AppConstants.getHighlightUrl(matchId, highlightId),
+          data: params);
+    } else {
+      // Send as FormData
+      final data = <String, dynamic>{};
+
+      for (var entry in params.entries) {
+        if (entry.key == 'title_translations' && entry.value is List) {
+          List list = entry.value;
+          for (int i = 0; i < list.length; i++) {
+            Map item = list[i];
+            item.forEach((key, value) {
+              data['title_translations[$i][$key]'] = value;
+            });
+          }
+        } else if (entry.value is XFile) {
+          final XFile file = entry.value;
+          final bytes = await file.readAsBytes();
+          data[entry.key] = MultipartFile.fromBytes(bytes, filename: file.name);
+        } else {
+          data[entry.key] = entry.value;
+        }
+      }
+
+      final formData = FormData.fromMap(data);
+      await _apiClient.patch(AppConstants.getHighlightUrl(matchId, highlightId),
+          data: formData);
     }
-    await _apiClient.patch(AppConstants.getHighlightUrl(matchId, highlightId),
-        data: formData);
   }
 
   @override

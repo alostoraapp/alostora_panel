@@ -1,6 +1,7 @@
 import 'package:alostora/core/l10n/s.dart';
 import 'package:alostora/features/matches/domain/entities/match_entity.dart';
 import 'package:alostora/features/match_detail/presentation/widgets/match_detail_tab_bar.dart';
+import 'package:alostora/features/matches/presentation/widgets/match_tile.dart';
 import 'package:flutter/material.dart';
 
 class MatchDetailScreen extends StatefulWidget {
@@ -17,7 +18,11 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).matchDetails),
+        title: MatchTile(
+          match: widget.match,
+          isInteractive: false,
+        ),
+        toolbarHeight: 70, // Reduced height for compact MatchTile
       ),
       body: MatchDetailTabBar(
         theme: Theme.of(context),
