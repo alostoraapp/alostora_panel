@@ -167,5 +167,7 @@
   "deleteBroadcast": "Delete Broadcast",
   "deleteBroadcastConfirmation": "Are you sure you want to delete this broadcast?",
   "tvChannels": "TV Channels",
-  "commentators": "Commentators"
+  "commentators": "Commentators",
+  "deleteTvChannel": "Delete TV Channel",
+  "deleteTvChannelConfirmation": "Are you sure you want to delete this TV channel?"
 }

@@ -416,4 +416,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get commentators => 'المعلقين';
+
+  @override
+  String get deleteTvChannel => 'حذف القناة';
+
+  @override
+  String get deleteTvChannelConfirmation => 'هل أنت متأكد أنك تريد حذف هذه القناة؟';
 }

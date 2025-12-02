@@ -5,6 +5,7 @@ import '../entities/lineup_entity.dart';
 import '../entities/highlight_entity.dart';
 import '../entities/broadcast_entity.dart';
 import '../entities/tv_channel_entity.dart';
+import '../entities/match_tv_channel_entity.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -50,4 +51,12 @@ abstract class MatchDetailRepository {
       String matchId, String broadcastId);
   Future<Either<Failure, List<TvChannelEntity>>> searchTvChannels(
       String query, int page);
+
+  // Match TV Channels
+  Future<Either<Failure, List<MatchTvChannelEntity>>> getMatchTvChannels(
+      String matchId);
+  Future<Either<Failure, void>> addTvChannelToMatch(
+      String matchId, String tvChannelId);
+  Future<Either<Failure, void>> deleteTvChannelFromMatch(
+      String matchId, String itemId);
 }

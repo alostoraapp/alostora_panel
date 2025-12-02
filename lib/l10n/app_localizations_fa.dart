@@ -416,4 +416,10 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get commentators => 'گزارشگران';
+
+  @override
+  String get deleteTvChannel => 'حذف شبکه';
+
+  @override
+  String get deleteTvChannelConfirmation => 'آیا مطمئن هستید که می‌خواهید این شبکه را حذف کنید؟';
 }

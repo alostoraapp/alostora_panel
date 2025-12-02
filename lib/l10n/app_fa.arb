@@ -167,6 +167,8 @@
   "deleteBroadcast": "حذف پخش",
   "deleteBroadcastConfirmation": "آیا مطمئن هستید که می‌خواهید این پخش را حذف کنید؟",
   "tvChannels": "شبکه‌های تلویزیونی",
-  "commentators": "گزارشگران"
+  "commentators": "گزارشگران",
+  "deleteTvChannel": "حذف شبکه",
+  "deleteTvChannelConfirmation": "آیا مطمئن هستید که می‌خواهید این شبکه را حذف کنید؟"
 }
 

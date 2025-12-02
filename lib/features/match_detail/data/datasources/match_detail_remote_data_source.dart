@@ -6,6 +6,7 @@ import '../models/lineup_model.dart';
 import '../models/highlight_model.dart';
 import '../models/broadcast_model.dart';
 import '../models/tv_channel_model.dart';
+import '../models/match_tv_channel_model.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -37,6 +38,11 @@ abstract class MatchDetailRemoteDataSource {
       String matchId, String broadcastId, Map<String, dynamic> params);
   Future<void> deleteBroadcast(String matchId, String broadcastId);
   Future<List<TvChannelModel>> searchTvChannels(String query, int page);
+
+  // Match TV Channels
+  Future<List<MatchTvChannelModel>> getMatchTvChannels(String matchId);
+  Future<void> addTvChannelToMatch(String matchId, String tvChannelId);
+  Future<void> deleteTvChannelFromMatch(String matchId, String itemId);
 }
 
 class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
@@ -251,5 +257,28 @@ class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
     return (response['results'] as List)
         .map((e) => TvChannelModel.fromJson(e))
         .toList();
+  }
+
+  // Match TV Channels
+  @override
+  Future<List<MatchTvChannelModel>> getMatchTvChannels(String matchId) async {
+    final response =
+        await _apiClient.get(AppConstants.getMatchTvChannelsUrl(matchId));
+    return (response as List)
+        .map((e) => MatchTvChannelModel.fromJson(e))
+        .toList();
+  }
+
+  @override
+  Future<void> addTvChannelToMatch(String matchId, String tvChannelId) async {
+    await _apiClient.post(
+      AppConstants.getMatchTvChannelsUrl(matchId),
+      data: {'tv_channel': tvChannelId},
+    );
+  }
+
+  @override
+  Future<void> deleteTvChannelFromMatch(String matchId, String itemId) async {
+    await _apiClient.delete(AppConstants.getMatchTvChannelUrl(matchId, itemId));
   }
 }

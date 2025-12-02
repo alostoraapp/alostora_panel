@@ -894,6 +894,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Commentators'**
   String get commentators;
+
+  /// No description provided for @deleteTvChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete TV Channel'**
+  String get deleteTvChannel;
+
+  /// No description provided for @deleteTvChannelConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this TV channel?'**
+  String get deleteTvChannelConfirmation;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
