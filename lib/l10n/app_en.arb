@@ -165,5 +165,7 @@
   "pleaseSelectPlatform": "Please select a Platform",
   "pleaseEnterUrl": "Please enter URL",
   "deleteBroadcast": "Delete Broadcast",
-  "deleteBroadcastConfirmation": "Are you sure you want to delete this broadcast?"
+  "deleteBroadcastConfirmation": "Are you sure you want to delete this broadcast?",
+  "tvChannels": "TV Channels",
+  "commentators": "Commentators"
 }

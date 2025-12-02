@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_icons.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/l10n/s.dart';
 import '../../../../injection_container.dart';
 import '../bloc/match_broadcasts/match_broadcasts_bloc.dart';
@@ -21,6 +22,17 @@ class LiveTab extends StatefulWidget {
 
 class _LiveTabState extends State<LiveTab> {
   late MatchBroadcastsBloc _bloc;
+
+  String _getPlatformName(AppLocalizations s, String key) {
+    final choices = {
+      'youtube': s.platformYouTube,
+      'x': s.platformX,
+      'facebook': s.platformFacebook,
+      'official': s.platformOfficial,
+      'other': s.platformOther,
+    };
+    return choices[key] ?? key;
+  }
 
   @override
   void initState() {
@@ -194,7 +206,8 @@ class _LiveTabState extends State<LiveTab> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        broadcast.platformName,
+                                        _getPlatformName(
+                                            s, broadcast.platformName),
                                         style: theme.textTheme.bodyMedium,
                                       ),
                                       const SizedBox(height: 2),
@@ -210,6 +223,37 @@ class _LiveTabState extends State<LiveTab> {
                                       ),
                                     ],
                                   ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline,
+                                      color: Colors.red),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: Text(s.deleteBroadcast),
+                                        content:
+                                            Text(s.deleteBroadcastConfirmation),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text(s.cancel),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              _bloc.add(DeleteBroadcastEvent(
+                                                matchId: widget.matchId,
+                                                broadcastId: broadcast.id,
+                                              ));
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(s.delete),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),

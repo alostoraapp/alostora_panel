@@ -73,7 +73,7 @@ class _BroadcastDialogState extends State<BroadcastDialog> {
       final params = {
         'platform_name': _selectedPlatform,
         'url': _urlController.text,
-        'tv_channel_id': _selectedTvChannel!.id,
+        'tv_channel': _selectedTvChannel!.id,
       };
 
       if (widget.broadcast == null) {
@@ -91,34 +91,6 @@ class _BroadcastDialogState extends State<BroadcastDialog> {
 
       Navigator.pop(context);
     }
-  }
-
-  void _delete() {
-    final s = S.of(context);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(s.deleteBroadcast),
-        content: Text(s.deleteBroadcastConfirmation),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(s.cancel),
-          ),
-          TextButton(
-            onPressed: () {
-              widget.matchBroadcastsBloc.add(DeleteBroadcastEvent(
-                matchId: widget.matchId,
-                broadcastId: widget.broadcast!.id,
-              ));
-              Navigator.pop(context); // Close confirmation dialog
-              Navigator.pop(context); // Close edit dialog
-            },
-            child: Text(s.delete),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -196,31 +168,16 @@ class _BroadcastDialogState extends State<BroadcastDialog> {
 
               // Actions
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (widget.broadcast != null)
-                    TextButton.icon(
-                      onPressed: _delete,
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      label: Text(
-                        s.delete,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    )
-                  else
-                    const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text(s.cancel),
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed: _save,
-                        child: Text(s.save),
-                      ),
-                    ],
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(s.cancel),
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: _save,
+                    child: Text(s.save),
                   ),
                 ],
               ),

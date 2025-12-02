@@ -410,4 +410,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteBroadcastConfirmation => 'Are you sure you want to delete this broadcast?';
+
+  @override
+  String get tvChannels => 'TV Channels';
+
+  @override
+  String get commentators => 'Commentators';
 }

@@ -165,5 +165,7 @@
   "pleaseSelectPlatform": "يرجى اختيار منصة",
   "pleaseEnterUrl": "يرجى إدخال الرابط",
   "deleteBroadcast": "حذف البث",
-  "deleteBroadcastConfirmation": "هل أنت متأكد أنك تريد حذف هذا البث؟"
+  "deleteBroadcastConfirmation": "هل أنت متأكد أنك تريد حذف هذا البث؟",
+  "tvChannels": "القنوات التلفزيونية",
+  "commentators": "المعلقين"
 }

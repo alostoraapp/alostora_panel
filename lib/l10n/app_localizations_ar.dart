@@ -410,4 +410,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get deleteBroadcastConfirmation => 'هل أنت متأكد أنك تريد حذف هذا البث؟';
+
+  @override
+  String get tvChannels => 'القنوات التلفزيونية';
+
+  @override
+  String get commentators => 'المعلقين';
 }

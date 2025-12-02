@@ -165,6 +165,8 @@
   "pleaseSelectPlatform": "لطفاً یک پلتفرم انتخاب کنید",
   "pleaseEnterUrl": "لطفاً آدرس را وارد کنید",
   "deleteBroadcast": "حذف پخش",
-  "deleteBroadcastConfirmation": "آیا مطمئن هستید که می‌خواهید این پخش را حذف کنید؟"
+  "deleteBroadcastConfirmation": "آیا مطمئن هستید که می‌خواهید این پخش را حذف کنید؟",
+  "tvChannels": "شبکه‌های تلویزیونی",
+  "commentators": "گزارشگران"
 }
 

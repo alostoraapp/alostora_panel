@@ -410,4 +410,10 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get deleteBroadcastConfirmation => 'آیا مطمئن هستید که می‌خواهید این پخش را حذف کنید؟';
+
+  @override
+  String get tvChannels => 'شبکه‌های تلویزیونی';
+
+  @override
+  String get commentators => 'گزارشگران';
 }
