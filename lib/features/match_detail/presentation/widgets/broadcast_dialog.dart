@@ -1,14 +1,12 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/l10n/s.dart';
-import '../../../../injection_container.dart';
 import '../../domain/entities/broadcast_entity.dart';
 import '../../domain/entities/tv_channel_entity.dart';
-import '../../domain/usecases/search_tv_channels_usecase.dart';
 import '../bloc/match_broadcasts/match_broadcasts_bloc.dart';
 import '../bloc/match_broadcasts/match_broadcasts_event.dart';
+import 'tv_channel_dropdown.dart';
 
 class BroadcastDialog extends StatefulWidget {
   final String matchId;
@@ -31,11 +29,6 @@ class _BroadcastDialogState extends State<BroadcastDialog> {
   late TextEditingController _urlController;
   String? _selectedPlatform;
   TvChannelEntity? _selectedTvChannel;
-  final SearchTvChannelsUseCase _searchTvChannelsUseCase = sl();
-  final TextEditingController _tvChannelSearchController =
-      TextEditingController();
-  List<TvChannelEntity> _tvChannelOptions = [];
-  bool _isLoadingChannels = false;
 
   Map<String, String> _getPlatformChoices(AppLocalizations s) {
     return {
@@ -53,50 +46,11 @@ class _BroadcastDialogState extends State<BroadcastDialog> {
     _urlController = TextEditingController(text: widget.broadcast?.url ?? '');
     _selectedPlatform = widget.broadcast?.platformName;
     _selectedTvChannel = widget.broadcast?.tvChannel;
-    if (_selectedTvChannel != null) {
-      _tvChannelSearchController.text = _selectedTvChannel!.name;
-    }
-    _tvChannelSearchController.addListener(_onSearchChanged);
-    _loadTvChannels();
-  }
-
-  Timer? _debounce;
-
-  void _onSearchChanged() {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      // Only search if the text is different from the selected channel name
-      // This prevents re-searching when selecting an item
-      if (_selectedTvChannel == null ||
-          _tvChannelSearchController.text != _selectedTvChannel!.name) {
-        _loadTvChannels(_tvChannelSearchController.text);
-      }
-    });
-  }
-
-  Future<void> _loadTvChannels([String query = '']) async {
-    setState(() {
-      _isLoadingChannels = true;
-    });
-    final result = await _searchTvChannelsUseCase(
-        SearchTvChannelsParams(query: query, page: 1));
-    result.fold(
-      (failure) => null, // Handle error if needed
-      (channels) {
-        setState(() {
-          _tvChannelOptions = channels.take(5).toList();
-          _isLoadingChannels = false;
-        });
-      },
-    );
   }
 
   @override
   void dispose() {
-    _debounce?.cancel();
     _urlController.dispose();
-    _tvChannelSearchController.removeListener(_onSearchChanged);
-    _tvChannelSearchController.dispose();
     super.dispose();
   }
 
@@ -214,50 +168,12 @@ class _BroadcastDialogState extends State<BroadcastDialog> {
               const SizedBox(height: 16),
 
               // TV Channel Searchable Dropdown
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  return DropdownMenu<TvChannelEntity>(
-                    width: constraints.maxWidth,
-                    controller: _tvChannelSearchController,
-                    enableFilter:
-                        false, // Disable local filtering to use backend results
-                    requestFocusOnTap: true,
-                    trailingIcon: _isLoadingChannels
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : null,
-                    leadingIcon: const Icon(Icons.search),
-                    label: Text(s.tvChannel),
-                    inputDecorationTheme: const InputDecorationTheme(
-                      border: OutlineInputBorder(),
-                    ),
-                    initialSelection: _selectedTvChannel,
-                    onSelected: (TvChannelEntity? channel) {
-                      setState(() {
-                        _selectedTvChannel = channel;
-                      });
-                    },
-                    dropdownMenuEntries: _tvChannelOptions
-                        .map<DropdownMenuEntry<TvChannelEntity>>(
-                            (TvChannelEntity channel) {
-                      return DropdownMenuEntry<TvChannelEntity>(
-                        value: channel,
-                        label: channel.name,
-                        leadingIcon: channel.logo.isNotEmpty
-                            ? Image.network(
-                                channel.logo,
-                                width: 24,
-                                height: 24,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(Icons.tv, size: 24),
-                              )
-                            : const Icon(Icons.tv, size: 24),
-                      );
-                    }).toList(),
-                  );
+              TvChannelSearchDropdown(
+                initialSelection: _selectedTvChannel,
+                onSelected: (TvChannelEntity? channel) {
+                  setState(() {
+                    _selectedTvChannel = channel;
+                  });
                 },
               ),
               const SizedBox(height: 16),
