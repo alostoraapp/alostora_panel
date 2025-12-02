@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
@@ -55,7 +56,22 @@ class _BroadcastDialogState extends State<BroadcastDialog> {
     if (_selectedTvChannel != null) {
       _tvChannelSearchController.text = _selectedTvChannel!.name;
     }
+    _tvChannelSearchController.addListener(_onSearchChanged);
     _loadTvChannels();
+  }
+
+  Timer? _debounce;
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      // Only search if the text is different from the selected channel name
+      // This prevents re-searching when selecting an item
+      if (_selectedTvChannel == null ||
+          _tvChannelSearchController.text != _selectedTvChannel!.name) {
+        _loadTvChannels(_tvChannelSearchController.text);
+      }
+    });
   }
 
   Future<void> _loadTvChannels([String query = '']) async {
@@ -77,7 +93,9 @@ class _BroadcastDialogState extends State<BroadcastDialog> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _urlController.dispose();
+    _tvChannelSearchController.removeListener(_onSearchChanged);
     _tvChannelSearchController.dispose();
     super.dispose();
   }
@@ -201,7 +219,8 @@ class _BroadcastDialogState extends State<BroadcastDialog> {
                   return DropdownMenu<TvChannelEntity>(
                     width: constraints.maxWidth,
                     controller: _tvChannelSearchController,
-                    enableFilter: true,
+                    enableFilter:
+                        false, // Disable local filtering to use backend results
                     requestFocusOnTap: true,
                     trailingIcon: _isLoadingChannels
                         ? const SizedBox(
