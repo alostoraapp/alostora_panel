@@ -5,6 +5,8 @@ import '../../../../core/utils/either.dart';
 import '../../domain/entities/incident_entity.dart';
 import '../../domain/entities/lineup_entity.dart';
 import '../../domain/entities/highlight_entity.dart';
+import '../../domain/entities/broadcast_entity.dart';
+import '../../domain/entities/tv_channel_entity.dart';
 import '../../domain/repositories/match_detail_repository.dart';
 
 import '../datasources/match_detail_remote_data_source.dart';
@@ -165,6 +167,72 @@ class MatchDetailRepositoryImpl implements MatchDetailRepository {
       await remoteDataSource.approveHighlight(
           matchId, highlightId, status, priority);
       return const Right(null);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  // Broadcasts Implementation
+  @override
+  Future<Either<Failure, List<BroadcastEntity>>> getBroadcasts(
+      String matchId) async {
+    try {
+      final result = await remoteDataSource.getBroadcasts(matchId);
+      return Right(result);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> createBroadcast(
+      String matchId, Map<String, dynamic> params) async {
+    try {
+      await remoteDataSource.createBroadcast(matchId, params);
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateBroadcast(
+      String matchId, String broadcastId, Map<String, dynamic> params) async {
+    try {
+      await remoteDataSource.updateBroadcast(matchId, broadcastId, params);
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteBroadcast(
+      String matchId, String broadcastId) async {
+    try {
+      await remoteDataSource.deleteBroadcast(matchId, broadcastId);
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TvChannelEntity>>> searchTvChannels(
+      String query, int page) async {
+    try {
+      final result = await remoteDataSource.searchTvChannels(query, page);
+      return Right(result);
     } on AppException catch (e) {
       return Left(ServerFailure(message: e.errorResponse.firstError));
     } catch (e) {

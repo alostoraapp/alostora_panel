@@ -792,6 +792,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Match Details'**
   String get matchDetails;
+
+  /// No description provided for @platformYouTube.
+  ///
+  /// In en, this message translates to:
+  /// **'YouTube'**
+  String get platformYouTube;
+
+  /// No description provided for @platformX.
+  ///
+  /// In en, this message translates to:
+  /// **'X (Twitter)'**
+  String get platformX;
+
+  /// No description provided for @platformFacebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook'**
+  String get platformFacebook;
+
+  /// No description provided for @platformOfficial.
+  ///
+  /// In en, this message translates to:
+  /// **'Official Website'**
+  String get platformOfficial;
+
+  /// No description provided for @platformOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get platformOther;
+
+  /// No description provided for @addBroadcast.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Broadcast'**
+  String get addBroadcast;
+
+  /// No description provided for @editBroadcast.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Broadcast'**
+  String get editBroadcast;
+
+  /// No description provided for @platform.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get platform;
+
+  /// No description provided for @tvChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'TV Channel'**
+  String get tvChannel;
+
+  /// No description provided for @url.
+  ///
+  /// In en, this message translates to:
+  /// **'URL'**
+  String get url;
+
+  /// No description provided for @pleaseSelectTvChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a TV Channel'**
+  String get pleaseSelectTvChannel;
+
+  /// No description provided for @pleaseSelectPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a Platform'**
+  String get pleaseSelectPlatform;
+
+  /// No description provided for @pleaseEnterUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter URL'**
+  String get pleaseEnterUrl;
+
+  /// No description provided for @deleteBroadcast.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Broadcast'**
+  String get deleteBroadcast;
+
+  /// No description provided for @deleteBroadcastConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this broadcast?'**
+  String get deleteBroadcastConfirmation;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

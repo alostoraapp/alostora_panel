@@ -365,4 +365,49 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get matchDetails => 'جزئیات مسابقه';
+
+  @override
+  String get platformYouTube => 'یوتیوب';
+
+  @override
+  String get platformX => 'ایکس (توییتر)';
+
+  @override
+  String get platformFacebook => 'فیسبوک';
+
+  @override
+  String get platformOfficial => 'وبسایت رسمی';
+
+  @override
+  String get platformOther => 'سایر';
+
+  @override
+  String get addBroadcast => 'افزودن پخش';
+
+  @override
+  String get editBroadcast => 'ویرایش پخش';
+
+  @override
+  String get platform => 'پلتفرم';
+
+  @override
+  String get tvChannel => 'کانال تلویزیونی';
+
+  @override
+  String get url => 'آدرس';
+
+  @override
+  String get pleaseSelectTvChannel => 'لطفاً یک کانال تلویزیونی انتخاب کنید';
+
+  @override
+  String get pleaseSelectPlatform => 'لطفاً یک پلتفرم انتخاب کنید';
+
+  @override
+  String get pleaseEnterUrl => 'لطفاً آدرس را وارد کنید';
+
+  @override
+  String get deleteBroadcast => 'حذف پخش';
+
+  @override
+  String get deleteBroadcastConfirmation => 'آیا مطمئن هستید که می‌خواهید این پخش را حذف کنید؟';
 }

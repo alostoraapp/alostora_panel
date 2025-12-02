@@ -35,6 +35,12 @@ import 'features/match_detail/domain/usecases/create_highlight_usecase.dart';
 import 'features/match_detail/domain/usecases/update_highlight_usecase.dart';
 import 'features/match_detail/domain/usecases/delete_highlight_usecase.dart';
 import 'features/match_detail/domain/usecases/approve_highlight_usecase.dart';
+import 'features/match_detail/presentation/bloc/match_broadcasts/match_broadcasts_bloc.dart';
+import 'features/match_detail/domain/usecases/get_broadcasts_usecase.dart';
+import 'features/match_detail/domain/usecases/create_broadcast_usecase.dart';
+import 'features/match_detail/domain/usecases/update_broadcast_usecase.dart';
+import 'features/match_detail/domain/usecases/delete_broadcast_usecase.dart';
+import 'features/match_detail/domain/usecases/search_tv_channels_usecase.dart';
 
 import 'features/matches/data/datasources/matches_remote_datasource.dart';
 import 'features/matches/data/repositories/matches_repository_impl.dart';
@@ -112,6 +118,21 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateHighlightUseCase(sl()));
   sl.registerLazySingleton(() => DeleteHighlightUseCase(sl()));
   sl.registerLazySingleton(() => ApproveHighlightUseCase(sl()));
+
+  // Broadcasts
+  sl.registerFactory(() => MatchBroadcastsBloc(
+        getBroadcastsUseCase: sl(),
+        createBroadcastUseCase: sl(),
+        updateBroadcastUseCase: sl(),
+        deleteBroadcastUseCase: sl(),
+      ));
+
+  // Broadcasts Use Cases
+  sl.registerLazySingleton(() => GetBroadcastsUseCase(sl()));
+  sl.registerLazySingleton(() => CreateBroadcastUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateBroadcastUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteBroadcastUseCase(sl()));
+  sl.registerLazySingleton(() => SearchTvChannelsUseCase(sl()));
 
   // Repository
   sl.registerLazySingleton<MatchDetailRepository>(

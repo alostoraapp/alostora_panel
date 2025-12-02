@@ -150,5 +150,20 @@
   "addMedia": "Add Media",
   "editMedia": "Edit Media",
   "lineup": "Lineup",
-  "matchDetails": "Match Details"
+  "matchDetails": "Match Details",
+  "platformYouTube": "YouTube",
+  "platformX": "X (Twitter)",
+  "platformFacebook": "Facebook",
+  "platformOfficial": "Official Website",
+  "platformOther": "Other",
+  "addBroadcast": "Add Broadcast",
+  "editBroadcast": "Edit Broadcast",
+  "platform": "Platform",
+  "tvChannel": "TV Channel",
+  "url": "URL",
+  "pleaseSelectTvChannel": "Please select a TV Channel",
+  "pleaseSelectPlatform": "Please select a Platform",
+  "pleaseEnterUrl": "Please enter URL",
+  "deleteBroadcast": "Delete Broadcast",
+  "deleteBroadcastConfirmation": "Are you sure you want to delete this broadcast?"
 }

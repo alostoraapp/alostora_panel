@@ -150,6 +150,21 @@
   "addMedia": "افزودن رسانه",
   "editMedia": "ویرایش رسانه",
   "lineup": "ترکیب",
-  "matchDetails": "جزئیات مسابقه"
+  "matchDetails": "جزئیات مسابقه",
+  "platformYouTube": "یوتیوب",
+  "platformX": "ایکس (توییتر)",
+  "platformFacebook": "فیسبوک",
+  "platformOfficial": "وبسایت رسمی",
+  "platformOther": "سایر",
+  "addBroadcast": "افزودن پخش",
+  "editBroadcast": "ویرایش پخش",
+  "platform": "پلتفرم",
+  "tvChannel": "کانال تلویزیونی",
+  "url": "آدرس",
+  "pleaseSelectTvChannel": "لطفاً یک کانال تلویزیونی انتخاب کنید",
+  "pleaseSelectPlatform": "لطفاً یک پلتفرم انتخاب کنید",
+  "pleaseEnterUrl": "لطفاً آدرس را وارد کنید",
+  "deleteBroadcast": "حذف پخش",
+  "deleteBroadcastConfirmation": "آیا مطمئن هستید که می‌خواهید این پخش را حذف کنید؟"
 }
 

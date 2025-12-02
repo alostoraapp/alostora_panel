@@ -150,5 +150,20 @@
   "addMedia": "إضافة وسائط",
   "editMedia": "تعديل الوسائط",
   "lineup": "التشكيلة",
-  "matchDetails": "تفاصيل المباراة"
+  "matchDetails": "تفاصيل المباراة",
+  "platformYouTube": "يوتيوب",
+  "platformX": "إكس (تويتر)",
+  "platformFacebook": "فيسبوك",
+  "platformOfficial": "الموقع الرسمي",
+  "platformOther": "أخرى",
+  "addBroadcast": "إضافة بث",
+  "editBroadcast": "تعديل البث",
+  "platform": "المنصة",
+  "tvChannel": "القناة التلفزيونية",
+  "url": "الرابط",
+  "pleaseSelectTvChannel": "يرجى اختيار قناة تلفزيونية",
+  "pleaseSelectPlatform": "يرجى اختيار منصة",
+  "pleaseEnterUrl": "يرجى إدخال الرابط",
+  "deleteBroadcast": "حذف البث",
+  "deleteBroadcastConfirmation": "هل أنت متأكد أنك تريد حذف هذا البث؟"
 }

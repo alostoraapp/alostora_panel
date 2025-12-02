@@ -29,6 +29,15 @@ class AppConstants {
   static String getApproveHighlightUrl(String matchId, String highlightId) =>
       '/v1/admin/matches/$matchId/highlights/$highlightId/approve/';
 
+  // Broadcasts
+  static String getBroadcastsUrl(String matchId) =>
+      '/v1/admin/matches/$matchId/broadcasts/';
+  static String getBroadcastUrl(String matchId, String broadcastId) =>
+      '/v1/admin/matches/$matchId/broadcasts/$broadcastId/';
+
+  // TV Channels
+  static const String tvChannelsUrl = '/v1/admin/media/tv-channels/';
+
   // Settings - Competition Config
   static const String competitionConfigsUrl =
       '/v1/admin/entities/competition/configs/';

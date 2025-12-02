@@ -4,6 +4,8 @@ import '../../../../core/services/api_client.dart';
 import '../models/incident_model.dart';
 import '../models/lineup_model.dart';
 import '../models/highlight_model.dart';
+import '../models/broadcast_model.dart';
+import '../models/tv_channel_model.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -27,6 +29,14 @@ abstract class MatchDetailRemoteDataSource {
   Future<void> deleteHighlight(String matchId, String highlightId);
   Future<void> approveHighlight(
       String matchId, String highlightId, String status, String priority);
+
+  // Broadcasts
+  Future<List<BroadcastModel>> getBroadcasts(String matchId);
+  Future<void> createBroadcast(String matchId, Map<String, dynamic> params);
+  Future<void> updateBroadcast(
+      String matchId, String broadcastId, Map<String, dynamic> params);
+  Future<void> deleteBroadcast(String matchId, String broadcastId);
+  Future<List<TvChannelModel>> searchTvChannels(String query, int page);
 }
 
 class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
@@ -204,5 +214,42 @@ class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
       AppConstants.getApproveHighlightUrl(matchId, highlightId),
       data: {'status': status, 'priority': priority},
     );
+  }
+
+  // Broadcasts
+  @override
+  Future<List<BroadcastModel>> getBroadcasts(String matchId) async {
+    final response =
+        await _apiClient.get(AppConstants.getBroadcastsUrl(matchId));
+    return (response as List).map((e) => BroadcastModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<void> createBroadcast(
+      String matchId, Map<String, dynamic> params) async {
+    await _apiClient.post(AppConstants.getBroadcastsUrl(matchId), data: params);
+  }
+
+  @override
+  Future<void> updateBroadcast(
+      String matchId, String broadcastId, Map<String, dynamic> params) async {
+    await _apiClient.patch(AppConstants.getBroadcastUrl(matchId, broadcastId),
+        data: params);
+  }
+
+  @override
+  Future<void> deleteBroadcast(String matchId, String broadcastId) async {
+    await _apiClient.delete(AppConstants.getBroadcastUrl(matchId, broadcastId));
+  }
+
+  @override
+  Future<List<TvChannelModel>> searchTvChannels(String query, int page) async {
+    final response = await _apiClient.get(
+      AppConstants.tvChannelsUrl,
+      queryParameters: {'search': query, 'page': page},
+    );
+    return (response['results'] as List)
+        .map((e) => TvChannelModel.fromJson(e))
+        .toList();
   }
 }

@@ -11,6 +11,7 @@ import '../bloc/lineup_bloc.dart';
 import 'best_player_tab.dart';
 import 'events_tab.dart';
 import 'highlights_tab.dart';
+import 'live_tab.dart';
 
 class MatchDetailTabBar extends StatefulWidget {
   const MatchDetailTabBar({
@@ -109,7 +110,7 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
                     matchId: widget.match.id,
                   ),
                   HighlightsTab(matchId: widget.match.id),
-                  const Center(child: Text('H2H View')),
+                  LiveTab(matchId: widget.match.id),
                   const Center(child: Text('Standings View')),
                 ],
               ),

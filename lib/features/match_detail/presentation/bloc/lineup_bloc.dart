@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/usecase/usecase.dart';
 import '../../domain/entities/lineup_entity.dart';
 import '../../domain/usecases/get_lineup_usecase.dart';
 import '../../domain/usecases/update_man_of_the_match.dart';

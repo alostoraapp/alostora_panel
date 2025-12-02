@@ -365,4 +365,49 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get matchDetails => 'تفاصيل المباراة';
+
+  @override
+  String get platformYouTube => 'يوتيوب';
+
+  @override
+  String get platformX => 'إكس (تويتر)';
+
+  @override
+  String get platformFacebook => 'فيسبوك';
+
+  @override
+  String get platformOfficial => 'الموقع الرسمي';
+
+  @override
+  String get platformOther => 'أخرى';
+
+  @override
+  String get addBroadcast => 'إضافة بث';
+
+  @override
+  String get editBroadcast => 'تعديل البث';
+
+  @override
+  String get platform => 'المنصة';
+
+  @override
+  String get tvChannel => 'القناة التلفزيونية';
+
+  @override
+  String get url => 'الرابط';
+
+  @override
+  String get pleaseSelectTvChannel => 'يرجى اختيار قناة تلفزيونية';
+
+  @override
+  String get pleaseSelectPlatform => 'يرجى اختيار منصة';
+
+  @override
+  String get pleaseEnterUrl => 'يرجى إدخال الرابط';
+
+  @override
+  String get deleteBroadcast => 'حذف البث';
+
+  @override
+  String get deleteBroadcastConfirmation => 'هل أنت متأكد أنك تريد حذف هذا البث؟';
 }

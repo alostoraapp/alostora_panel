@@ -365,4 +365,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchDetails => 'Match Details';
+
+  @override
+  String get platformYouTube => 'YouTube';
+
+  @override
+  String get platformX => 'X (Twitter)';
+
+  @override
+  String get platformFacebook => 'Facebook';
+
+  @override
+  String get platformOfficial => 'Official Website';
+
+  @override
+  String get platformOther => 'Other';
+
+  @override
+  String get addBroadcast => 'Add Broadcast';
+
+  @override
+  String get editBroadcast => 'Edit Broadcast';
+
+  @override
+  String get platform => 'Platform';
+
+  @override
+  String get tvChannel => 'TV Channel';
+
+  @override
+  String get url => 'URL';
+
+  @override
+  String get pleaseSelectTvChannel => 'Please select a TV Channel';
+
+  @override
+  String get pleaseSelectPlatform => 'Please select a Platform';
+
+  @override
+  String get pleaseEnterUrl => 'Please enter URL';
+
+  @override
+  String get deleteBroadcast => 'Delete Broadcast';
+
+  @override
+  String get deleteBroadcastConfirmation => 'Are you sure you want to delete this broadcast?';
 }
