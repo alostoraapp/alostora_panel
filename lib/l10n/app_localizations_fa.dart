@@ -9,6 +9,9 @@ class AppLocalizationsFa extends AppLocalizations {
   AppLocalizationsFa([String locale = 'fa']) : super(locale);
 
   @override
+  String get selectMatchToViewDetails => 'یک بازی را برای مشاهده جزئیات انتخاب کنید';
+
+  @override
   String get appName => 'پنل الأسطورة';
 
   @override

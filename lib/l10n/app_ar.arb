@@ -1,5 +1,6 @@
 {
   "@@locale": "ar",
+  "selectMatchToViewDetails": "اختر مباراة لعرض التفاصيل",
   "appName": "لوحة تحكم الأسطورة",
   "changeTheme": "تغيير المظهر",
   "changeLanguage": "تغيير اللغة",

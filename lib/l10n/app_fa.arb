@@ -1,5 +1,6 @@
 {
   "@@locale": "fa",
+  "selectMatchToViewDetails": "یک بازی را برای مشاهده جزئیات انتخاب کنید",
   "appName": "پنل الأسطورة",
   "changeTheme": "تغییر پوسته",
   "changeLanguage": "تغییر زبان",

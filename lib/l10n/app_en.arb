@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "selectMatchToViewDetails": "Select a match to view details",
   "appName": "Al Ostora Panel",
   "changeTheme": "Change Theme",
   "changeLanguage": "Change Language",

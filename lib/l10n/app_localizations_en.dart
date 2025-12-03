@@ -9,6 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get selectMatchToViewDetails => 'Select a match to view details';
+
+  @override
   String get appName => 'Al Ostora Panel';
 
   @override

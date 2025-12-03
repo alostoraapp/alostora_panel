@@ -18,11 +18,13 @@ import '../../domain/entities/team_entity.dart';
 class MatchTile extends StatefulWidget {
   final MatchEntity match;
   final bool isInteractive;
+  final VoidCallback? onTap;
 
   const MatchTile({
     super.key,
     required this.match,
     this.isInteractive = true,
+    this.onTap,
   });
 
   @override
@@ -64,7 +66,6 @@ class _MatchTileState extends State<MatchTile> {
       case MatchStatus.tbd:
         return s.matchStatusTBD;
       case MatchStatus.unknown:
-      default:
         return s.matchStatusUnknown;
     }
   }
@@ -142,13 +143,14 @@ class _MatchTileState extends State<MatchTile> {
           : SystemMouseCursors.basic,
       child: GestureDetector(
         onTap: widget.isInteractive
-            ? () {
-                GoRouter.of(context).goNamed(
-                  AppRoutes.matchDetail,
-                  pathParameters: {'matchId': widget.match.id},
-                  extra: widget.match,
-                );
-              }
+            ? (widget.onTap ??
+                () {
+                  GoRouter.of(context).goNamed(
+                    AppRoutes.matchDetail,
+                    pathParameters: {'matchId': widget.match.id},
+                    extra: widget.match,
+                  );
+                })
             : null,
         child: Card(
           elevation: _isHovering && widget.isInteractive ? 4 : 1,

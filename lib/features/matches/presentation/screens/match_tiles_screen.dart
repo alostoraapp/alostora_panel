@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +15,10 @@ import '../bloc/matches_bloc.dart';
 import '../bloc/matches_event.dart';
 import '../bloc/matches_state.dart';
 import '../widgets/match_tile.dart';
+import '../../../../features/match_detail/presentation/screens/match_detail_screen.dart';
+import '../../../../features/matches/domain/entities/match_entity.dart';
+
+// ... (imports)
 
 class MatchTilesScreen extends StatefulWidget {
   const MatchTilesScreen({super.key});
@@ -30,13 +32,12 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
   // Local state for UI controls that trigger BLoC events
   String _ordering = 'importance';
   bool _isLive = false;
+  MatchEntity? _selectedMatch;
 
   @override
   void initState() {
+    // ... (existing initState)
     super.initState();
-    // Initial fetch when the screen loads for the first time.
-    // The BLoC is now managed by the ShellRoute's BlocProvider.
-    // We only add the event if no matches have been loaded yet for the current date.
     final matchesBloc = context.read<MatchesBloc>();
     if (matchesBloc.state is MatchesInitial) {
       matchesBloc.add(const GetMatches());
@@ -106,23 +107,44 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
           onOrderingChanged: _onOrderingChanged,
         );
 
-        return BlocListener<LanguageCubit, Locale>(
-          listener: (context, locale) {
-            _fetchMatches();
-          },
-          child: Scaffold(
-            body: ScrollConfiguration(
-              behavior:
-                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  _fetchMatches();
-                },
-                child: ListView(
+        final refreshButton = Card(
+          elevation: 2,
+          shadowColor: Colors.black12,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: InkWell(
+            onTap: _fetchMatches,
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox(
+              width: 64,
+              height: 64,
+              child: Center(
+                child: Icon(
+                  Icons.refresh,
+                  size: 24,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+              ),
+            ),
+          ),
+        );
+
+        Widget buildListContent({required bool isSplitView}) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              _fetchMatches();
+            },
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Determine if we should use the wide layout (Row) or compact layout (Column)
+                // based on the available width of the list view.
+                // Threshold can be adjusted, e.g., 700px.
+                final bool useWideLayout = constraints.maxWidth > 700;
+
+                return ListView(
                   padding: const EdgeInsets.all(10.0),
                   children: [
-                    if (ResponsiveBreakpoints.of(context).isDesktop ||
-                        ResponsiveBreakpoints.of(context).equals('4K'))
+                    if (useWideLayout)
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -130,27 +152,7 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                           const SizedBox(width: 16),
                           Expanded(child: searchCard),
                           const SizedBox(width: 16),
-                          Card(
-                            elevation: 2,
-                            shadowColor: Colors.black12,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            child: InkWell(
-                              onTap: _fetchMatches,
-                              borderRadius: BorderRadius.circular(12),
-                              child: SizedBox(
-                                width: 64,
-                                height: 64,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.refresh,
-                                    size: 24,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          refreshButton,
                         ],
                       )
                     else
@@ -166,7 +168,17 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                     if (state is MatchesLoading)
                       _buildShimmerList()
                     else if (state is MatchesLoaded)
-                      _buildMatchesList(context, state.competitions)
+                      _buildMatchesList(
+                        context,
+                        state.competitions,
+                        isSplitView
+                            ? (match) {
+                                setState(() {
+                                  _selectedMatch = match;
+                                });
+                              }
+                            : null,
+                      )
                     else if (state is MatchesError)
                       Center(child: Text(state.message))
                     else if (state is MatchesInitial)
@@ -175,8 +187,72 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                     else
                       const SizedBox.shrink(),
                   ],
-                ),
-              ),
+                );
+              },
+            ),
+          );
+        }
+
+        return BlocListener<LanguageCubit, Locale>(
+          listener: (context, locale) {
+            _fetchMatches();
+          },
+          child: Scaffold(
+            body: LayoutBuilder(
+              builder: (context, constraints) {
+                final isDesktopOr4K =
+                    ResponsiveBreakpoints.of(context).isDesktop ||
+                        ResponsiveBreakpoints.of(context).equals('4K');
+                final double totalWidth = constraints.maxWidth;
+                // On desktop/4K, if a match is selected, we show the detail view.
+                // We use a ratio (e.g., 0.6 for detail, 0.4 for list) or fixed width.
+                // Let's use flex-like behavior with AnimatedContainer.
+                final double detailWidth =
+                    (isDesktopOr4K && _selectedMatch != null)
+                        ? totalWidth * 0.6
+                        : 0.0;
+
+                return ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context)
+                      .copyWith(scrollbars: false),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // The List View
+                      // We use Expanded to let it take remaining space.
+                      // When detailWidth is 0, it takes full width.
+                      // When detailWidth is > 0, it takes the rest.
+                      Expanded(
+                        child: buildListContent(isSplitView: isDesktopOr4K),
+                      ),
+                      // The Detail View
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        width: detailWidth,
+                        child: _selectedMatch != null
+                            ? Container(
+                                margin: const EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Theme.of(context).dividerColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: MatchDetailScreen(
+                                    key: ValueKey(_selectedMatch!.id),
+                                    match: _selectedMatch!,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         );
@@ -185,7 +261,10 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
   }
 
   Widget _buildMatchesList(
-      BuildContext context, List<CompetitionEntity> competitions) {
+    BuildContext context,
+    List<CompetitionEntity> competitions,
+    ValueChanged<MatchEntity>? onMatchSelected,
+  ) {
     if (competitions.isEmpty) {
       return Center(
         child: Padding(
@@ -213,10 +292,13 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
             const SizedBox(height: 8),
             LayoutBuilder(
               builder: (context, constraints) {
-                final breakpoints = ResponsiveBreakpoints.of(context);
-                final int crossAxisCount = breakpoints.equals('4K')
-                    ? 3
-                    : (breakpoints.isDesktop ? 2 : 1);
+                // Use constraints.maxWidth to determine crossAxisCount
+                // instead of global breakpoints.
+                // Assuming ~400px per tile for desktop-like layout, or 1 column if smaller.
+                final double availableWidth = constraints.maxWidth;
+                final int crossAxisCount =
+                    (availableWidth / 400).floor().clamp(1, 3);
+
                 const double itemHeight = 105.0;
                 const double crossAxisSpacing = 16;
 
@@ -237,7 +319,13 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                     mainAxisSpacing: 8,
                   ),
                   itemBuilder: (context, index) {
-                    return MatchTile(match: competition.matches[index]);
+                    final match = competition.matches[index];
+                    return MatchTile(
+                      match: match,
+                      onTap: onMatchSelected != null
+                          ? () => onMatchSelected(match)
+                          : null,
+                    );
                   },
                 );
               },

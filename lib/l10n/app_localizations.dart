@@ -97,6 +97,12 @@ abstract class AppLocalizations {
     Locale('fa')
   ];
 
+  /// No description provided for @selectMatchToViewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a match to view details'**
+  String get selectMatchToViewDetails;
+
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
