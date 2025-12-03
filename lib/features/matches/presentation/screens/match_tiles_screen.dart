@@ -114,40 +114,68 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
             body: ScrollConfiguration(
               behavior:
                   ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: ListView(
-                padding: const EdgeInsets.all(10.0),
-                children: [
-                  if (ResponsiveBreakpoints.of(context).isDesktop)
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: timePicker),
-                        const SizedBox(width: 16),
-                        Expanded(child: searchCard),
-                      ],
-                    )
-                  else
-                    Column(
-                      children: [
-                        timePicker,
-                        const SizedBox(height: 2),
-                        searchCard,
-                      ],
-                    ),
-                  const SizedBox(height: 16),
-                  // Handle different states from the BLoC
-                  if (state is MatchesLoading)
-                    _buildShimmerList()
-                  else if (state is MatchesLoaded)
-                    _buildMatchesList(context, state.competitions)
-                  else if (state is MatchesError)
-                    Center(child: Text(state.message))
-                  else if (state is MatchesInitial)
-                    // Show shimmer or an empty state during initial load
-                    _buildShimmerList()
-                  else
-                    const SizedBox.shrink(),
-                ],
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  _fetchMatches();
+                },
+                child: ListView(
+                  padding: const EdgeInsets.all(10.0),
+                  children: [
+                    if (ResponsiveBreakpoints.of(context).isDesktop ||
+                        ResponsiveBreakpoints.of(context).equals('4K'))
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(child: timePicker),
+                          const SizedBox(width: 16),
+                          Expanded(child: searchCard),
+                          const SizedBox(width: 16),
+                          Card(
+                            elevation: 2,
+                            shadowColor: Colors.black12,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            child: InkWell(
+                              onTap: _fetchMatches,
+                              borderRadius: BorderRadius.circular(12),
+                              child: SizedBox(
+                                width: 64,
+                                height: 64,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.refresh,
+                                    size: 24,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      Column(
+                        children: [
+                          timePicker,
+                          const SizedBox(height: 2),
+                          searchCard,
+                        ],
+                      ),
+                    const SizedBox(height: 16),
+                    // Handle different states from the BLoC
+                    if (state is MatchesLoading)
+                      _buildShimmerList()
+                    else if (state is MatchesLoaded)
+                      _buildMatchesList(context, state.competitions)
+                    else if (state is MatchesError)
+                      Center(child: Text(state.message))
+                    else if (state is MatchesInitial)
+                      // Show shimmer or an empty state during initial load
+                      _buildShimmerList()
+                    else
+                      const SizedBox.shrink(),
+                  ],
+                ),
               ),
             ),
           ),

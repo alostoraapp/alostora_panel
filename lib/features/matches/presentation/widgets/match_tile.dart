@@ -126,12 +126,13 @@ class _MatchTileState extends State<MatchTile> {
     final isLive = _isLive(widget.match.status);
     final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
 
-    final hasIndicators = widget.match.hasManOfTheMatch ||
-        widget.match.hasIncidentsMedia ||
-        widget.match.hasHighlights ||
-        widget.match.hasLiveBroadcast ||
-        widget.match.hasTvChannels ||
-        widget.match.hasCommentators;
+    final hasIndicators = widget.isInteractive &&
+        (widget.match.hasManOfTheMatch ||
+            widget.match.hasIncidentsMedia ||
+            widget.match.hasHighlights ||
+            widget.match.hasLiveBroadcast ||
+            widget.match.hasTvChannels ||
+            widget.match.hasCommentators);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),
@@ -310,12 +311,13 @@ class _MatchTileState extends State<MatchTile> {
         match.status == MatchStatus.ended ||
         match.status == MatchStatus.penaltyShootout;
 
-    final hasIndicators = match.hasManOfTheMatch ||
-        match.hasIncidentsMedia ||
-        match.hasHighlights ||
-        match.hasLiveBroadcast ||
-        match.hasTvChannels ||
-        match.hasCommentators;
+    final hasIndicators = widget.isInteractive &&
+        (match.hasManOfTheMatch ||
+            match.hasIncidentsMedia ||
+            match.hasHighlights ||
+            match.hasLiveBroadcast ||
+            match.hasTvChannels ||
+            match.hasCommentators);
 
     return Expanded(
       flex: 2,
