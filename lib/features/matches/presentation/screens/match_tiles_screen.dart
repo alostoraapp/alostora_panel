@@ -57,7 +57,8 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
 
   void _fetchMatches() {
     context.read<MatchesBloc>().add(GetMatches(
-          search: _searchController.text.isNotEmpty ? _searchController.text : null,
+          search:
+              _searchController.text.isNotEmpty ? _searchController.text : null,
           ordering: _ordering,
           isLive: _isLive,
         ));
@@ -111,7 +112,8 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
           },
           child: Scaffold(
             body: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              behavior:
+                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
               child: ListView(
                 padding: const EdgeInsets.all(10.0),
                 children: [
@@ -154,12 +156,14 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
     );
   }
 
-  Widget _buildMatchesList(BuildContext context, List<CompetitionEntity> competitions) {
+  Widget _buildMatchesList(
+      BuildContext context, List<CompetitionEntity> competitions) {
     if (competitions.isEmpty) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(32.0),
-          child: Text(S.of(context).noMatchesFound, style: Theme.of(context).textTheme.titleMedium),
+          child: Text(S.of(context).noMatchesFound,
+              style: Theme.of(context).textTheme.titleMedium),
         ),
       );
     }
@@ -182,12 +186,17 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
             LayoutBuilder(
               builder: (context, constraints) {
                 final breakpoints = ResponsiveBreakpoints.of(context);
-                final int crossAxisCount = breakpoints.equals('4K') ? 3 : (breakpoints.isDesktop ? 2 : 1);
-                const double itemHeight = 90.0;
+                final int crossAxisCount = breakpoints.equals('4K')
+                    ? 3
+                    : (breakpoints.isDesktop ? 2 : 1);
+                const double itemHeight = 105.0;
                 const double crossAxisSpacing = 16;
 
-                final double itemWidth = (constraints.maxWidth - (crossAxisSpacing * (crossAxisCount - 1))) / crossAxisCount;
-                final double childAspectRatio = itemWidth > 0 ? itemWidth / itemHeight : 1.0;
+                final double itemWidth = (constraints.maxWidth -
+                        (crossAxisSpacing * (crossAxisCount - 1))) /
+                    crossAxisCount;
+                final double childAspectRatio =
+                    itemWidth > 0 ? itemWidth / itemHeight : 1.0;
 
                 return GridView.builder(
                   itemCount: competition.matches.length,
@@ -226,12 +235,17 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
             LayoutBuilder(
               builder: (context, constraints) {
                 final breakpoints = ResponsiveBreakpoints.of(context);
-                final int crossAxisCount = breakpoints.equals('4K') ? 3 : (breakpoints.isDesktop ? 2 : 1);
-                const double itemHeight = 90.0;
+                final int crossAxisCount = breakpoints.equals('4K')
+                    ? 3
+                    : (breakpoints.isDesktop ? 2 : 1);
+                const double itemHeight = 105.0;
                 const double crossAxisSpacing = 16;
 
-                final double itemWidth = (constraints.maxWidth - (crossAxisSpacing * (crossAxisCount - 1))) / crossAxisCount;
-                final double childAspectRatio = itemWidth > 0 ? itemWidth / itemHeight : 1.0;
+                final double itemWidth = (constraints.maxWidth -
+                        (crossAxisSpacing * (crossAxisCount - 1))) /
+                    crossAxisCount;
+                final double childAspectRatio =
+                    itemWidth > 0 ? itemWidth / itemHeight : 1.0;
 
                 return GridView.builder(
                   itemCount: 4, // Number of shimmer tiles per competition
@@ -300,25 +314,27 @@ class _TimePickerCard extends StatelessWidget {
       width: 50.0,
       child: isLiveSelected
           ? ElevatedButton(
-        onPressed: () => onLiveSelected(false),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        ),
-        child: Text(s.liveFilter),
-      )
+              onPressed: () => onLiveSelected(false),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              ),
+              child: Text(s.liveFilter),
+            )
           : OutlinedButton(
-        onPressed: () => onLiveSelected(true),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.red,
-          side: const BorderSide(color: Colors.red),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        ),
-        child: Text(s.liveFilter),
-      ),
+              onPressed: () => onLiveSelected(true),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.red,
+                side: const BorderSide(color: Colors.red),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              ),
+              child: Text(s.liveFilter),
+            ),
     );
 
     return Card(
@@ -339,26 +355,37 @@ class _TimePickerCard extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: SvgPicture.asset(
-                      isRtl ? AppIcons.angleSmallRight : AppIcons.angleSmallLeft,
-                      colorFilter: ColorFilter.mode(theme.iconTheme.color!, BlendMode.srcIn),
+                      isRtl
+                          ? AppIcons.angleSmallRight
+                          : AppIcons.angleSmallLeft,
+                      colorFilter: ColorFilter.mode(
+                          theme.iconTheme.color!, BlendMode.srcIn),
                     ),
-                    onPressed: () => onDateChanged(selectedDate.subtract(const Duration(days: 1))),
+                    onPressed: () => onDateChanged(
+                        selectedDate.subtract(const Duration(days: 1))),
                   ),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(_getDateText(context, selectedDate), style: theme.textTheme.bodySmall),
-                        Text(DateFormat('yyyy/MM/dd').format(selectedDate), style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+                        Text(_getDateText(context, selectedDate),
+                            style: theme.textTheme.bodySmall),
+                        Text(DateFormat('yyyy/MM/dd').format(selectedDate),
+                            style: theme.textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
                   IconButton(
                     icon: SvgPicture.asset(
-                      isRtl ? AppIcons.angleSmallLeft : AppIcons.angleSmallRight,
-                      colorFilter: ColorFilter.mode(theme.iconTheme.color!, BlendMode.srcIn),
+                      isRtl
+                          ? AppIcons.angleSmallLeft
+                          : AppIcons.angleSmallRight,
+                      colorFilter: ColorFilter.mode(
+                          theme.iconTheme.color!, BlendMode.srcIn),
                     ),
-                    onPressed: () => onDateChanged(selectedDate.add(const Duration(days: 1))),
+                    onPressed: () => onDateChanged(
+                        selectedDate.add(const Duration(days: 1))),
                   ),
                 ],
               ),
@@ -367,11 +394,14 @@ class _TimePickerCard extends StatelessWidget {
               height: 40.0,
               width: 40.0,
               child: IconButton(
-                icon: SvgPicture.asset(AppIcons.calendar, colorFilter: ColorFilter.mode(theme.colorScheme.onPrimary, BlendMode.srcIn)),
+                icon: SvgPicture.asset(AppIcons.calendar,
+                    colorFilter: ColorFilter.mode(
+                        theme.colorScheme.onPrimary, BlendMode.srcIn)),
                 style: IconButton.styleFrom(
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: theme.colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
                 onPressed: () => _showDatePicker(context, theme),
               ),
@@ -412,7 +442,8 @@ class _TimePickerCard extends StatelessWidget {
                   textStyle: theme.textTheme.bodySmall,
                 ),
               ),
-              selectionTextStyle: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onPrimary),
+              selectionTextStyle: theme.textTheme.bodyLarge
+                  ?.copyWith(color: theme.colorScheme.onPrimary),
               selectionColor: theme.colorScheme.primary,
               todayHighlightColor: theme.colorScheme.primary,
             ),
@@ -465,7 +496,9 @@ class _SearchCard extends StatelessWidget {
                         AppIcons.search,
                         width: 20,
                         height: 20,
-                        colorFilter: iconColor != null ? ColorFilter.mode(iconColor, BlendMode.srcIn) : null,
+                        colorFilter: iconColor != null
+                            ? ColorFilter.mode(iconColor, BlendMode.srcIn)
+                            : null,
                       ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -478,7 +511,8 @@ class _SearchCard extends StatelessWidget {
                   value: ordering,
                   underline: const SizedBox.shrink(),
                   items: [
-                    DropdownMenuItem(value: 'importance', child: Text(s.sortByImportance)),
+                    DropdownMenuItem(
+                        value: 'importance', child: Text(s.sortByImportance)),
                     DropdownMenuItem(value: 'time', child: Text(s.sortByTime)),
                   ],
                   onChanged: onOrderingChanged,
@@ -531,7 +565,10 @@ class _CompetitionHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              errorWidget: (context, url, error) => const Icon(Icons.sports_soccer, color: Colors.white70, size: 20),
+              errorWidget: (context, url, error) => const Icon(
+                  Icons.sports_soccer,
+                  color: Colors.white70,
+                  size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(

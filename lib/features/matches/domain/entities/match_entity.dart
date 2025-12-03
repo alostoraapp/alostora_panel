@@ -14,6 +14,12 @@ class MatchEntity extends Equatable {
   final int awayScoreFinal;
   final TeamEntity homeTeam;
   final TeamEntity awayTeam;
+  final bool hasManOfTheMatch;
+  final bool hasIncidentsMedia;
+  final bool hasHighlights;
+  final bool hasLiveBroadcast;
+  final bool hasTvChannels;
+  final bool hasCommentators;
 
   const MatchEntity({
     required this.id,
@@ -26,6 +32,12 @@ class MatchEntity extends Equatable {
     required this.awayScoreFinal,
     required this.homeTeam,
     required this.awayTeam,
+    this.hasManOfTheMatch = false,
+    this.hasIncidentsMedia = false,
+    this.hasHighlights = false,
+    this.hasLiveBroadcast = false,
+    this.hasTvChannels = false,
+    this.hasCommentators = false,
   });
 
   @override
@@ -40,5 +52,11 @@ class MatchEntity extends Equatable {
         awayScoreFinal,
         homeTeam,
         awayTeam,
+        hasManOfTheMatch,
+        hasIncidentsMedia,
+        hasHighlights,
+        hasLiveBroadcast,
+        hasTvChannels,
+        hasCommentators,
       ];
 }

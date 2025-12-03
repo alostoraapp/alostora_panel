@@ -15,6 +15,12 @@ class MatchModel extends Equatable {
   final int awayScoreFinal;
   final TeamModel homeTeam;
   final TeamModel awayTeam;
+  final bool hasManOfTheMatch;
+  final bool hasIncidentsMedia;
+  final bool hasHighlights;
+  final bool hasLiveBroadcast;
+  final bool hasTvChannels;
+  final bool hasCommentators;
 
   const MatchModel({
     required this.id,
@@ -27,6 +33,12 @@ class MatchModel extends Equatable {
     required this.awayScoreFinal,
     required this.homeTeam,
     required this.awayTeam,
+    required this.hasManOfTheMatch,
+    required this.hasIncidentsMedia,
+    required this.hasHighlights,
+    required this.hasLiveBroadcast,
+    required this.hasTvChannels,
+    required this.hasCommentators,
   });
 
   factory MatchModel.fromJson(Map<String, dynamic> json) {
@@ -41,6 +53,12 @@ class MatchModel extends Equatable {
       awayScoreFinal: json['away_score_final'],
       homeTeam: TeamModel.fromJson(json['home_team']),
       awayTeam: TeamModel.fromJson(json['away_team']),
+      hasManOfTheMatch: json['has_man_of_the_match'] ?? false,
+      hasIncidentsMedia: json['has_incidents_media'] ?? false,
+      hasHighlights: json['has_highlights'] ?? false,
+      hasLiveBroadcast: json['has_live_broadcast'] ?? false,
+      hasTvChannels: json['has_tv_channels'] ?? false,
+      hasCommentators: json['has_commentators'] ?? false,
     );
   }
 
@@ -50,12 +68,22 @@ class MatchModel extends Equatable {
       exId: exId,
       matchTime: DateTime.fromMillisecondsSinceEpoch(matchTime * 1000),
       status: MatchStatus.fromStatusCode(statusCode),
-      firstHalfStartTime: firstHalfStartTime != null ? DateTime.fromMillisecondsSinceEpoch(firstHalfStartTime! * 1000) : null,
-      secondHalfStartTime: secondHalfStartTime != null ? DateTime.fromMillisecondsSinceEpoch(secondHalfStartTime! * 1000) : null,
+      firstHalfStartTime: firstHalfStartTime != null
+          ? DateTime.fromMillisecondsSinceEpoch(firstHalfStartTime! * 1000)
+          : null,
+      secondHalfStartTime: secondHalfStartTime != null
+          ? DateTime.fromMillisecondsSinceEpoch(secondHalfStartTime! * 1000)
+          : null,
       homeScoreFinal: homeScoreFinal,
       awayScoreFinal: awayScoreFinal,
       homeTeam: homeTeam.toEntity(),
       awayTeam: awayTeam.toEntity(),
+      hasManOfTheMatch: hasManOfTheMatch,
+      hasIncidentsMedia: hasIncidentsMedia,
+      hasHighlights: hasHighlights,
+      hasLiveBroadcast: hasLiveBroadcast,
+      hasTvChannels: hasTvChannels,
+      hasCommentators: hasCommentators,
     );
   }
 
@@ -71,5 +99,11 @@ class MatchModel extends Equatable {
         awayScoreFinal,
         homeTeam,
         awayTeam,
+        hasManOfTheMatch,
+        hasIncidentsMedia,
+        hasHighlights,
+        hasLiveBroadcast,
+        hasTvChannels,
+        hasCommentators,
       ];
 }

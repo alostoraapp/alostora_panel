@@ -126,6 +126,13 @@ class _MatchTileState extends State<MatchTile> {
     final isLive = _isLive(widget.match.status);
     final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
 
+    final hasIndicators = widget.match.hasManOfTheMatch ||
+        widget.match.hasIncidentsMedia ||
+        widget.match.hasHighlights ||
+        widget.match.hasLiveBroadcast ||
+        widget.match.hasTvChannels ||
+        widget.match.hasCommentators;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
@@ -167,18 +174,46 @@ class _MatchTileState extends State<MatchTile> {
                   ? 6.0
                   : 2.0, // Reduced padding when not interactive
             ),
-            child: Row(
-              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildTeam(theme,
-                    team: widget.match.homeTeam, isMobile: isMobile),
-                _buildCenterInfo(theme,
-                    match: widget.match, isMobile: isMobile),
-                _buildTeam(theme,
-                    team: widget.match.awayTeam,
-                    isReversed: true,
-                    isMobile: isMobile),
+                if (hasIndicators)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: Wrap(
+                      spacing: isMobile ? 2 : 4,
+                      runSpacing: isMobile ? 2 : 4,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        if (widget.match.hasManOfTheMatch)
+                          _buildIndicator(theme, 'B', Colors.amber, isMobile),
+                        if (widget.match.hasIncidentsMedia)
+                          _buildIndicator(theme, 'E', Colors.blue, isMobile),
+                        if (widget.match.hasHighlights)
+                          _buildIndicator(theme, 'H', Colors.purple, isMobile),
+                        if (widget.match.hasLiveBroadcast)
+                          _buildIndicator(theme, 'L', Colors.red, isMobile),
+                        if (widget.match.hasTvChannels)
+                          _buildIndicator(theme, 'T', Colors.green, isMobile),
+                        if (widget.match.hasCommentators)
+                          _buildIndicator(theme, 'C', Colors.orange, isMobile),
+                      ],
+                    ),
+                  ),
+                Row(
+                  textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildTeam(theme,
+                        team: widget.match.homeTeam, isMobile: isMobile),
+                    _buildCenterInfo(theme,
+                        match: widget.match, isMobile: isMobile),
+                    _buildTeam(theme,
+                        team: widget.match.awayTeam,
+                        isReversed: true,
+                        isMobile: isMobile),
+                  ],
+                ),
               ],
             ),
           ),
@@ -275,15 +310,24 @@ class _MatchTileState extends State<MatchTile> {
         match.status == MatchStatus.ended ||
         match.status == MatchStatus.penaltyShootout;
 
+    final hasIndicators = match.hasManOfTheMatch ||
+        match.hasIncidentsMedia ||
+        match.hasHighlights ||
+        match.hasLiveBroadcast ||
+        match.hasTvChannels ||
+        match.hasCommentators;
+
     return Expanded(
       flex: 2,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            startTime,
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
-          ),
+          if (match.status == MatchStatus.notStarted && !hasIndicators)
+            Text(
+              startTime,
+              style:
+                  theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
+            ),
           if (showScore)
             Text(
               '${match.homeScoreFinal} - ${match.awayScoreFinal}',
@@ -313,6 +357,31 @@ class _MatchTileState extends State<MatchTile> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildIndicator(
+      ThemeData theme, String text, Color color, bool isMobile) {
+    final double size = isMobile ? 14 : 17;
+    final double fontSize = isMobile ? 8 : 10;
+    return Container(
+      width: size,
+      height: size,
+      margin: const EdgeInsets.only(bottom: 2),
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: Colors.white,
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
