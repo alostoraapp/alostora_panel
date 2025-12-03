@@ -169,5 +169,7 @@
   "tvChannels": "القنوات التلفزيونية",
   "commentators": "المعلقين",
   "deleteTvChannel": "حذف القناة",
-  "deleteTvChannelConfirmation": "هل أنت متأكد أنك تريد حذف هذه القناة؟"
+  "deleteTvChannelConfirmation": "هل أنت متأكد أنك تريد حذف هذه القناة؟",
+  "deleteCommentator": "حذف المعلق",
+  "deleteCommentatorConfirmation": "هل أنت متأكد أنك تريد حذف هذا المعلق؟"
 }

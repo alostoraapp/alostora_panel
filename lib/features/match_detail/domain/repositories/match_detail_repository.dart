@@ -6,6 +6,8 @@ import '../entities/highlight_entity.dart';
 import '../entities/broadcast_entity.dart';
 import '../entities/tv_channel_entity.dart';
 import '../entities/match_tv_channel_entity.dart';
+import '../entities/commentator_entity.dart';
+import '../entities/match_commentator_entity.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -58,5 +60,16 @@ abstract class MatchDetailRepository {
   Future<Either<Failure, void>> addTvChannelToMatch(
       String matchId, String tvChannelId);
   Future<Either<Failure, void>> deleteTvChannelFromMatch(
+      String matchId, String itemId);
+
+  Future<Either<Failure, List<CommentatorEntity>>> searchCommentators(
+      String query, int page);
+
+  // Match Commentators
+  Future<Either<Failure, List<MatchCommentatorEntity>>> getMatchCommentators(
+      String matchId);
+  Future<Either<Failure, void>> addCommentatorToMatch(
+      String matchId, String commentatorId);
+  Future<Either<Failure, void>> deleteCommentatorFromMatch(
       String matchId, String itemId);
 }

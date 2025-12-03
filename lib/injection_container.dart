@@ -45,6 +45,11 @@ import 'features/match_detail/presentation/bloc/match_tv_channels/match_tv_chann
 import 'features/match_detail/domain/usecases/get_match_tv_channels_usecase.dart';
 import 'features/match_detail/domain/usecases/add_tv_channel_to_match_usecase.dart';
 import 'features/match_detail/domain/usecases/delete_tv_channel_from_match_usecase.dart';
+import 'features/match_detail/presentation/bloc/match_commentators/match_commentators_bloc.dart';
+import 'features/match_detail/domain/usecases/search_commentators_usecase.dart';
+import 'features/match_detail/domain/usecases/get_match_commentators_usecase.dart';
+import 'features/match_detail/domain/usecases/add_commentator_to_match_usecase.dart';
+import 'features/match_detail/domain/usecases/delete_commentator_from_match_usecase.dart';
 
 import 'features/matches/data/datasources/matches_remote_datasource.dart';
 import 'features/matches/data/repositories/matches_repository_impl.dart';
@@ -148,6 +153,18 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetMatchTvChannelsUseCase(sl()));
   sl.registerLazySingleton(() => AddTvChannelToMatchUseCase(sl()));
   sl.registerLazySingleton(() => DeleteTvChannelFromMatchUseCase(sl()));
+
+  // Match Commentators
+  sl.registerFactory(() => MatchCommentatorsBloc(
+        getMatchCommentators: sl(),
+        addCommentatorToMatch: sl(),
+        deleteCommentatorFromMatch: sl(),
+      ));
+
+  sl.registerLazySingleton(() => SearchCommentatorsUseCase(sl()));
+  sl.registerLazySingleton(() => GetMatchCommentatorsUseCase(sl()));
+  sl.registerLazySingleton(() => AddCommentatorToMatchUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteCommentatorFromMatchUseCase(sl()));
 
   // Repository
   sl.registerLazySingleton<MatchDetailRepository>(

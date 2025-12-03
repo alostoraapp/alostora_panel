@@ -186,22 +186,19 @@ class _TvChannelsTabState extends State<TvChannelsTab> {
                                     const SizedBox(height: 4),
                                     Row(
                                       children: [
-                                        if (channel.country != null) ...[
-                                          CachedNetworkImage(
-                                            imageUrl: channel.country!.logo,
-                                            width: 16,
-                                            height: 12,
-                                            fit: BoxFit.cover,
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const SizedBox.shrink(),
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            channel.country!.name,
-                                            style: theme.textTheme.bodyMedium,
-                                          ),
-                                        ],
+                                        CachedNetworkImage(
+                                          imageUrl: channel.country.logo,
+                                          width: 16,
+                                          height: 12,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              const SizedBox.shrink(),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          channel.country.name,
+                                          style: theme.textTheme.bodyMedium,
+                                        ),
                                       ],
                                     ),
                                   ],

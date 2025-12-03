@@ -7,6 +7,8 @@ import '../models/highlight_model.dart';
 import '../models/broadcast_model.dart';
 import '../models/tv_channel_model.dart';
 import '../models/match_tv_channel_model.dart';
+import '../models/commentator_model.dart';
+import '../models/match_commentator_model.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -43,6 +45,13 @@ abstract class MatchDetailRemoteDataSource {
   Future<List<MatchTvChannelModel>> getMatchTvChannels(String matchId);
   Future<void> addTvChannelToMatch(String matchId, String tvChannelId);
   Future<void> deleteTvChannelFromMatch(String matchId, String itemId);
+
+  Future<List<CommentatorModel>> searchCommentators(String query, int page);
+
+  // Match Commentators
+  Future<List<MatchCommentatorModel>> getMatchCommentators(String matchId);
+  Future<void> addCommentatorToMatch(String matchId, String commentatorId);
+  Future<void> deleteCommentatorFromMatch(String matchId, String itemId);
 }
 
 class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
@@ -280,5 +289,45 @@ class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
   @override
   Future<void> deleteTvChannelFromMatch(String matchId, String itemId) async {
     await _apiClient.delete(AppConstants.getMatchTvChannelUrl(matchId, itemId));
+  }
+
+  @override
+  Future<List<CommentatorModel>> searchCommentators(
+      String query, int page) async {
+    final response = await _apiClient.get(
+      AppConstants.commentatorsUrl,
+      queryParameters: {
+        'search': query,
+        'page': page,
+      },
+    );
+    return (response['results'] as List)
+        .map((e) => CommentatorModel.fromJson(e))
+        .toList();
+  }
+
+  @override
+  Future<List<MatchCommentatorModel>> getMatchCommentators(
+      String matchId) async {
+    final response =
+        await _apiClient.get(AppConstants.getMatchCommentatorsUrl(matchId));
+    return (response as List)
+        .map((e) => MatchCommentatorModel.fromJson(e))
+        .toList();
+  }
+
+  @override
+  Future<void> addCommentatorToMatch(
+      String matchId, String commentatorId) async {
+    await _apiClient.post(
+      AppConstants.getMatchCommentatorsUrl(matchId),
+      data: {'commentator': commentatorId},
+    );
+  }
+
+  @override
+  Future<void> deleteCommentatorFromMatch(String matchId, String itemId) async {
+    await _apiClient
+        .delete(AppConstants.getMatchCommentatorUrl(matchId, itemId));
   }
 }

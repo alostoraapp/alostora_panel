@@ -422,4 +422,10 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get deleteTvChannelConfirmation => 'آیا مطمئن هستید که می‌خواهید این شبکه را حذف کنید؟';
+
+  @override
+  String get deleteCommentator => 'حذف گزارشگر';
+
+  @override
+  String get deleteCommentatorConfirmation => 'آیا مطمئن هستید که می‌خواهید این گزارشگر را حذف کنید؟';
 }

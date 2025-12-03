@@ -8,6 +8,8 @@ import '../../domain/entities/highlight_entity.dart';
 import '../../domain/entities/broadcast_entity.dart';
 import '../../domain/entities/tv_channel_entity.dart';
 import '../../domain/entities/match_tv_channel_entity.dart';
+import '../../domain/entities/commentator_entity.dart';
+import '../../domain/entities/match_commentator_entity.dart';
 import '../../domain/repositories/match_detail_repository.dart';
 
 import '../datasources/match_detail_remote_data_source.dart';
@@ -273,6 +275,58 @@ class MatchDetailRepositoryImpl implements MatchDetailRepository {
       String matchId, String itemId) async {
     try {
       await remoteDataSource.deleteTvChannelFromMatch(matchId, itemId);
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CommentatorEntity>>> searchCommentators(
+      String query, int page) async {
+    try {
+      final result = await remoteDataSource.searchCommentators(query, page);
+      return Right(result);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MatchCommentatorEntity>>> getMatchCommentators(
+      String matchId) async {
+    try {
+      final result = await remoteDataSource.getMatchCommentators(matchId);
+      return Right(result);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> addCommentatorToMatch(
+      String matchId, String commentatorId) async {
+    try {
+      await remoteDataSource.addCommentatorToMatch(matchId, commentatorId);
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteCommentatorFromMatch(
+      String matchId, String itemId) async {
+    try {
+      await remoteDataSource.deleteCommentatorFromMatch(matchId, itemId);
       return const Right(null);
     } on AppException catch (e) {
       return Left(ServerFailure(message: e.errorResponse.firstError));

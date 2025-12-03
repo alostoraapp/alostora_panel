@@ -42,6 +42,13 @@ class AppConstants {
   static String getMatchTvChannelUrl(String matchId, String itemId) =>
       '/v1/admin/matches/$matchId/tv-channels/$itemId/';
 
+  // Commentators
+  static const String commentatorsUrl = '/v1/admin/media/commentators/search/';
+  static String getMatchCommentatorsUrl(String matchId) =>
+      '/v1/admin/matches/$matchId/commentators/';
+  static String getMatchCommentatorUrl(String matchId, String itemId) =>
+      '/v1/admin/matches/$matchId/commentators/$itemId/';
+
   // Settings - Competition Config
   static const String competitionConfigsUrl =
       '/v1/admin/entities/competition/configs/';
