@@ -431,4 +431,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get deleteCommentatorConfirmation => 'هل أنت متأكد أنك تريد حذف هذا المعلق؟';
+
+  @override
+  String get menu => 'القائمة';
+
+  @override
+  String get news => 'الأخبار';
 }

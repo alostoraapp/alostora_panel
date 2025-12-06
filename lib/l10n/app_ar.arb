@@ -172,5 +172,7 @@
   "deleteTvChannel": "حذف القناة",
   "deleteTvChannelConfirmation": "هل أنت متأكد أنك تريد حذف هذه القناة؟",
   "deleteCommentator": "حذف المعلق",
-  "deleteCommentatorConfirmation": "هل أنت متأكد أنك تريد حذف هذا المعلق؟"
+  "deleteCommentatorConfirmation": "هل أنت متأكد أنك تريد حذف هذا المعلق؟",
+  "menu": "القائمة",
+  "news": "الأخبار"
 }

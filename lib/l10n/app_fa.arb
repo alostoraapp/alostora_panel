@@ -172,6 +172,7 @@
   "deleteTvChannel": "حذف شبکه",
   "deleteTvChannelConfirmation": "آیا مطمئن هستید که می‌خواهید این شبکه را حذف کنید؟",
   "deleteCommentator": "حذف گزارشگر",
-  "deleteCommentatorConfirmation": "آیا مطمئن هستید که می‌خواهید این گزارشگر را حذف کنید؟"
+  "deleteCommentatorConfirmation": "آیا مطمئن هستید که می‌خواهید این گزارشگر را حذف کنید؟",
+  "menu": "منو",
+  "news": "اخبار"
 }
-

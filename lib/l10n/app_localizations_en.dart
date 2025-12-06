@@ -431,4 +431,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteCommentatorConfirmation => 'Are you sure you want to delete this commentator?';
+
+  @override
+  String get menu => 'Menu';
+
+  @override
+  String get news => 'News';
 }

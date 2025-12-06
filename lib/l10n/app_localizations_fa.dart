@@ -431,4 +431,10 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get deleteCommentatorConfirmation => 'آیا مطمئن هستید که می‌خواهید این گزارشگر را حذف کنید؟';
+
+  @override
+  String get menu => 'منو';
+
+  @override
+  String get news => 'اخبار';
 }

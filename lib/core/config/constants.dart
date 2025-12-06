@@ -7,6 +7,7 @@ class AppConstants {
   static const String verifyUrl = '/v1/admin/users/token/verify/';
   static const String logoutUrl = '/v1/admin/users/logout/';
   static const String refreshTokenUrl = '/v1/admin/users/token/refresh/';
+  static const String cachedToken = 'CACHED_TOKEN';
 
   // Matches
   static const String matchesListUrl = '/v1/admin/matches/list/';

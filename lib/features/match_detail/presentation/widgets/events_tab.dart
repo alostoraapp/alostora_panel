@@ -170,6 +170,27 @@ class _EventsList extends StatefulWidget {
 class _EventsListState extends State<_EventsList> {
   bool _showImportantOnly = false;
 
+  Map<String, String> _calculatePenaltyScores(List<IncidentEntity> penalties) {
+    final sortedPenalties = List<IncidentEntity>.from(penalties)
+      ..sort((a, b) => a.order.compareTo(b.order));
+
+    final Map<String, String> scores = {};
+    int homeScore = 0;
+    int awayScore = 0;
+
+    for (final incident in sortedPenalties) {
+      if (incident.type == StatTypeChoices.penaltyShootout) {
+        if (incident.isHome) {
+          homeScore++;
+        } else {
+          awayScore++;
+        }
+      }
+      scores[incident.id] = '$homeScore - $awayScore';
+    }
+    return scores;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Filter incidents if the switch is on.
@@ -181,6 +202,7 @@ class _EventsListState extends State<_EventsList> {
         : widget.incidents;
 
     final groupedIncidents = _groupIncidents(filteredIncidents);
+    final penaltyScores = _calculatePenaltyScores(groupedIncidents.penalties);
 
     return Column(
       children: [
@@ -232,6 +254,7 @@ class _EventsListState extends State<_EventsList> {
                           title: S.of(context).penalties,
                           incidents: groupedIncidents.penalties,
                           period: _MatchPeriod.penalties,
+                          penaltyScores: penaltyScores,
                         ),
                       if (groupedIncidents.overtime.isNotEmpty)
                         _EventSection(
@@ -268,11 +291,13 @@ class _EventSection extends StatelessWidget {
   final String title;
   final List<IncidentEntity> incidents;
   final _MatchPeriod period;
+  final Map<String, String>? penaltyScores;
 
   const _EventSection({
     required this.title,
     required this.incidents,
     required this.period,
+    this.penaltyScores,
   });
 
   @override
@@ -296,8 +321,11 @@ class _EventSection extends StatelessWidget {
               ),
             ),
             const Divider(),
-            ...incidents.map((incident) =>
-                _IncidentItem(incident: incident, period: period)),
+            ...incidents.map((incident) => _IncidentItem(
+                  incident: incident,
+                  period: period,
+                  penaltyScores: penaltyScores,
+                )),
           ],
         ),
       ),
@@ -309,8 +337,13 @@ class _EventSection extends StatelessWidget {
 class _IncidentItem extends StatelessWidget {
   final IncidentEntity incident;
   final _MatchPeriod period;
+  final Map<String, String>? penaltyScores;
 
-  const _IncidentItem({required this.incident, required this.period});
+  const _IncidentItem({
+    required this.incident,
+    required this.period,
+    this.penaltyScores,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -348,15 +381,30 @@ class _IncidentItem extends StatelessWidget {
       }
     }
 
+    Widget timeOrScore;
+    if (period == _MatchPeriod.penalties &&
+        penaltyScores != null &&
+        penaltyScores!.containsKey(incident.id)) {
+      timeOrScore = SizedBox(
+        width: 45,
+        child: Text(
+          penaltyScores![incident.id]!,
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: AppColors.kNeutral600),
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else {
+      timeOrScore = _TimeDisplay(
+          time: incident.time, addedTime: incident.addedTime, period: period);
+    }
+
     Widget content = Row(
       mainAxisAlignment:
           isHome ? MainAxisAlignment.start : MainAxisAlignment.end,
       children: [
         if (isHome) ...[
-          _TimeDisplay(
-              time: incident.time,
-              addedTime: incident.addedTime,
-              period: period),
+          timeOrScore,
           const SizedBox(width: 8),
           _IncidentIcon(type: incident.type),
           const SizedBox(width: 8),
@@ -374,10 +422,7 @@ class _IncidentItem extends StatelessWidget {
           const SizedBox(width: 8),
           _IncidentIcon(type: incident.type),
           const SizedBox(width: 8),
-          _TimeDisplay(
-              time: incident.time,
-              addedTime: incident.addedTime,
-              period: period),
+          timeOrScore,
         ],
       ],
     );

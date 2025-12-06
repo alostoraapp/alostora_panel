@@ -1,0 +1,858 @@
+import 'dart:typed_data';
+
+import 'package:alostora/core/config/constants.dart';
+import 'package:alostora/core/l10n/s.dart';
+import 'package:alostora/features/news/domain/entities/news_entity.dart';
+import 'package:alostora/features/news/presentation/bloc/news_bloc.dart';
+import 'package:alostora/features/news/presentation/bloc/news_event.dart';
+import 'package:alostora/features/news/presentation/bloc/news_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill_delta_from_html/flutter_quill_delta_from_html.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
+
+class NewsEditScreen extends StatefulWidget {
+  final NewsEntity? news;
+  final NewsBloc newsBloc;
+
+  const NewsEditScreen({
+    super.key,
+    this.news,
+    required this.newsBloc,
+  });
+
+  @override
+  State<NewsEditScreen> createState() => _NewsEditScreenState();
+}
+
+class _NewsEditScreenState extends State<NewsEditScreen>
+    with TickerProviderStateMixin {
+  late TextEditingController _sourceUrlController;
+  late TextEditingController _relatedTeamsController;
+
+  // Image Management
+  List<dynamic> _newsImages = []; // Contains NewsImageEntity or XFile
+  List<String> _deletedImageIds = [];
+  int _coverIndex = 0;
+
+  bool _isPinned = false;
+  bool _sendNotification = false;
+  String _selectedPriority = 'normal';
+  String _status = 'draft';
+
+  // Language management
+  List<String> _languages = ['en'];
+  late TabController _tabController;
+  final Map<String, TextEditingController> _titleControllers = {};
+  final Map<String, QuillController> _contentControllers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _sourceUrlController =
+        TextEditingController(text: widget.news?.sourceUrl ?? '');
+    _relatedTeamsController = TextEditingController(
+        text: widget.news?.relatedTeamsDetails != null
+            ? widget.news!.relatedTeamsDetails.toString()
+            : '');
+    _isPinned = widget.news?.isPinned ?? false;
+    _selectedPriority = widget.news?.priority ?? 'normal';
+    _status = widget.news?.status ?? 'draft';
+
+    if (_selectedPriority == 'urgent') {
+      _sendNotification = true;
+    }
+
+    // Initialize images
+    if (widget.news != null) {
+      _newsImages = List.from(widget.news!.images);
+      // Find cover
+      final index = _newsImages
+          .indexWhere((img) => img is NewsImageEntity && img.order == 'cover');
+      if (index != -1) {
+        _coverIndex = index;
+      } else if (_newsImages.isNotEmpty) {
+        _coverIndex = 0;
+      }
+    }
+
+    // Initialize languages and controllers
+    if (widget.news != null) {
+      _titleControllers['en'] = TextEditingController(text: widget.news!.title);
+      _contentControllers['en'] = _createQuillController(widget.news!.content);
+
+      // Process title translations
+      for (var translation in widget.news!.titleTranslations) {
+        if (!_languages.contains(translation.languageCode)) {
+          _languages.add(translation.languageCode);
+        }
+        _titleControllers[translation.languageCode] =
+            TextEditingController(text: translation.text);
+      }
+
+      // Process content translations
+      for (var translation in widget.news!.contentTranslations) {
+        if (!_languages.contains(translation.languageCode)) {
+          _languages.add(translation.languageCode);
+        }
+        _contentControllers[translation.languageCode] =
+            _createQuillController(translation.text);
+      }
+    } else {
+      _titleControllers['en'] = TextEditingController();
+      _contentControllers['en'] = QuillController.basic();
+    }
+
+    // Ensure controllers exist for all languages found
+    for (var code in _languages) {
+      if (!_titleControllers.containsKey(code)) {
+        _titleControllers[code] = TextEditingController();
+      }
+      if (!_contentControllers.containsKey(code)) {
+        _contentControllers[code] = QuillController.basic();
+      }
+    }
+
+    _tabController = TabController(length: _languages.length, vsync: this);
+  }
+
+  QuillController _createQuillController(String content) {
+    if (content.isEmpty) return QuillController.basic();
+    try {
+      final delta = HtmlToDelta().convert(content);
+      return QuillController(
+        document: Document.fromDelta(delta),
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+    } catch (e) {
+      // Fallback for plain text or error
+      return QuillController(
+        document: Document()..insert(0, content),
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _sourceUrlController.dispose();
+    _relatedTeamsController.dispose();
+    _tabController.dispose();
+    for (var controller in _titleControllers.values) {
+      controller.dispose();
+    }
+    for (var controller in _contentControllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _addLanguage(String code) {
+    if (!_languages.contains(code)) {
+      setState(() {
+        _languages.add(code);
+        _titleControllers[code] = TextEditingController();
+        _contentControllers[code] = QuillController.basic();
+        _tabController.dispose();
+        _tabController = TabController(length: _languages.length, vsync: this);
+        _tabController.animateTo(_languages.length - 1);
+      });
+    } else {
+      int index = _languages.indexOf(code);
+      _tabController.animateTo(index);
+    }
+  }
+
+  void _removeLanguage(int index) {
+    if (_languages[index] == 'en') return; // Cannot remove default language
+
+    setState(() {
+      String code = _languages[index];
+      _languages.removeAt(index);
+      _titleControllers[code]?.dispose();
+      _contentControllers[code]?.dispose();
+      _titleControllers.remove(code);
+      _contentControllers.remove(code);
+      _tabController.dispose();
+      _tabController = TabController(length: _languages.length, vsync: this);
+    });
+  }
+
+  Future<void> _pickImages() async {
+    final ImagePicker picker = ImagePicker();
+    try {
+      final List<XFile> images = await picker.pickMultiImage();
+      if (images.isNotEmpty) {
+        setState(() {
+          _newsImages.addAll(images);
+          if (_newsImages.length == images.length) {
+            // First images added, set first as cover
+            _coverIndex = 0;
+          }
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(S.of(context).errorPickingImage(e.toString()))),
+        );
+      }
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      final item = _newsImages[index];
+      if (item is NewsImageEntity) {
+        _deletedImageIds.add(item.id);
+      }
+      _newsImages.removeAt(index);
+
+      // Adjust cover index
+      if (index == _coverIndex) {
+        _coverIndex = 0; // Reset to first if cover deleted
+      } else if (index < _coverIndex) {
+        _coverIndex--;
+      }
+
+      if (_newsImages.isEmpty) {
+        _coverIndex = 0;
+      } else if (_coverIndex >= _newsImages.length) {
+        _coverIndex = _newsImages.length - 1;
+      }
+    });
+  }
+
+  void _setCover(int index) {
+    setState(() {
+      _coverIndex = index;
+    });
+  }
+
+  Widget _buildImageGrid(ThemeData theme) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        childAspectRatio: 1,
+      ),
+      itemCount: _newsImages.length + 1,
+      itemBuilder: (context, index) {
+        if (index == _newsImages.length) {
+          // Add button
+          return InkWell(
+            onTap: _pickImages,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: theme.colorScheme.outline.withOpacity(0.5),
+                  style: BorderStyle.solid,
+                ),
+              ),
+              child: Icon(Icons.add_photo_alternate,
+                  size: 32, color: theme.colorScheme.onSurfaceVariant),
+            ),
+          );
+        }
+
+        final item = _newsImages[index];
+        final isCover = index == _coverIndex;
+
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: item is NewsImageEntity
+                  ? Image.network(
+                      item.image.startsWith('http')
+                          ? item.image
+                          : '${AppConstants.baseUrl}${item.image}',
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.broken_image)),
+                    )
+                  : FutureBuilder<Uint8List>(
+                      future: (item as XFile).readAsBytes(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Image.memory(snapshot.data!,
+                              fit: BoxFit.cover);
+                        }
+                        return Container(color: Colors.grey[300]);
+                      },
+                    ),
+            ),
+            // Cover Indicator
+            if (isCover)
+              Positioned(
+                top: 8,
+                left: 8,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text('Cover',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ),
+
+            // Actions Overlay
+            Positioned.fill(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => _setCover(index),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: isCover
+                          ? Border.all(
+                              color: theme.colorScheme.primary, width: 3)
+                          : null,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Delete Button
+            Positioned(
+              top: 4,
+              right: 4,
+              child: InkWell(
+                onTap: () => _removeImage(index),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 16),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _getLanguageFlag(String code) {
+    switch (code) {
+      case 'en':
+        return '🇺🇸';
+      case 'ar':
+        return '🇸🇦';
+      case 'fa':
+        return '🇮🇷';
+      case 'fr':
+        return '🇫🇷';
+      case 'es':
+        return '🇪🇸';
+      case 'de':
+        return '🇩🇪';
+      case 'it':
+        return '🇮🇹';
+      default:
+        return '🏳️';
+    }
+  }
+
+  String _getLanguageName(String code) {
+    switch (code) {
+      case 'en':
+        return 'English';
+      case 'ar':
+        return 'العربية';
+      case 'fa':
+        return 'فارسی';
+      case 'fr':
+        return 'Français';
+      case 'es':
+        return 'Español';
+      case 'de':
+        return 'Deutsch';
+      case 'it':
+        return 'Italiano';
+      default:
+        return code.toUpperCase();
+    }
+  }
+
+  bool _isRtl(String code) {
+    return ['ar', 'fa', 'he', 'ur'].contains(code);
+  }
+
+  void _showLanguagePicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        final availableLanguages = ['ar', 'fa', 'fr', 'es', 'de', 'it'];
+        return ListView(
+          shrinkWrap: true,
+          children: availableLanguages.map((code) {
+            return ListTile(
+              leading: Text(_getLanguageFlag(code),
+                  style: const TextStyle(fontSize: 24)),
+              title: Text(_getLanguageName(code)),
+              onTap: () {
+                Navigator.pop(context);
+                _addLanguage(code);
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  String _convertDeltaToHtml(dynamic delta) {
+    final converter = QuillDeltaToHtmlConverter(
+      delta.toJson(),
+      ConverterOptions.forEmail(),
+    );
+    return converter.convert();
+  }
+
+  void _saveNews() {
+    final s = S.of(context);
+
+    // Collect translations
+    List<Map<String, String>> titleTranslations = [];
+    List<Map<String, String>> contentTranslations = [];
+
+    _titleControllers.forEach((code, controller) {
+      if (code != 'en' && controller.text.isNotEmpty) {
+        titleTranslations.add({
+          'language_code': code,
+          'text': controller.text,
+        });
+      }
+    });
+
+    _contentControllers.forEach((code, controller) {
+      if (code != 'en') {
+        final html = _convertDeltaToHtml(controller.document.toDelta());
+        if (html.isNotEmpty && html != '<p><br/></p>') {
+          contentTranslations.add({
+            'language_code': code,
+            'text': html,
+          });
+        }
+      }
+    });
+
+    final enContent = _contentControllers['en'] != null
+        ? _convertDeltaToHtml(_contentControllers['en']!.document.toDelta())
+        : '';
+
+    // Collect Images
+    List<XFile> newImages = [];
+    for (var item in _newsImages) {
+      if (item is XFile) {
+        newImages.add(item);
+      }
+    }
+
+    // Determine Cover
+    // If cover is an existing image, we might need to send its ID.
+    // If cover is a new image, we might need to send its index in the newImages list?
+    // Or maybe we send 'cover_image_index' relative to the full list?
+    // Since I don't know the backend API perfectly, I'll try to send:
+    // - images: new files
+    // - deleted_images: ids
+    // - cover_image_id: id (if existing)
+    // - cover_image_index: index in newImages (if new)
+
+    String? coverImageId;
+    int? coverImageIndexInNew;
+
+    if (_newsImages.isNotEmpty) {
+      final coverItem = _newsImages[_coverIndex];
+      if (coverItem is NewsImageEntity) {
+        coverImageId = coverItem.id;
+      } else if (coverItem is XFile) {
+        coverImageIndexInNew = newImages.indexOf(coverItem);
+      }
+    }
+
+    final newsData = {
+      'title': _titleControllers['en']?.text ?? '',
+      'content': enContent,
+      'source_url': _sourceUrlController.text,
+      'status': _status,
+      'priority': _selectedPriority,
+      'is_pinned': _isPinned,
+      'related_teams_details': [],
+      'title_translations': titleTranslations,
+      'content_translations': contentTranslations,
+      'images': newImages,
+      'deleted_images': _deletedImageIds,
+    };
+
+    if (coverImageId != null) {
+      newsData['cover_image_id'] = coverImageId;
+    }
+    if (coverImageIndexInNew != null) {
+      newsData['cover_image_index'] = coverImageIndexInNew;
+    }
+
+    if (widget.news != null) {
+      widget.newsBloc.add(UpdateNewsEvent(widget.news!.id, newsData));
+    } else {
+      widget.newsBloc.add(CreateNewsEvent(newsData));
+    }
+
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(s.requestSent)),
+    );
+  }
+
+  void _deleteNews() {
+    if (widget.news != null) {
+      widget.newsBloc.add(DeleteNewsEvent(widget.news!.id));
+      Navigator.pop(context);
+    }
+  }
+
+  void _approveNews() {
+    final s = S.of(context);
+    if (widget.news != null) {
+      widget.newsBloc.add(ApproveNewsEvent(widget.news!.id, {
+        'status': 'published',
+        'priority': _selectedPriority,
+      }));
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s.incidentApproved)),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    final theme = Theme.of(context);
+
+    return BlocListener<NewsBloc, NewsState>(
+      bloc: widget.newsBloc,
+      listener: (context, state) {
+        if (state is NewsOperationSuccess) {
+          // Handled in _saveNews mostly, but good for backup
+        } else if (state is NewsError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.news != null ? 'Edit News' : 'Add News'),
+          actions: [
+            if (widget.news?.status == 'pending_approval')
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: FilledButton(
+                  onPressed: _approveNews,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(s.approve),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: FilledButton(
+                onPressed: _saveNews,
+                style: FilledButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(s.save),
+              ),
+            ),
+            if (widget.news != null)
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(s.delete),
+                      content: const Text(
+                          'Are you sure you want to delete this news?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(s.cancel),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _deleteNews();
+                          },
+                          child: Text(s.delete,
+                              style: const TextStyle(color: Colors.red)),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Language Tabs
+              Container(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                      color: theme.colorScheme.outline.withOpacity(0.2)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TabBar(
+                        controller: _tabController,
+                        isScrollable: true,
+                        tabAlignment: TabAlignment.start,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        dividerColor: Colors.transparent,
+                        tabs: _languages.map((code) {
+                          return Tab(
+                            child: Row(
+                              children: [
+                                Text(
+                                    '${_getLanguageFlag(code)} ${code.toUpperCase()}'),
+                                if (code != 'en') ...[
+                                  const SizedBox(width: 8),
+                                  InkWell(
+                                    onTap: () => _removeLanguage(
+                                        _languages.indexOf(code)),
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Icon(Icons.close,
+                                          size: 14,
+                                          color: theme.colorScheme.error),
+                                    ),
+                                  ),
+                                ]
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    Container(
+                      width: 1,
+                      height: 24,
+                      color: theme.colorScheme.outline.withOpacity(0.2),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: _showLanguagePicker,
+                      tooltip: s.changeLanguage,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Title and Content Fields (Dynamic based on tab)
+              SizedBox(
+                height: 500, // Increased height for editor
+                child: TabBarView(
+                  controller: _tabController,
+                  children: _languages.map((code) {
+                    final isRtl = _isRtl(code);
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: TextField(
+                            controller: _titleControllers[code],
+                            textDirection:
+                                isRtl ? TextDirection.rtl : TextDirection.ltr,
+                            decoration: InputDecoration(
+                              labelText: 'Title (${_getLanguageName(code)})',
+                              hintText:
+                                  'Enter title in ${_getLanguageName(code)}',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: theme.colorScheme.outline
+                                      .withOpacity(0.5)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              children: [
+                                QuillSimpleToolbar(
+                                  controller: _contentControllers[code]!,
+                                  config: const QuillSimpleToolbarConfig(
+                                    showFontFamily: false,
+                                    showFontSize: false,
+                                    showSearchButton: false,
+                                    showSubscript: false,
+                                    showSuperscript: false,
+                                  ),
+                                ),
+                                const Divider(height: 1),
+                                Expanded(
+                                  child: Directionality(
+                                    textDirection: isRtl
+                                        ? TextDirection.rtl
+                                        : TextDirection.ltr,
+                                    child: QuillEditor.basic(
+                                      controller: _contentControllers[code]!,
+                                      config: QuillEditorConfig(
+                                        padding: const EdgeInsets.all(16),
+                                        placeholder:
+                                            'Enter content in ${_getLanguageName(code)}...',
+                                        autoFocus: false,
+                                        expands: false,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Source URL
+              TextField(
+                controller: _sourceUrlController,
+                decoration: InputDecoration(
+                  labelText: 'Source URL',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  prefixIcon: const Icon(Icons.link),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Images Collection
+              Text('Images', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 8),
+              _buildImageGrid(theme),
+              const SizedBox(height: 24),
+
+              // Notification / Priority
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: theme.colorScheme.outline.withOpacity(0.5)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: SwitchListTile(
+                  title: Text(s.sendNotification,
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w500)),
+                  value: _sendNotification,
+                  onChanged: (value) {
+                    setState(() {
+                      _sendNotification = value;
+                      _selectedPriority = value ? 'urgent' : 'normal';
+                    });
+                  },
+                  secondary: Icon(
+                    _sendNotification
+                        ? Icons.notifications_active
+                        : Icons.notifications_none,
+                    color: _sendNotification
+                        ? theme.colorScheme.primary
+                        : Colors.grey,
+                    size: 20,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                  dense: true,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+              // Pinned Switch
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: theme.colorScheme.outline.withOpacity(0.5)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: SwitchListTile(
+                  title: const Text('Pinned',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  value: _isPinned,
+                  onChanged: (value) {
+                    setState(() {
+                      _isPinned = value;
+                    });
+                  },
+                  secondary: Icon(
+                    _isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+                    color: _isPinned ? Colors.blue : Colors.grey,
+                    size: 20,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                  dense: true,
+                ),
+              ),
+
+              const SizedBox(height: 40),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

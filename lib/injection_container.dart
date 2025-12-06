@@ -67,6 +67,15 @@ import 'features/settings/domain/usecases/search_competitions_usecase.dart';
 import 'features/settings/domain/usecases/toggle_competition_status_usecase.dart';
 import 'features/settings/presentation/bloc/competition_config_bloc.dart';
 import 'features/settings/presentation/bloc/search_competitions/search_competitions_bloc.dart';
+import 'features/news/data/datasources/news_remote_data_source.dart';
+import 'features/news/data/repositories/news_repository_impl.dart';
+import 'features/news/domain/repositories/news_repository.dart';
+import 'features/news/domain/usecases/approve_news_usecase.dart';
+import 'features/news/domain/usecases/create_news_usecase.dart';
+import 'features/news/domain/usecases/delete_news_usecase.dart';
+import 'features/news/domain/usecases/get_news_usecase.dart';
+import 'features/news/domain/usecases/update_news_usecase.dart';
+import 'features/news/presentation/bloc/news_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -196,6 +205,24 @@ Future<void> init() async {
       () => CompetitionConfigRepositoryImpl(sl()));
   sl.registerLazySingleton<CompetitionConfigRemoteDataSource>(
       () => CompetitionConfigRemoteDataSourceImpl(sl()));
+
+  // News
+  sl.registerFactory(() => NewsBloc(
+        getNews: sl(),
+        createNews: sl(),
+        updateNews: sl(),
+        deleteNews: sl(),
+        approveNews: sl(),
+      ));
+  sl.registerLazySingleton(() => GetNewsUseCase(sl()));
+  sl.registerLazySingleton(() => CreateNewsUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateNewsUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteNewsUseCase(sl()));
+  sl.registerLazySingleton(() => ApproveNewsUseCase(sl()));
+  sl.registerLazySingleton<NewsRepository>(
+      () => NewsRepositoryImpl(remoteDataSource: sl()));
+  sl.registerLazySingleton<NewsRemoteDataSource>(
+      () => NewsRemoteDataSourceImpl(sl()));
 
   // --- Core ---
   sl.registerLazySingleton(() => ApiClient(sl()));

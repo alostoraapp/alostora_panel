@@ -9,8 +9,8 @@ List<SidebarMenuModel> getSidebarMenus(BuildContext context) {
 
   return [
     SidebarMenuModel(
-      title: s.dashboard,
-      icon: AppIcons.analyse,
+      title: s.menu,
+      icon: AppIcons.apps,
       route: '/dashboard', // Parent route
       children: [
         SidebarMenuModel(
@@ -18,22 +18,15 @@ List<SidebarMenuModel> getSidebarMenus(BuildContext context) {
           icon: AppIcons.circle,
           route: '/dashboard/overview',
         ),
-      ],
-    ),
-    SidebarMenuModel(
-      title: s.matches,
-      icon: AppIcons.football,
-      route: '/matches', // Parent route
-      children: [
         SidebarMenuModel(
-          title: s.matchesTiles,
+          title: s.matches,
           icon: AppIcons.tile,
           route: '/matches/tiles',
         ),
         SidebarMenuModel(
-          title: s.matchesList,
-          icon: AppIcons.list,
-          route: '/matches/list',
+          title: s.news,
+          icon: AppIcons.circle,
+          route: '/news',
         ),
       ],
     ),

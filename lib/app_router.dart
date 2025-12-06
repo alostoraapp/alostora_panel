@@ -12,6 +12,7 @@ import 'features/settings/presentation/screens/competition_select_screen.dart';
 import 'features/shell/presentation/screens/app_shell.dart';
 import 'features/shell/presentation/screens/placeholder_screen.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
+import 'features/news/presentation/screens/news_screen.dart';
 import 'injection_container.dart';
 import 'features/matches/domain/entities/match_entity.dart'; // Import MatchEntity
 
@@ -79,6 +80,11 @@ class AppRouter {
             name: AppRoutes.competitionSelect,
             builder: (context, state) => const CompetitionSelectScreen(),
           ),
+          GoRoute(
+            path: AppRoutes.news,
+            name: AppRoutes.news,
+            builder: (context, state) => const NewsScreen(),
+          ),
         ],
       ),
     ],
@@ -97,8 +103,8 @@ class AppRouter {
       }
 
       if (authState is AuthAuthenticated) {
-        if (isSplash || isLoggingIn) return AppRoutes.dashboardOverview;
-        if (state.matchedLocation == '/') return AppRoutes.dashboardOverview;
+        if (isSplash || isLoggingIn) return AppRoutes.matchesTiles;
+        if (state.matchedLocation == '/') return AppRoutes.matchesTiles;
       }
 
       return null;
@@ -128,4 +134,5 @@ class AppRoutes {
   // Settings
   static const String settings = '/settings';
   static const String competitionSelect = '/settings/competition-select';
+  static const String news = '/news';
 }

@@ -172,5 +172,7 @@
   "deleteTvChannel": "Delete TV Channel",
   "deleteTvChannelConfirmation": "Are you sure you want to delete this TV channel?",
   "deleteCommentator": "Delete Commentator",
-  "deleteCommentatorConfirmation": "Are you sure you want to delete this commentator?"
+  "deleteCommentatorConfirmation": "Are you sure you want to delete this commentator?",
+  "menu": "Menu",
+  "news": "News"
 }

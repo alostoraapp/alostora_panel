@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'app_router.dart';
 import 'core/config/app_theme.dart';
@@ -37,7 +38,10 @@ class App extends StatelessWidget {
 
       // --- Localization Configuration ---
       locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: [
+        ...AppLocalizations.localizationsDelegates,
+        FlutterQuillLocalizations.delegate,
+      ],
       supportedLocales: L10n.all,
 
       // --- Router Configuration ---
