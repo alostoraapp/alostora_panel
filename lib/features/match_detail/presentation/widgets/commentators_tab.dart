@@ -189,50 +189,55 @@ class _CommentatorsTabState extends State<CommentatorsTab> {
                                       ),
                                     ),
                                     const SizedBox(height: 4),
-                                    Row(
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        if (commentator.country != null) ...[
-                                          CachedNetworkImage(
-                                            imageUrl: commentator.country!.logo,
-                                            width: 16,
-                                            height: 12,
-                                            fit: BoxFit.cover,
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const SizedBox.shrink(),
+                                        if (commentator.country != null)
+                                          Row(
+                                            children: [
+                                              CachedNetworkImage(
+                                                imageUrl:
+                                                    commentator.country!.logo,
+                                                width: 16,
+                                                height: 12,
+                                                fit: BoxFit.cover,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const SizedBox.shrink(),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                commentator.country!.name,
+                                                style:
+                                                    theme.textTheme.bodyMedium,
+                                              ),
+                                            ],
                                           ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            commentator.country!.name,
-                                            style: theme.textTheme.bodyMedium,
-                                          ),
-                                        ],
                                         if (matchCommentator.tvChannel !=
                                             null) ...[
-                                          const SizedBox(width: 8),
-                                          Container(
-                                            width: 4,
-                                            height: 4,
-                                            decoration: BoxDecoration(
-                                              color: theme.colorScheme.outline,
-                                              shape: BoxShape.circle,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          CachedNetworkImage(
-                                            imageUrl: matchCommentator
-                                                .tvChannel!.logo,
-                                            width: 16,
-                                            height: 16,
-                                            fit: BoxFit.contain,
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const SizedBox.shrink(),
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            matchCommentator.tvChannel!.name,
-                                            style: theme.textTheme.bodyMedium,
+                                          if (commentator.country != null)
+                                            const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              CachedNetworkImage(
+                                                imageUrl: matchCommentator
+                                                    .tvChannel!.logo,
+                                                width: 16,
+                                                height: 16,
+                                                fit: BoxFit.contain,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const SizedBox.shrink(),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                matchCommentator
+                                                    .tvChannel!.name,
+                                                style:
+                                                    theme.textTheme.bodyMedium,
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ],

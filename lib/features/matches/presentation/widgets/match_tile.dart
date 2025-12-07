@@ -14,6 +14,7 @@ import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../domain/entities/match_entity.dart';
 import '../../domain/entities/match_status_enum.dart';
 import '../../domain/entities/team_entity.dart';
+import '../../../teams/presentation/screens/team_detail_screen.dart';
 
 class MatchTile extends StatefulWidget {
   final MatchEntity match;
@@ -229,27 +230,35 @@ class _MatchTileState extends State<MatchTile> {
     // Reduced logo size when not interactive (e.g. in AppBar)
     final double logoSize = isMobile ? 32 : (widget.isInteractive ? 40 : 32);
 
-    final logo = CachedNetworkImage(
-      imageUrl: team.logo,
-      width: logoSize,
-      height: logoSize,
-      placeholder: (context, url) => Shimmer.fromColors(
-        baseColor: theme.colorScheme.surfaceVariant,
-        highlightColor: theme.colorScheme.onSurface.withOpacity(0.1),
-        child: Container(
-          width: logoSize,
-          height: logoSize,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-          ),
-        ),
-      ),
-      errorWidget: (context, url, error) => SvgPicture.asset(
-        AppIcons.shield,
+    final logo = InkWell(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => TeamDetailScreen(teamId: team.id),
+        ));
+      },
+      borderRadius: BorderRadius.circular(logoSize / 2),
+      child: CachedNetworkImage(
+        imageUrl: team.logo,
         width: logoSize,
         height: logoSize,
-        colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+        placeholder: (context, url) => Shimmer.fromColors(
+          baseColor: theme.colorScheme.surfaceVariant,
+          highlightColor: theme.colorScheme.onSurface.withOpacity(0.1),
+          child: Container(
+            width: logoSize,
+            height: logoSize,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+        errorWidget: (context, url, error) => SvgPicture.asset(
+          AppIcons.shield,
+          width: logoSize,
+          height: logoSize,
+          colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+        ),
       ),
     );
 

@@ -64,4 +64,10 @@ class AppConstants {
       '/v1/admin/media/news/$id/approve/';
   static String getUploadNewsImageUrl(String id) =>
       '/v1/admin/media/news/$id/images/';
+
+  // Teams
+  static String getTeamDetailUrl(String teamId) =>
+      '/v1/admin/entities/teams/$teamId/';
+  static String updateTeamUrl(String teamId) =>
+      '/v1/admin/entities/teams/$teamId/';
 }

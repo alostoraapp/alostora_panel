@@ -17,6 +17,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_delta_from_html/flutter_quill_delta_from_html.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
+import '../../../teams/presentation/screens/team_detail_screen.dart';
 
 class NewsEditScreen extends StatefulWidget {
   final NewsEntity? news;
@@ -1036,14 +1037,9 @@ class _RelatedTeamsSelectorState extends State<_RelatedTeamsSelector> {
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         _showOverlay();
-      } else {
-        // Delay hiding overlay to allow onTap to propagate
-        Future.delayed(const Duration(milliseconds: 200), () {
-          if (!_focusNode.hasFocus) {
-            _hideOverlay();
-          }
-        });
       }
+      // Removed the else block that hides overlay on focus loss.
+      // We now rely on TapRegion to close the overlay when tapping outside.
     });
 
     _searchController.addListener(_onSearchChanged);
@@ -1133,29 +1129,31 @@ class _RelatedTeamsSelectorState extends State<_RelatedTeamsSelector> {
           targetAnchor: showAbove ? Alignment.topLeft : Alignment.bottomLeft,
           followerAnchor: showAbove ? Alignment.bottomLeft : Alignment.topLeft,
           offset: showAbove ? const Offset(0.0, -5.0) : const Offset(0.0, 5.0),
-          child: Material(
-            elevation: 4.0,
-            borderRadius: BorderRadius.circular(8),
-            color: Theme.of(context).colorScheme.surfaceContainer,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 200),
-              child: _isLoading
-                  ? const Center(
-                      child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator(),
-                    ))
-                  : ListView(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      children: _availableTeams.isEmpty
-                          ? [
-                              const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text("No teams found"),
-                              )
-                            ]
-                          : _availableTeams.map((team) {
+          child: TapRegion(
+            groupId: _layerLink,
+            child: Material(
+              elevation: 4.0,
+              borderRadius: BorderRadius.circular(8),
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 200),
+                child: _isLoading
+                    ? const Center(
+                        child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: CircularProgressIndicator(),
+                      ))
+                    : _availableTeams.isEmpty
+                        ? const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text("No teams found"),
+                          )
+                        : ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: _availableTeams.length,
+                            itemBuilder: (context, index) {
+                              final team = _availableTeams[index];
                               return ListTile(
                                 leading: team['logo'] != null &&
                                         team['logo'].isNotEmpty
@@ -1170,8 +1168,9 @@ class _RelatedTeamsSelectorState extends State<_RelatedTeamsSelector> {
                                   _selectTeam(team);
                                 },
                               );
-                            }).toList(),
-                    ),
+                            },
+                          ),
+              ),
             ),
           ),
         ),
@@ -1210,69 +1209,81 @@ class _RelatedTeamsSelectorState extends State<_RelatedTeamsSelector> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Related Teams',
-            style: theme.textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: _focusNode.hasFocus
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.outline),
-              borderRadius: BorderRadius.circular(8),
+    return TapRegion(
+      groupId: _layerLink,
+      onTapOutside: (event) {
+        _hideOverlay();
+        _focusNode.unfocus();
+      },
+      child: CompositedTransformTarget(
+        link: _layerLink,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Related Teams',
+              style: theme.textTheme.titleSmall,
             ),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                ..._selectedTeams.map((team) {
-                  return Chip(
-                    avatar: team['logo'] != null
-                        ? CircleAvatar(
-                            backgroundImage: NetworkImage(team['logo']))
-                        : const CircleAvatar(
-                            child: Icon(Icons.shield, size: 12)),
-                    label: Text((team['short_name']?.isNotEmpty == true)
-                        ? team['short_name']
-                        : (team['name']?.isNotEmpty == true
-                            ? team['name']
-                            : 'Team')),
-                    onDeleted: () => _removeTeam(team),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  );
-                }),
-                ConstrainedBox(
-                  constraints:
-                      const BoxConstraints(minWidth: 80, maxWidth: 200),
-                  child: TextField(
-                    controller: _searchController,
-                    focusNode: _focusNode,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      hintText: 'Search...',
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: _focusNode.hasFocus
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.outline),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  ..._selectedTeams.map((team) {
+                    return InputChip(
+                      avatar: team['logo'] != null
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(team['logo']))
+                          : const CircleAvatar(
+                              child: Icon(Icons.shield, size: 12)),
+                      label: Text((team['short_name']?.isNotEmpty == true)
+                          ? team['short_name']
+                          : (team['name']?.isNotEmpty == true
+                              ? team['name']
+                              : 'Team')),
+                      onDeleted: () => _removeTeam(team),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => TeamDetailScreen(teamId: team['id']),
+                        ));
+                      },
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    );
+                  }),
+                  ConstrainedBox(
+                    constraints:
+                        const BoxConstraints(minWidth: 80, maxWidth: 200),
+                    child: TextField(
+                      controller: _searchController,
+                      focusNode: _focusNode,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        hintText: 'Search...',
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

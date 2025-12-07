@@ -75,6 +75,12 @@ import 'features/news/domain/usecases/update_news_usecase.dart';
 import 'features/news/domain/usecases/upload_news_image_usecase.dart';
 import 'features/news/domain/usecases/search_teams_usecase.dart';
 import 'features/news/presentation/bloc/news_bloc.dart';
+import 'features/teams/data/datasources/team_remote_data_source.dart';
+import 'features/teams/data/repositories/team_repository_impl.dart';
+import 'features/teams/domain/repositories/team_repository.dart';
+import 'features/teams/domain/usecases/get_team_detail_usecase.dart';
+import 'features/teams/domain/usecases/update_team_usecase.dart';
+import 'features/teams/presentation/bloc/team_detail_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -216,6 +222,18 @@ Future<void> init() async {
       () => NewsRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<NewsRemoteDataSource>(
       () => NewsRemoteDataSourceImpl(sl()));
+
+  // Teams
+  sl.registerFactory(() => TeamDetailBloc(
+        getTeamDetail: sl(),
+        updateTeam: sl(),
+      ));
+  sl.registerLazySingleton(() => GetTeamDetailUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateTeamUseCase(sl()));
+  sl.registerLazySingleton<TeamRepository>(
+      () => TeamRepositoryImpl(remoteDataSource: sl()));
+  sl.registerLazySingleton<TeamRemoteDataSource>(
+      () => TeamRemoteDataSourceImpl(apiClient: sl()));
 
   // --- Core ---
   sl.registerLazySingleton(() => ApiClient(sl()));
