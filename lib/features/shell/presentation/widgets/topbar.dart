@@ -33,7 +33,8 @@ class Topbar extends StatelessWidget implements PreferredSizeWidget {
               child: IconButton(
                 icon: SvgPicture.asset(
                   AppIcons.menuBurger,
-                  colorFilter: ColorFilter.mode(iconColor!, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                      iconColor ?? Colors.black, BlendMode.srcIn),
                 ),
                 onPressed: () => context.read<ShellBloc>().add(ToggleSidebar()),
               ),
@@ -47,7 +48,8 @@ class Topbar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: SvgPicture.asset(
             isDark ? AppIcons.sun : AppIcons.moon,
-            colorFilter: ColorFilter.mode(iconColor!, BlendMode.srcIn),
+            colorFilter:
+                ColorFilter.mode(iconColor ?? Colors.black, BlendMode.srcIn),
           ),
           tooltip: s.changeTheme,
           onPressed: () => context.read<ThemeCubit>().toggleThemeMode(),
@@ -59,7 +61,8 @@ class Topbar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: s.changeLanguage,
           icon: SvgPicture.asset(
             AppIcons.language,
-            colorFilter: ColorFilter.mode(iconColor!, BlendMode.srcIn),
+            colorFilter:
+                ColorFilter.mode(iconColor ?? Colors.black, BlendMode.srcIn),
           ),
           itemBuilder: (context) {
             return L10n.all.map((locale) {
@@ -90,19 +93,22 @@ class Topbar extends StatelessWidget implements PreferredSizeWidget {
                 AppIcons.user,
                 width: 18,
                 height: 18,
-                colorFilter: ColorFilter.mode(iconColor!, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                    iconColor ?? Colors.black, BlendMode.srcIn),
               ),
             ),
             itemBuilder: (context) => [
               PopupMenuItem(
-                onTap: () => context.read<AuthBloc>().add(AuthLogoutRequested()),
+                onTap: () =>
+                    context.read<AuthBloc>().add(AuthLogoutRequested()),
                 child: Row(
                   children: [
                     SvgPicture.asset(
                       AppIcons.signOutAlt,
                       width: 16,
                       height: 16,
-                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(
+                          iconColor ?? Colors.black, BlendMode.srcIn),
                     ),
                     const SizedBox(width: 8),
                     Text(s.logout),

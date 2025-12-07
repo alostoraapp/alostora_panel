@@ -437,4 +437,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get news => 'الأخبار';
+
+  @override
+  String get normal => 'Normal';
+
+  @override
+  String get important => 'Important';
+
+  @override
+  String get urgent => 'Urgent';
+
+  @override
+  String get pinned => 'مثبت';
+
+  @override
+  String get noInternetConnection => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get checkYourConnection => 'يرجى التحقق من الاتصال';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get somethingWentWrong => 'حدث خطأ ما';
 }

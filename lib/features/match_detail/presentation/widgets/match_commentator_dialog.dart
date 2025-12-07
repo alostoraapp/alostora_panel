@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/s.dart';
 import '../../domain/entities/commentator_entity.dart';
+import '../../domain/entities/tv_channel_entity.dart';
 import '../bloc/match_commentators/match_commentators_bloc.dart';
 import '../bloc/match_commentators/match_commentators_event.dart';
 import '../bloc/match_commentators/match_commentators_state.dart';
 import 'commentator_dropdown.dart';
+import 'tv_channel_dropdown.dart';
 
 class MatchCommentatorDialog extends StatefulWidget {
   final String matchId;
@@ -21,6 +23,7 @@ class MatchCommentatorDialog extends StatefulWidget {
 
 class _MatchCommentatorDialogState extends State<MatchCommentatorDialog> {
   CommentatorEntity? _selectedCommentator;
+  TvChannelEntity? _selectedTvChannel;
 
   void _save() {
     if (_selectedCommentator == null) {
@@ -37,6 +40,7 @@ class _MatchCommentatorDialogState extends State<MatchCommentatorDialog> {
           AddCommentatorToMatchEvent(
             matchId: widget.matchId,
             commentatorId: _selectedCommentator!.id,
+            tvChannelId: _selectedTvChannel?.id,
           ),
         );
   }
@@ -66,6 +70,14 @@ class _MatchCommentatorDialogState extends State<MatchCommentatorDialog> {
                 onSelected: (commentator) {
                   setState(() {
                     _selectedCommentator = commentator;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              TvChannelSearchDropdown(
+                onSelected: (tvChannel) {
+                  setState(() {
+                    _selectedTvChannel = tvChannel;
                   });
                 },
               ),

@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/l10n/s.dart';
+import '../../../../core/presentation/widgets/error_view.dart';
 import '../../../../injection_container.dart';
 import '../bloc/match_broadcasts/match_broadcasts_bloc.dart';
 import '../bloc/match_broadcasts/match_broadcasts_event.dart';
@@ -59,7 +60,11 @@ class _LiveTabState extends State<LiveTab> {
           if (state is MatchBroadcastsLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is MatchBroadcastsError) {
-            return Center(child: Text(state.message));
+            return ErrorView(
+              message: state.message,
+              onRetry: () =>
+                  _bloc.add(GetBroadcastsEvent(matchId: widget.matchId)),
+            );
           } else if (state is MatchBroadcastsLoaded) {
             return Column(
               children: [

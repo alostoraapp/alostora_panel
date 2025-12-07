@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/l10n/s.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
+import '../../../../core/presentation/widgets/error_view.dart';
 import '../../domain/entities/competition_entity.dart';
 import '../bloc/matches_bloc.dart';
 import '../bloc/matches_event.dart';
@@ -160,7 +161,16 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                         children: [
                           timePicker,
                           const SizedBox(height: 2),
-                          searchCard,
+                          if (!ResponsiveBreakpoints.of(context).isMobile)
+                            Row(
+                              children: [
+                                Expanded(child: searchCard),
+                                const SizedBox(width: 8),
+                                refreshButton,
+                              ],
+                            )
+                          else
+                            searchCard,
                         ],
                       ),
                     const SizedBox(height: 16),
@@ -180,7 +190,10 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                             : null,
                       )
                     else if (state is MatchesError)
-                      Center(child: Text(state.message))
+                      ErrorView(
+                        message: state.message,
+                        onRetry: _fetchMatches,
+                      )
                     else if (state is MatchesInitial)
                       // Show shimmer or an empty state during initial load
                       _buildShimmerList()

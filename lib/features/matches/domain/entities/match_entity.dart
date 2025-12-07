@@ -18,7 +18,6 @@ class MatchEntity extends Equatable {
   final bool hasIncidentsMedia;
   final bool hasHighlights;
   final bool hasLiveBroadcast;
-  final bool hasTvChannels;
   final bool hasCommentators;
 
   const MatchEntity({
@@ -36,7 +35,6 @@ class MatchEntity extends Equatable {
     this.hasIncidentsMedia = false,
     this.hasHighlights = false,
     this.hasLiveBroadcast = false,
-    this.hasTvChannels = false,
     this.hasCommentators = false,
   });
 
@@ -56,7 +54,6 @@ class MatchEntity extends Equatable {
         hasIncidentsMedia,
         hasHighlights,
         hasLiveBroadcast,
-        hasTvChannels,
         hasCommentators,
       ];
 }

@@ -12,13 +12,21 @@ class AddCommentatorToMatchUseCase
   @override
   Future<Either<Failure, void>> call(AddCommentatorParams params) async {
     return await repository.addCommentatorToMatch(
-        params.matchId, params.commentatorId);
+      params.matchId,
+      params.commentatorId,
+      params.tvChannelId,
+    );
   }
 }
 
 class AddCommentatorParams {
   final String matchId;
   final String commentatorId;
+  final String? tvChannelId;
 
-  AddCommentatorParams({required this.matchId, required this.commentatorId});
+  AddCommentatorParams({
+    required this.matchId,
+    required this.commentatorId,
+    this.tvChannelId,
+  });
 }

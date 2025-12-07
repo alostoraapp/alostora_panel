@@ -174,5 +174,10 @@
   "deleteCommentator": "حذف گزارشگر",
   "deleteCommentatorConfirmation": "آیا مطمئن هستید که می‌خواهید این گزارشگر را حذف کنید؟",
   "menu": "منو",
-  "news": "اخبار"
+  "news": "اخبار",
+  "pinned": "سنجاق شده",
+  "noInternetConnection": "اتصال اینترنت برقرار نیست",
+  "checkYourConnection": "لطفا اتصال خود را بررسی کنید",
+  "retry": "تلاش مجدد",
+  "somethingWentWrong": "مشکلی پیش آمده است"
 }

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/l10n/s.dart';
+import '../../../../core/presentation/widgets/error_view.dart';
 import '../../../../injection_container.dart';
 import '../bloc/match_commentators/match_commentators_bloc.dart';
 import '../bloc/match_commentators/match_commentators_event.dart';
@@ -47,7 +48,11 @@ class _CommentatorsTabState extends State<CommentatorsTab> {
           if (state is MatchCommentatorsLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is MatchCommentatorsError) {
-            return Center(child: Text(state.message));
+            return ErrorView(
+              message: state.message,
+              onRetry: () =>
+                  _bloc.add(GetMatchCommentatorsEvent(matchId: widget.matchId)),
+            );
           } else if (state is MatchCommentatorsLoaded) {
             return Column(
               children: [
@@ -199,6 +204,34 @@ class _CommentatorsTabState extends State<CommentatorsTab> {
                                           const SizedBox(width: 4),
                                           Text(
                                             commentator.country!.name,
+                                            style: theme.textTheme.bodyMedium,
+                                          ),
+                                        ],
+                                        if (matchCommentator.tvChannel !=
+                                            null) ...[
+                                          const SizedBox(width: 8),
+                                          Container(
+                                            width: 4,
+                                            height: 4,
+                                            decoration: BoxDecoration(
+                                              color: theme.colorScheme.outline,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          CachedNetworkImage(
+                                            imageUrl: matchCommentator
+                                                .tvChannel!.logo,
+                                            width: 16,
+                                            height: 16,
+                                            fit: BoxFit.contain,
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const SizedBox.shrink(),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            matchCommentator.tvChannel!.name,
                                             style: theme.textTheme.bodyMedium,
                                           ),
                                         ],

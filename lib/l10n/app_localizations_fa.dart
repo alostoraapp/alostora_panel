@@ -437,4 +437,28 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get news => 'اخبار';
+
+  @override
+  String get normal => 'Normal';
+
+  @override
+  String get important => 'Important';
+
+  @override
+  String get urgent => 'Urgent';
+
+  @override
+  String get pinned => 'سنجاق شده';
+
+  @override
+  String get noInternetConnection => 'اتصال اینترنت برقرار نیست';
+
+  @override
+  String get checkYourConnection => 'لطفا اتصال خود را بررسی کنید';
+
+  @override
+  String get retry => 'تلاش مجدد';
+
+  @override
+  String get somethingWentWrong => 'مشکلی پیش آمده است';
 }

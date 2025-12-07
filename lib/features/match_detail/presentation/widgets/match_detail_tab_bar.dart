@@ -12,7 +12,6 @@ import 'best_player_tab.dart';
 import 'events_tab.dart';
 import 'highlights_tab.dart';
 import 'live_tab.dart';
-import 'tv_channels_tab.dart';
 import 'commentators_tab.dart';
 
 class MatchDetailTabBar extends StatefulWidget {
@@ -37,7 +36,7 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this, initialIndex: 0);
+    _tabController = TabController(length: 5, vsync: this, initialIndex: 0);
     _lineupBloc.add(GetLineupEvent(matchId: widget.match.id));
   }
 
@@ -53,7 +52,6 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
         S.of(context).bestPlayer,
         S.of(context).highlights,
         S.of(context).live,
-        S.of(context).tvChannels,
         S.of(context).commentators,
       ];
 
@@ -114,7 +112,6 @@ class _MatchDetailTabBarState extends State<MatchDetailTabBar>
                   ),
                   HighlightsTab(matchId: widget.match.id),
                   LiveTab(matchId: widget.match.id),
-                  TvChannelsTab(matchId: widget.match.id),
                   CommentatorsTab(matchId: widget.match.id),
                 ],
               ),

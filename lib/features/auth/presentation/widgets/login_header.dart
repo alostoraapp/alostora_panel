@@ -55,7 +55,8 @@ class LoginHeader extends StatelessWidget implements PreferredSizeWidget {
                   isDark ? AppIcons.sun : AppIcons.moon,
                   width: 20,
                   height: 20,
-                  colorFilter: ColorFilter.mode(iconColor!, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                      iconColor ?? Colors.black, BlendMode.srcIn),
                 ),
                 tooltip: s.changeTheme,
                 onPressed: () => context.read<ThemeCubit>().toggleThemeMode(),
@@ -69,7 +70,8 @@ class LoginHeader extends StatelessWidget implements PreferredSizeWidget {
                   AppIcons.language,
                   width: 20,
                   height: 20,
-                  colorFilter: ColorFilter.mode(iconColor!, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                      iconColor ?? Colors.black, BlendMode.srcIn),
                 ),
                 itemBuilder: (context) {
                   return L10n.all.map((locale) {

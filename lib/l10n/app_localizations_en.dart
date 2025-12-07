@@ -437,4 +437,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get news => 'News';
+
+  @override
+  String get normal => 'Normal';
+
+  @override
+  String get important => 'Important';
+
+  @override
+  String get urgent => 'Urgent';
+
+  @override
+  String get pinned => 'Pinned';
+
+  @override
+  String get noInternetConnection => 'No Internet Connection';
+
+  @override
+  String get checkYourConnection => 'Please check your connection';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
 }

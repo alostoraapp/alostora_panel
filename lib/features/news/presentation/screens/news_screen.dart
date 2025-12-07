@@ -7,6 +7,7 @@ import 'package:alostora/features/news/domain/entities/news_entity.dart';
 import 'package:alostora/features/news/presentation/bloc/news_bloc.dart';
 import 'package:alostora/features/news/presentation/bloc/news_event.dart';
 import 'package:alostora/features/news/presentation/bloc/news_state.dart';
+import 'package:alostora/core/presentation/widgets/error_view.dart';
 import 'package:alostora/features/news/presentation/screens/news_edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +39,10 @@ class NewsScreen extends StatelessWidget {
           if (state is NewsLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is NewsError) {
-            return Center(child: Text(state.message));
+            return ErrorView(
+              message: state.message,
+              onRetry: () => context.read<NewsBloc>().add(const GetNewsEvent()),
+            );
           } else if (state is NewsLoaded) {
             return Scaffold(
               body: Column(

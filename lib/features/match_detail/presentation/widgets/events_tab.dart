@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/config/app_colors.dart';
 import '../../../../core/l10n/s.dart';
+import '../../../../core/presentation/widgets/error_view.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/incident_entity.dart';
 import '../../domain/entities/incident_enums.dart';
@@ -142,7 +143,12 @@ class EventsTab extends StatelessWidget {
           if (state is MatchIncidentsLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is MatchIncidentsError) {
-            return Center(child: Text(state.message));
+            return ErrorView(
+              message: state.message,
+              onRetry: () => context
+                  .read<MatchIncidentsBloc>()
+                  .add(GetMatchIncidentsEvent(matchId)),
+            );
           } else if (state is MatchIncidentsLoaded) {
             if (state.incidents.isEmpty) {
               return Center(child: Text(S.of(context).noDataFound));

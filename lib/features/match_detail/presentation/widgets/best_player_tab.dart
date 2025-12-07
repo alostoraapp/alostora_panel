@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../../core/l10n/s.dart';
+import '../../../../core/presentation/widgets/error_view.dart';
 import '../../domain/entities/lineup_entity.dart';
 import '../../domain/entities/player_lineup_entity.dart';
 import '../../domain/entities/team_lineup_info_entity.dart';
@@ -34,7 +35,12 @@ class _BestPlayerTabState extends State<BestPlayerTab> {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is LineupError) {
-          return Center(child: Text(state.message));
+          return ErrorView(
+            message: state.message,
+            onRetry: () => context
+                .read<LineupBloc>()
+                .add(GetLineupEvent(matchId: widget.matchId)),
+          );
         }
         if (state is LineupLoaded) {
           final lineup = state.lineup;

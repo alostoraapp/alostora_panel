@@ -132,7 +132,6 @@ class _MatchTileState extends State<MatchTile> {
             widget.match.hasIncidentsMedia ||
             widget.match.hasHighlights ||
             widget.match.hasLiveBroadcast ||
-            widget.match.hasTvChannels ||
             widget.match.hasCommentators);
 
     return MouseRegion(
@@ -196,8 +195,6 @@ class _MatchTileState extends State<MatchTile> {
                           _buildIndicator(theme, 'H', Colors.purple, isMobile),
                         if (widget.match.hasLiveBroadcast)
                           _buildIndicator(theme, 'L', Colors.red, isMobile),
-                        if (widget.match.hasTvChannels)
-                          _buildIndicator(theme, 'T', Colors.green, isMobile),
                         if (widget.match.hasCommentators)
                           _buildIndicator(theme, 'C', Colors.orange, isMobile),
                       ],
@@ -318,7 +315,6 @@ class _MatchTileState extends State<MatchTile> {
             match.hasIncidentsMedia ||
             match.hasHighlights ||
             match.hasLiveBroadcast ||
-            match.hasTvChannels ||
             match.hasCommentators);
 
     return Expanded(

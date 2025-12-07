@@ -6,7 +6,7 @@ import '../models/lineup_model.dart';
 import '../models/highlight_model.dart';
 import '../models/broadcast_model.dart';
 import '../models/tv_channel_model.dart';
-import '../models/match_tv_channel_model.dart';
+
 import '../models/commentator_model.dart';
 import '../models/match_commentator_model.dart';
 
@@ -41,16 +41,12 @@ abstract class MatchDetailRemoteDataSource {
   Future<void> deleteBroadcast(String matchId, String broadcastId);
   Future<List<TvChannelModel>> searchTvChannels(String query, int page);
 
-  // Match TV Channels
-  Future<List<MatchTvChannelModel>> getMatchTvChannels(String matchId);
-  Future<void> addTvChannelToMatch(String matchId, String tvChannelId);
-  Future<void> deleteTvChannelFromMatch(String matchId, String itemId);
-
   Future<List<CommentatorModel>> searchCommentators(String query, int page);
 
   // Match Commentators
   Future<List<MatchCommentatorModel>> getMatchCommentators(String matchId);
-  Future<void> addCommentatorToMatch(String matchId, String commentatorId);
+  Future<void> addCommentatorToMatch(
+      String matchId, String commentatorId, String? tvChannelId);
   Future<void> deleteCommentatorFromMatch(String matchId, String itemId);
 }
 
@@ -268,29 +264,6 @@ class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
         .toList();
   }
 
-  // Match TV Channels
-  @override
-  Future<List<MatchTvChannelModel>> getMatchTvChannels(String matchId) async {
-    final response =
-        await _apiClient.get(AppConstants.getMatchTvChannelsUrl(matchId));
-    return (response as List)
-        .map((e) => MatchTvChannelModel.fromJson(e))
-        .toList();
-  }
-
-  @override
-  Future<void> addTvChannelToMatch(String matchId, String tvChannelId) async {
-    await _apiClient.post(
-      AppConstants.getMatchTvChannelsUrl(matchId),
-      data: {'tv_channel': tvChannelId},
-    );
-  }
-
-  @override
-  Future<void> deleteTvChannelFromMatch(String matchId, String itemId) async {
-    await _apiClient.delete(AppConstants.getMatchTvChannelUrl(matchId, itemId));
-  }
-
   @override
   Future<List<CommentatorModel>> searchCommentators(
       String query, int page) async {
@@ -318,10 +291,14 @@ class MatchDetailRemoteDataSourceImpl implements MatchDetailRemoteDataSource {
 
   @override
   Future<void> addCommentatorToMatch(
-      String matchId, String commentatorId) async {
+      String matchId, String commentatorId, String? tvChannelId) async {
+    final data = {'commentator': commentatorId};
+    if (tvChannelId != null) {
+      data['tv_channel'] = tvChannelId;
+    }
     await _apiClient.post(
       AppConstants.getMatchCommentatorsUrl(matchId),
-      data: {'commentator': commentatorId},
+      data: data,
     );
   }
 

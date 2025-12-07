@@ -5,7 +5,7 @@ import '../entities/lineup_entity.dart';
 import '../entities/highlight_entity.dart';
 import '../entities/broadcast_entity.dart';
 import '../entities/tv_channel_entity.dart';
-import '../entities/match_tv_channel_entity.dart';
+
 import '../entities/commentator_entity.dart';
 import '../entities/match_commentator_entity.dart';
 
@@ -54,14 +54,6 @@ abstract class MatchDetailRepository {
   Future<Either<Failure, List<TvChannelEntity>>> searchTvChannels(
       String query, int page);
 
-  // Match TV Channels
-  Future<Either<Failure, List<MatchTvChannelEntity>>> getMatchTvChannels(
-      String matchId);
-  Future<Either<Failure, void>> addTvChannelToMatch(
-      String matchId, String tvChannelId);
-  Future<Either<Failure, void>> deleteTvChannelFromMatch(
-      String matchId, String itemId);
-
   Future<Either<Failure, List<CommentatorEntity>>> searchCommentators(
       String query, int page);
 
@@ -69,7 +61,7 @@ abstract class MatchDetailRepository {
   Future<Either<Failure, List<MatchCommentatorEntity>>> getMatchCommentators(
       String matchId);
   Future<Either<Failure, void>> addCommentatorToMatch(
-      String matchId, String commentatorId);
+      String matchId, String commentatorId, String? tvChannelId);
   Future<Either<Failure, void>> deleteCommentatorFromMatch(
       String matchId, String itemId);
 }

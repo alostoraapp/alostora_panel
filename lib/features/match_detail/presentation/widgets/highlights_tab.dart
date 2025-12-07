@@ -2,6 +2,7 @@ import 'package:alostora/core/config/constants.dart';
 import 'package:alostora/core/constants/app_icons.dart';
 import 'package:alostora/injection_container.dart';
 import 'package:alostora/core/l10n/s.dart';
+import 'package:alostora/core/presentation/widgets/error_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:alostora/features/match_detail/domain/entities/highlight_entity.dart';
 import 'package:alostora/features/match_detail/presentation/bloc/match_highlights/match_highlights_bloc.dart';
@@ -43,7 +44,12 @@ class HighlightsTab extends StatelessWidget {
           if (state is MatchHighlightsLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is MatchHighlightsError) {
-            return Center(child: Text(state.message));
+            return ErrorView(
+              message: state.message,
+              onRetry: () => context
+                  .read<MatchHighlightsBloc>()
+                  .add(GetMatchHighlightsEvent(matchId)),
+            );
           } else if (state is MatchHighlightsLoaded) {
             return Column(
               children: [

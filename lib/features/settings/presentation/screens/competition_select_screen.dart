@@ -9,6 +9,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/l10n/s.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
+import '../../../../core/presentation/widgets/error_view.dart';
 import '../../../../injection_container.dart';
 import '../bloc/competition_config_bloc.dart';
 import '../bloc/competition_config_event.dart';
@@ -22,7 +23,8 @@ class CompetitionSelectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<CompetitionConfigBloc>()..add(const GetCompetitionConfigsEvent()),
+      create: (context) =>
+          sl<CompetitionConfigBloc>()..add(const GetCompetitionConfigsEvent()),
       child: const CompetitionSelectView(),
     );
   }
@@ -71,7 +73,9 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
             SearchCompetitionConfigsEvent(_searchController.text),
           );
     } else {
-      context.read<CompetitionConfigBloc>().add(const GetCompetitionConfigsEvent());
+      context
+          .read<CompetitionConfigBloc>()
+          .add(const GetCompetitionConfigsEvent());
     }
   }
 
@@ -113,10 +117,12 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
                         controller: _searchController,
                         decoration: InputDecoration(
                           hintText: '${s.search}...',
-                          prefixIcon: Icon(Icons.search, size: 20, color: theme.hintColor),
+                          prefixIcon: Icon(Icons.search,
+                              size: 20, color: theme.hintColor),
                           filled: true,
                           fillColor: theme.colorScheme.surface,
-                          contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 16.0),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -189,14 +195,17 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
                           Expanded(
                             child: Text(
                               s.competitionSelect,
-                              style: theme.textTheme.titleSmall?.copyWith(color: theme.hintColor),
+                              style: theme.textTheme.titleSmall
+                                  ?.copyWith(color: theme.hintColor),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsetsDirectional.only(end: 48.0),
+                            padding:
+                                const EdgeInsetsDirectional.only(end: 48.0),
                             child: Text(
                               s.active,
-                              style: theme.textTheme.titleSmall?.copyWith(color: theme.hintColor),
+                              style: theme.textTheme.titleSmall
+                                  ?.copyWith(color: theme.hintColor),
                             ),
                           ),
                         ],
@@ -206,22 +215,29 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
                       const SizedBox(height: 12),
                       // List
                       Expanded(
-                        child: BlocBuilder<CompetitionConfigBloc, CompetitionConfigState>(
+                        child: BlocBuilder<CompetitionConfigBloc,
+                            CompetitionConfigState>(
                           builder: (context, state) {
                             if (state is CompetitionConfigLoading) {
                               return ScrollConfiguration(
-                                behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                                behavior: ScrollConfiguration.of(context)
+                                    .copyWith(scrollbars: false),
                                 child: ListView.builder(
                                   controller: _scrollController,
                                   itemCount: 8,
-                                  itemBuilder: (context, index) => const _ShimmerCompetitionItem(),
+                                  itemBuilder: (context, index) =>
+                                      const _ShimmerCompetitionItem(),
                                 ),
                               );
                             } else if (state is CompetitionConfigError) {
-                              return Center(child: Text(state.message));
+                              return ErrorView(
+                                message: state.message,
+                                onRetry: _refreshConfigs,
+                              );
                             } else if (state is CompetitionConfigLoaded) {
                               return ScrollConfiguration(
-                                behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                                behavior: ScrollConfiguration.of(context)
+                                    .copyWith(scrollbars: false),
                                 child: ReorderableListView.builder(
                                   scrollController: _scrollController,
                                   buildDefaultDragHandles: false,
@@ -230,7 +246,9 @@ class _CompetitionSelectViewState extends State<CompetitionSelectView> {
                                   onReorder: (oldIndex, newIndex) {
                                     context.read<CompetitionConfigBloc>().add(
                                           ReorderCompetitionConfigsEvent(
-                                            state.configs.map((e) => e.id).toList(),
+                                            state.configs
+                                                .map((e) => e.id)
+                                                .toList(),
                                             oldIndex,
                                             newIndex,
                                           ),

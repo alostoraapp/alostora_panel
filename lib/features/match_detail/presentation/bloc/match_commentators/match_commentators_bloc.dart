@@ -42,6 +42,7 @@ class MatchCommentatorsBloc
     final result = await addCommentatorToMatch(AddCommentatorParams(
       matchId: event.matchId,
       commentatorId: event.commentatorId,
+      tvChannelId: event.tvChannelId,
     ));
     result.fold(
       (failure) => emit(MatchCommentatorsError(message: failure.message)),

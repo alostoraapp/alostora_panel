@@ -38,10 +38,6 @@ class AppConstants {
 
   // TV Channels
   static const String tvChannelsUrl = '/v1/admin/media/tv-channels/';
-  static String getMatchTvChannelsUrl(String matchId) =>
-      '/v1/admin/matches/$matchId/tv-channels/';
-  static String getMatchTvChannelUrl(String matchId, String itemId) =>
-      '/v1/admin/matches/$matchId/tv-channels/$itemId/';
 
   // Commentators
   static const String commentatorsUrl = '/v1/admin/media/commentators/search/';

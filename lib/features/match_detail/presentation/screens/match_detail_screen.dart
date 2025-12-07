@@ -1,4 +1,3 @@
-import 'package:alostora/core/l10n/s.dart';
 import 'package:alostora/features/matches/domain/entities/match_entity.dart';
 import 'package:alostora/features/match_detail/presentation/widgets/match_detail_tab_bar.dart';
 import 'package:alostora/features/matches/presentation/widgets/match_tile.dart';

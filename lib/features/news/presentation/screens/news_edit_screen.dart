@@ -48,7 +48,6 @@ class _NewsEditScreenState extends State<NewsEditScreen>
   NewsEntity? _currentNews;
 
   bool _isPinned = false;
-  bool _sendNotification = false;
   String _selectedPriority = 'normal';
   String _status = 'draft';
 
@@ -71,10 +70,6 @@ class _NewsEditScreenState extends State<NewsEditScreen>
     _isPinned = widget.news?.isPinned ?? false;
     _selectedPriority = widget.news?.priority ?? 'normal';
     _status = widget.news?.status ?? 'draft';
-
-    if (_selectedPriority == 'urgent') {
-      _sendNotification = true;
-    }
 
     // Initialize images
     if (widget.news != null) {
@@ -934,33 +929,37 @@ class _NewsEditScreenState extends State<NewsEditScreen>
               ),
               const SizedBox(height: 24),
 
-              // Notification / Priority
-              Container(
-                child: SwitchListTile(
-                  title: Text(s.sendNotification,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w500)),
-                  value: _sendNotification,
-                  onChanged: (value) {
-                    setState(() {
-                      _sendNotification = value;
-                      _selectedPriority = value ? 'urgent' : 'normal';
-                    });
-                  },
-                  secondary: Icon(
-                    _sendNotification
-                        ? Icons.notifications_active
-                        : Icons.notifications_none,
-                    color: _sendNotification
-                        ? theme.colorScheme.primary
-                        : Colors.grey,
-                    size: 20,
+              // Priority Dropdown
+              DropdownButtonFormField<String>(
+                value: _selectedPriority,
+                decoration: InputDecoration(
+                  labelText: 'Priority',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                  dense: true,
+                  prefixIcon: const Icon(Icons.flag),
                 ),
+                items: [
+                  DropdownMenuItem(
+                    value: 'normal',
+                    child: Text(s.highlightPriorityNormal),
+                  ),
+                  DropdownMenuItem(
+                    value: 'important',
+                    child: Text(s.highlightPriorityImportant),
+                  ),
+                  DropdownMenuItem(
+                    value: 'urgent',
+                    child: Text(s.highlightPriorityUrgent),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedPriority = value;
+                    });
+                  }
+                },
               ),
 
               const SizedBox(height: 16),
@@ -972,9 +971,9 @@ class _NewsEditScreenState extends State<NewsEditScreen>
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: SwitchListTile(
-                  title: const Text('Pinned',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  title: Text(s.pinned,
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w500)),
                   value: _isPinned,
                   onChanged: (value) {
                     setState(() {
@@ -1114,6 +1113,16 @@ class _RelatedTeamsSelectorState extends State<_RelatedTeamsSelector> {
 
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
+    final offset = renderBox.localToGlobal(Offset.zero);
+    final screenHeight = MediaQuery.of(context).size.height;
+    final spaceBelow = screenHeight - offset.dy - size.height;
+
+    // Determine if we should show above
+    // Consider keyboard height if possible, but MediaQuery.viewInsets.bottom helps
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final availableBelow = spaceBelow - bottomInset;
+
+    final bool showAbove = availableBelow < 220; // 200 max height + buffer
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -1121,7 +1130,9 @@ class _RelatedTeamsSelectorState extends State<_RelatedTeamsSelector> {
         child: CompositedTransformFollower(
           link: _layerLink,
           showWhenUnlinked: false,
-          offset: Offset(0.0, size.height + 5.0),
+          targetAnchor: showAbove ? Alignment.topLeft : Alignment.bottomLeft,
+          followerAnchor: showAbove ? Alignment.bottomLeft : Alignment.topLeft,
+          offset: showAbove ? const Offset(0.0, -5.0) : const Offset(0.0, 5.0),
           child: Material(
             elevation: 4.0,
             borderRadius: BorderRadius.circular(8),

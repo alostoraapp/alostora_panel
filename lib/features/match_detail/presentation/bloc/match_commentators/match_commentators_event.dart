@@ -4,7 +4,7 @@ abstract class MatchCommentatorsEvent extends Equatable {
   const MatchCommentatorsEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class GetMatchCommentatorsEvent extends MatchCommentatorsEvent {
@@ -13,20 +13,22 @@ class GetMatchCommentatorsEvent extends MatchCommentatorsEvent {
   const GetMatchCommentatorsEvent({required this.matchId});
 
   @override
-  List<Object> get props => [matchId];
+  List<Object?> get props => [matchId];
 }
 
 class AddCommentatorToMatchEvent extends MatchCommentatorsEvent {
   final String matchId;
   final String commentatorId;
+  final String? tvChannelId;
 
   const AddCommentatorToMatchEvent({
     required this.matchId,
     required this.commentatorId,
+    this.tvChannelId,
   });
 
   @override
-  List<Object> get props => [matchId, commentatorId];
+  List<Object?> get props => [matchId, commentatorId, tvChannelId];
 }
 
 class DeleteCommentatorFromMatchEvent extends MatchCommentatorsEvent {
@@ -39,5 +41,5 @@ class DeleteCommentatorFromMatchEvent extends MatchCommentatorsEvent {
   });
 
   @override
-  List<Object> get props => [matchId, itemId];
+  List<Object?> get props => [matchId, itemId];
 }

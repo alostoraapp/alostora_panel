@@ -19,7 +19,6 @@ class MatchModel extends Equatable {
   final bool hasIncidentsMedia;
   final bool hasHighlights;
   final bool hasLiveBroadcast;
-  final bool hasTvChannels;
   final bool hasCommentators;
 
   const MatchModel({
@@ -37,7 +36,6 @@ class MatchModel extends Equatable {
     required this.hasIncidentsMedia,
     required this.hasHighlights,
     required this.hasLiveBroadcast,
-    required this.hasTvChannels,
     required this.hasCommentators,
   });
 
@@ -57,7 +55,6 @@ class MatchModel extends Equatable {
       hasIncidentsMedia: json['has_incidents_media'] ?? false,
       hasHighlights: json['has_highlights'] ?? false,
       hasLiveBroadcast: json['has_live_broadcast'] ?? false,
-      hasTvChannels: json['has_tv_channels'] ?? false,
       hasCommentators: json['has_commentators'] ?? false,
     );
   }
@@ -82,7 +79,6 @@ class MatchModel extends Equatable {
       hasIncidentsMedia: hasIncidentsMedia,
       hasHighlights: hasHighlights,
       hasLiveBroadcast: hasLiveBroadcast,
-      hasTvChannels: hasTvChannels,
       hasCommentators: hasCommentators,
     );
   }
@@ -103,7 +99,6 @@ class MatchModel extends Equatable {
         hasIncidentsMedia,
         hasHighlights,
         hasLiveBroadcast,
-        hasTvChannels,
         hasCommentators,
       ];
 }

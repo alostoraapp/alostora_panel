@@ -7,7 +7,7 @@ import '../../domain/entities/lineup_entity.dart';
 import '../../domain/entities/highlight_entity.dart';
 import '../../domain/entities/broadcast_entity.dart';
 import '../../domain/entities/tv_channel_entity.dart';
-import '../../domain/entities/match_tv_channel_entity.dart';
+
 import '../../domain/entities/commentator_entity.dart';
 import '../../domain/entities/match_commentator_entity.dart';
 import '../../domain/repositories/match_detail_repository.dart';
@@ -245,44 +245,7 @@ class MatchDetailRepositoryImpl implements MatchDetailRepository {
 
   // Match TV Channels
   @override
-  Future<Either<Failure, List<MatchTvChannelEntity>>> getMatchTvChannels(
-      String matchId) async {
-    try {
-      final result = await remoteDataSource.getMatchTvChannels(matchId);
-      return Right(result);
-    } on AppException catch (e) {
-      return Left(ServerFailure(message: e.errorResponse.firstError));
-    } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
-    }
-  }
-
   @override
-  Future<Either<Failure, void>> addTvChannelToMatch(
-      String matchId, String tvChannelId) async {
-    try {
-      await remoteDataSource.addTvChannelToMatch(matchId, tvChannelId);
-      return const Right(null);
-    } on AppException catch (e) {
-      return Left(ServerFailure(message: e.errorResponse.firstError));
-    } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> deleteTvChannelFromMatch(
-      String matchId, String itemId) async {
-    try {
-      await remoteDataSource.deleteTvChannelFromMatch(matchId, itemId);
-      return const Right(null);
-    } on AppException catch (e) {
-      return Left(ServerFailure(message: e.errorResponse.firstError));
-    } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
-    }
-  }
-
   @override
   Future<Either<Failure, List<CommentatorEntity>>> searchCommentators(
       String query, int page) async {
@@ -311,9 +274,10 @@ class MatchDetailRepositoryImpl implements MatchDetailRepository {
 
   @override
   Future<Either<Failure, void>> addCommentatorToMatch(
-      String matchId, String commentatorId) async {
+      String matchId, String commentatorId, String? tvChannelId) async {
     try {
-      await remoteDataSource.addCommentatorToMatch(matchId, commentatorId);
+      await remoteDataSource.addCommentatorToMatch(
+          matchId, commentatorId, tvChannelId);
       return const Right(null);
     } on AppException catch (e) {
       return Left(ServerFailure(message: e.errorResponse.firstError));

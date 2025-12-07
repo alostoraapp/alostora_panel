@@ -936,6 +936,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'News'**
   String get news;
+
+  /// No description provided for @normal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get normal;
+
+  /// No description provided for @important.
+  ///
+  /// In en, this message translates to:
+  /// **'Important'**
+  String get important;
+
+  /// No description provided for @urgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get urgent;
+
+  /// No description provided for @pinned.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get pinned;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @checkYourConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection'**
+  String get checkYourConnection;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
