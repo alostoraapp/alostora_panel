@@ -7,12 +7,16 @@ import 'package:alostora/features/news/domain/usecases/approve_news_usecase.dart
 import 'news_event.dart';
 import 'news_state.dart';
 
+import 'package:image_picker/image_picker.dart';
+import 'package:alostora/features/news/domain/usecases/upload_news_image_usecase.dart';
+
 class NewsBloc extends Bloc<NewsEvent, NewsState> {
   final GetNewsUseCase getNews;
   final CreateNewsUseCase createNews;
   final UpdateNewsUseCase updateNews;
   final DeleteNewsUseCase deleteNews;
   final ApproveNewsUseCase approveNews;
+  final UploadNewsImageUseCase uploadNewsImage;
 
   NewsBloc({
     required this.getNews,
@@ -20,6 +24,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
     required this.updateNews,
     required this.deleteNews,
     required this.approveNews,
+    required this.uploadNewsImage,
   }) : super(NewsInitial()) {
     on<GetNewsEvent>(_onGetNews);
     on<CreateNewsEvent>(_onCreateNews);
@@ -40,10 +45,40 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   Future<void> _onCreateNews(
       CreateNewsEvent event, Emitter<NewsState> emit) async {
     emit(NewsLoading());
-    final result = await createNews(event.newsData);
-    result.fold(
-      (failure) => emit(const NewsError('Failed to create news')),
-      (news) {
+    final newsData = Map<String, dynamic>.from(event.newsData);
+    final List<XFile> images =
+        (newsData['images'] as List<dynamic>?)?.cast<XFile>() ?? [];
+    final int? coverImageIndex = newsData['cover_image_index'];
+
+    // Remove images and cover_image_index from metadata payload
+    newsData.remove('images');
+    newsData.remove('cover_image_index');
+
+    // 1. Create News Metadata
+    final result = await createNews(newsData);
+
+    await result.fold(
+      (failure) async => emit(const NewsError('Failed to create news')),
+      (news) async {
+        // 2. Upload Images
+        String? newCoverImageId;
+        for (int i = 0; i < images.length; i++) {
+          final uploadResult = await uploadNewsImage(
+              UploadNewsImageParams(id: news.id, image: images[i]));
+
+          if (coverImageIndex == i) {
+            uploadResult.fold(
+              (l) => null, // Ignore failure for cover detection
+              (img) => newCoverImageId = img.id,
+            );
+          }
+        }
+
+        // 3. Set Cover Image if it was a new image
+        if (newCoverImageId != null) {
+          await updateNews(news.id, {'cover_image_id': newCoverImageId});
+        }
+
         emit(const NewsOperationSuccess('News created successfully'));
         add(const GetNewsEvent());
       },
@@ -53,10 +88,40 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   Future<void> _onUpdateNews(
       UpdateNewsEvent event, Emitter<NewsState> emit) async {
     emit(NewsLoading());
-    final result = await updateNews(event.id, event.newsData);
-    result.fold(
-      (failure) => emit(const NewsError('Failed to update news')),
-      (news) {
+    final newsData = Map<String, dynamic>.from(event.newsData);
+    final List<XFile> images =
+        (newsData['images'] as List<dynamic>?)?.cast<XFile>() ?? [];
+    final int? coverImageIndex = newsData['cover_image_index'];
+
+    // Remove images and cover_image_index from metadata payload
+    newsData.remove('images');
+    newsData.remove('cover_image_index');
+
+    // 1. Update News Metadata (including deleted_images and existing cover_image_id)
+    final result = await updateNews(event.id, newsData);
+
+    await result.fold(
+      (failure) async => emit(const NewsError('Failed to update news')),
+      (news) async {
+        // 2. Upload New Images
+        String? newCoverImageId;
+        for (int i = 0; i < images.length; i++) {
+          final uploadResult = await uploadNewsImage(
+              UploadNewsImageParams(id: news.id, image: images[i]));
+
+          if (coverImageIndex == i) {
+            uploadResult.fold(
+              (l) => null,
+              (img) => newCoverImageId = img.id,
+            );
+          }
+        }
+
+        // 3. Set Cover Image if it was a new image
+        if (newCoverImageId != null) {
+          await updateNews(news.id, {'cover_image_id': newCoverImageId});
+        }
+
         emit(const NewsOperationSuccess('News updated successfully'));
         add(const GetNewsEvent());
       },

@@ -75,6 +75,9 @@ import 'features/news/domain/usecases/create_news_usecase.dart';
 import 'features/news/domain/usecases/delete_news_usecase.dart';
 import 'features/news/domain/usecases/get_news_usecase.dart';
 import 'features/news/domain/usecases/update_news_usecase.dart';
+
+import 'features/news/domain/usecases/upload_news_image_usecase.dart';
+import 'features/news/domain/usecases/search_teams_usecase.dart';
 import 'features/news/presentation/bloc/news_bloc.dart';
 
 final sl = GetIt.instance;
@@ -213,12 +216,17 @@ Future<void> init() async {
         updateNews: sl(),
         deleteNews: sl(),
         approveNews: sl(),
+        uploadNewsImage: sl(),
       ));
   sl.registerLazySingleton(() => GetNewsUseCase(sl()));
   sl.registerLazySingleton(() => CreateNewsUseCase(sl()));
   sl.registerLazySingleton(() => UpdateNewsUseCase(sl()));
   sl.registerLazySingleton(() => DeleteNewsUseCase(sl()));
   sl.registerLazySingleton(() => ApproveNewsUseCase(sl()));
+  sl.registerLazySingleton(() => UploadNewsImageUseCase(sl()));
+  sl.registerLazySingleton(() => SearchTeamsUseCase(sl()));
+
+  // Repositories
   sl.registerLazySingleton<NewsRepository>(
       () => NewsRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<NewsRemoteDataSource>(

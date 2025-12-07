@@ -1,8 +1,13 @@
+import 'package:alostora/features/news/domain/usecases/search_teams_usecase.dart';
+import 'package:alostora/injection_container.dart';
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:alostora/core/config/constants.dart';
 import 'package:alostora/core/l10n/s.dart';
 import 'package:alostora/features/news/domain/entities/news_entity.dart';
+import 'package:alostora/features/news/domain/usecases/create_news_usecase.dart';
+import 'package:alostora/features/news/domain/usecases/upload_news_image_usecase.dart';
 import 'package:alostora/features/news/presentation/bloc/news_bloc.dart';
 import 'package:alostora/features/news/presentation/bloc/news_event.dart';
 import 'package:alostora/features/news/presentation/bloc/news_state.dart';
@@ -36,6 +41,11 @@ class _NewsEditScreenState extends State<NewsEditScreen>
   List<dynamic> _newsImages = []; // Contains NewsImageEntity or XFile
   List<String> _deletedImageIds = [];
   int _coverIndex = 0;
+  List<Map<String, dynamic>> _selectedRelatedTeams = [];
+
+  // Upload State
+  final Map<XFile, double> _uploadingImages = {};
+  NewsEntity? _currentNews;
 
   bool _isPinned = false;
   bool _sendNotification = false;
@@ -51,6 +61,7 @@ class _NewsEditScreenState extends State<NewsEditScreen>
   @override
   void initState() {
     super.initState();
+    _currentNews = widget.news;
     _sourceUrlController =
         TextEditingController(text: widget.news?.sourceUrl ?? '');
     _relatedTeamsController = TextEditingController(
@@ -180,6 +191,106 @@ class _NewsEditScreenState extends State<NewsEditScreen>
     });
   }
 
+  Future<void> _createDraft() async {
+    // Basic validation
+    if (_titleControllers['en']?.text.isEmpty ?? true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a title first')),
+      );
+      return;
+    }
+
+    // Collect data for draft
+    final enContent = _contentControllers['en'] != null
+        ? _convertDeltaToHtml(_contentControllers['en']!.document.toDelta())
+        : '';
+
+    final newsData = {
+      'title': _titleControllers['en']?.text ?? '',
+      'content': enContent,
+      'status': 'draft',
+      'priority': _selectedPriority,
+      'is_pinned': _isPinned,
+    };
+
+    // Use Bloc to create, but we need to wait for result.
+    // Since Bloc is event-based, we might need to listen to state changes or use a Completer.
+    // However, for simplicity in this refactor, we can trigger the event and wait for the state change in the listener,
+    // OR we can use the UseCase directly here for the draft creation to get the ID immediately.
+    // Using UseCase directly is cleaner for this specific "synchronous-like" requirement.
+
+    final createNewsUseCase = sl<CreateNewsUseCase>();
+    final result = await createNewsUseCase(newsData);
+
+    result.fold(
+      (failure) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create draft: ${failure.message}')),
+        );
+      },
+      (news) {
+        setState(() {
+          _currentNews = news;
+        });
+      },
+    );
+  }
+
+  Future<void> _uploadImage(XFile image) async {
+    if (_currentNews == null) {
+      await _createDraft();
+      if (_currentNews == null) return; // Failed to create draft
+    }
+
+    setState(() {
+      _uploadingImages[image] = 0.0;
+    });
+
+    final uploadUseCase = sl<UploadNewsImageUseCase>();
+    final result = await uploadUseCase(UploadNewsImageParams(
+      id: _currentNews!.id,
+      image: image,
+      onSendProgress: (sent, total) {
+        if (mounted) {
+          setState(() {
+            _uploadingImages[image] = sent / total;
+          });
+        }
+      },
+    ));
+
+    result.fold(
+      (failure) {
+        if (mounted) {
+          setState(() {
+            _uploadingImages.remove(image);
+            _newsImages.remove(image); // Remove failed image
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text('Failed to upload image: ${failure.message}')),
+          );
+        }
+      },
+      (newsImage) {
+        if (mounted) {
+          setState(() {
+            _uploadingImages.remove(image);
+            // Replace XFile with NewsImageEntity
+            final index = _newsImages.indexOf(image);
+            if (index != -1) {
+              _newsImages[index] = newsImage;
+            } else {
+              _newsImages.add(newsImage);
+            }
+          });
+          // Refresh news data to ensure consistency
+          widget.newsBloc.add(GetNewsEvent()); // Or GetNewsById if available
+        }
+      },
+    );
+  }
+
   Future<void> _pickImages() async {
     final ImagePicker picker = ImagePicker();
     try {
@@ -187,11 +298,16 @@ class _NewsEditScreenState extends State<NewsEditScreen>
       if (images.isNotEmpty) {
         setState(() {
           _newsImages.addAll(images);
-          if (_newsImages.length == images.length) {
-            // First images added, set first as cover
+          if (_newsImages.length == images.length && _currentNews == null) {
+            // First images added
             _coverIndex = 0;
           }
         });
+
+        // Trigger upload for each new image
+        for (var image in images) {
+          _uploadImage(image);
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -208,6 +324,9 @@ class _NewsEditScreenState extends State<NewsEditScreen>
       final item = _newsImages[index];
       if (item is NewsImageEntity) {
         _deletedImageIds.add(item.id);
+      } else if (item is XFile) {
+        // Cancel upload if in progress? (Not implemented for simplicity)
+        _uploadingImages.remove(item);
       }
       _newsImages.removeAt(index);
 
@@ -266,32 +385,49 @@ class _NewsEditScreenState extends State<NewsEditScreen>
 
         final item = _newsImages[index];
         final isCover = index == _coverIndex;
+        final isUploading = item is XFile && _uploadingImages.containsKey(item);
+        final progress = item is XFile ? _uploadingImages[item] ?? 0.0 : 0.0;
 
         return Stack(
           fit: StackFit.expand,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: item is NewsImageEntity
-                  ? Image.network(
-                      item.image.startsWith('http')
-                          ? item.image
-                          : '${AppConstants.baseUrl}${item.image}',
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.broken_image)),
-                    )
-                  : FutureBuilder<Uint8List>(
-                      future: (item as XFile).readAsBytes(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Image.memory(snapshot.data!,
-                              fit: BoxFit.cover);
-                        }
-                        return Container(color: Colors.grey[300]);
-                      },
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  item is NewsImageEntity
+                      ? Image.network(
+                          item.image.startsWith('http')
+                              ? item.image
+                              : '${AppConstants.baseUrl}${item.image}',
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                              color: Colors.grey[300],
+                              child: const Icon(Icons.broken_image)),
+                        )
+                      : FutureBuilder<Uint8List>(
+                          future: (item as XFile).readAsBytes(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Image.memory(snapshot.data!,
+                                  fit: BoxFit.cover);
+                            }
+                            return Container(color: Colors.grey[300]);
+                          },
+                        ),
+                  if (isUploading)
+                    Container(
+                      color: Colors.black.withOpacity(0.5),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value: progress,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
+                ],
+              ),
             ),
             // Cover Indicator
             if (isCover)
@@ -318,7 +454,7 @@ class _NewsEditScreenState extends State<NewsEditScreen>
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => _setCover(index),
+                  onTap: isUploading ? null : () => _setCover(index),
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     decoration: BoxDecoration(
@@ -501,11 +637,11 @@ class _NewsEditScreenState extends State<NewsEditScreen>
       'status': _status,
       'priority': _selectedPriority,
       'is_pinned': _isPinned,
-      'related_teams_details': [],
       'title_translations': titleTranslations,
       'content_translations': contentTranslations,
       'images': newImages,
-      'deleted_images': _deletedImageIds,
+      'deleted_image_ids': _deletedImageIds,
+      'related_teams': _selectedRelatedTeams.map((t) => t['id']).toList(),
     };
 
     if (coverImageId != null) {
@@ -784,13 +920,22 @@ class _NewsEditScreenState extends State<NewsEditScreen>
               _buildImageGrid(theme),
               const SizedBox(height: 24),
 
+              // Related Teams
+              _RelatedTeamsSelector(
+                initialTeams: widget.news?.relatedTeamsDetails
+                        ?.map((e) => Map<String, dynamic>.from(e))
+                        .toList() ??
+                    [],
+                onTeamsChanged: (teams) {
+                  setState(() {
+                    _selectedRelatedTeams = teams;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+
               // Notification / Priority
               Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: theme.colorScheme.outline.withOpacity(0.5)),
-                  borderRadius: BorderRadius.circular(12),
-                ),
                 child: SwitchListTile(
                   title: Text(s.sendNotification,
                       style: const TextStyle(
@@ -852,6 +997,271 @@ class _NewsEditScreenState extends State<NewsEditScreen>
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _RelatedTeamsSelector extends StatefulWidget {
+  final List<Map<String, dynamic>> initialTeams;
+  final ValueChanged<List<Map<String, dynamic>>> onTeamsChanged;
+
+  const _RelatedTeamsSelector({
+    required this.initialTeams,
+    required this.onTeamsChanged,
+  });
+
+  @override
+  State<_RelatedTeamsSelector> createState() => _RelatedTeamsSelectorState();
+}
+
+class _RelatedTeamsSelectorState extends State<_RelatedTeamsSelector> {
+  late List<Map<String, dynamic>> _selectedTeams;
+  List<Map<String, dynamic>> _availableTeams = [];
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  final LayerLink _layerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
+  Timer? _debounce;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedTeams = List.from(widget.initialTeams);
+    // Notify initial state
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onTeamsChanged(_selectedTeams);
+    });
+
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        _showOverlay();
+      } else {
+        // Delay hiding overlay to allow onTap to propagate
+        Future.delayed(const Duration(milliseconds: 200), () {
+          if (!_focusNode.hasFocus) {
+            _hideOverlay();
+          }
+        });
+      }
+    });
+
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    _focusNode.dispose();
+    _hideOverlay();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (_searchController.text.isNotEmpty) {
+        _searchTeams(_searchController.text);
+      } else {
+        setState(() {
+          _availableTeams = [];
+        });
+        _overlayEntry?.markNeedsBuild();
+      }
+    });
+  }
+
+  Future<void> _searchTeams(String query) async {
+    setState(() {
+      _isLoading = true;
+    });
+    _overlayEntry?.markNeedsBuild();
+
+    final result = await sl<SearchTeamsUseCase>()(query);
+
+    result.fold(
+      (failure) {
+        // Handle error silently or show toast
+        setState(() {
+          _isLoading = false;
+          _availableTeams = [];
+        });
+      },
+      (teams) {
+        setState(() {
+          _isLoading = false;
+          _availableTeams = teams
+              .where((team) =>
+                  !_selectedTeams.any((selected) => selected['id'] == team.id))
+              .map((team) => {
+                    'id': team.id,
+                    'name': team.name,
+                    'short_name': team.shortName,
+                    'logo': team.logo,
+                  })
+              .toList();
+        });
+      },
+    );
+    _overlayEntry?.markNeedsBuild();
+  }
+
+  void _showOverlay() {
+    if (_overlayEntry != null) return;
+
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final size = renderBox.size;
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        width: size.width,
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: Offset(0.0, size.height + 5.0),
+          child: Material(
+            elevation: 4.0,
+            borderRadius: BorderRadius.circular(8),
+            color: Theme.of(context).colorScheme.surfaceContainer,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 200),
+              child: _isLoading
+                  ? const Center(
+                      child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(),
+                    ))
+                  : ListView(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      children: _availableTeams.isEmpty
+                          ? [
+                              const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text("No teams found"),
+                              )
+                            ]
+                          : _availableTeams.map((team) {
+                              return ListTile(
+                                leading: team['logo'] != null &&
+                                        team['logo'].isNotEmpty
+                                    ? Image.network(team['logo'],
+                                        width: 24,
+                                        height: 24,
+                                        errorBuilder: (_, __, ___) =>
+                                            const Icon(Icons.shield, size: 24))
+                                    : const Icon(Icons.shield, size: 24),
+                                title: Text(team['name'] ?? 'Unknown'),
+                                onTap: () {
+                                  _selectTeam(team);
+                                },
+                              );
+                            }).toList(),
+                    ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _hideOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  void _selectTeam(Map<String, dynamic> team) {
+    setState(() {
+      _selectedTeams.add(team);
+      _availableTeams.remove(team);
+      _searchController.clear();
+    });
+    widget.onTeamsChanged(_selectedTeams);
+    _hideOverlay();
+    // Keep focus?
+    _focusNode.requestFocus();
+  }
+
+  void _removeTeam(Map<String, dynamic> team) {
+    setState(() {
+      _selectedTeams.remove(team);
+      _availableTeams.add(team); // Add back to available so we can re-select
+    });
+    widget.onTeamsChanged(_selectedTeams);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Related Teams',
+            style: theme.textTheme.titleSmall,
+          ),
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: _focusNode.hasFocus
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.outline),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                ..._selectedTeams.map((team) {
+                  return Chip(
+                    avatar: team['logo'] != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage(team['logo']))
+                        : const CircleAvatar(
+                            child: Icon(Icons.shield, size: 12)),
+                    label: Text((team['short_name']?.isNotEmpty == true)
+                        ? team['short_name']
+                        : (team['name']?.isNotEmpty == true
+                            ? team['name']
+                            : 'Team')),
+                    onDeleted: () => _removeTeam(team),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  );
+                }),
+                ConstrainedBox(
+                  constraints:
+                      const BoxConstraints(minWidth: 80, maxWidth: 200),
+                  child: TextField(
+                    controller: _searchController,
+                    focusNode: _focusNode,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      hintText: 'Search...',
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(vertical: 8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

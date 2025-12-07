@@ -1,6 +1,7 @@
 import 'package:alostora/core/config/constants.dart';
 import 'package:alostora/core/services/api_client.dart';
 import 'package:alostora/features/news/data/models/news_model.dart';
+import 'package:alostora/features/news/data/models/team_model.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -10,6 +11,9 @@ abstract class NewsRemoteDataSource {
   Future<NewsModel> updateNews(String id, Map<String, dynamic> newsData);
   Future<void> deleteNews(String id);
   Future<void> approveNews(String id, Map<String, dynamic> statusData);
+  Future<NewsImageModel> uploadNewsImage(String id, XFile image,
+      {void Function(int, int)? onSendProgress});
+  Future<List<TeamModel>> searchTeams(String query);
 }
 
 class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
@@ -20,7 +24,7 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
   @override
   Future<List<NewsModel>> getNews({int limit = 10, int offset = 0}) async {
     final response = await _apiClient.get(
-      '${AppConstants.baseUrl}/v1/admin/media/news/',
+      '${AppConstants.baseUrl}${AppConstants.newsListUrl}',
       queryParameters: {'limit': limit, 'offset': offset},
     );
     final List<dynamic> results = response['results'];
@@ -33,37 +37,10 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
     final data = <String, dynamic>{};
 
     for (var entry in params.entries) {
-      if (entry.key == 'title_translations' && entry.value is List) {
-        List list = entry.value;
-        for (int i = 0; i < list.length; i++) {
-          Map item = list[i];
-          item.forEach((key, value) {
-            data['title_translations[$i][$key]'] = value;
-          });
-        }
-      } else if (entry.key == 'content_translations' && entry.value is List) {
-        List list = entry.value;
-        for (int i = 0; i < list.length; i++) {
-          Map item = list[i];
-          item.forEach((key, value) {
-            data['content_translations[$i][$key]'] = value;
-          });
-        }
-      } else if (entry.value is XFile) {
+      if (entry.value is XFile) {
         final XFile file = entry.value;
         final bytes = await file.readAsBytes();
         data[entry.key] = MultipartFile.fromBytes(bytes, filename: file.name);
-      } else if (entry.value is List &&
-          (entry.value as List).isNotEmpty &&
-          (entry.value as List).first is XFile) {
-        final files = <MultipartFile>[];
-        for (var item in entry.value) {
-          if (item is XFile) {
-            final bytes = await item.readAsBytes();
-            files.add(MultipartFile.fromBytes(bytes, filename: item.name));
-          }
-        }
-        data[entry.key] = files;
       } else {
         data[entry.key] = entry.value;
       }
@@ -73,42 +50,18 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
 
   @override
   Future<NewsModel> createNews(Map<String, dynamic> newsData) async {
-    // Check if we need to upload a file
-    bool hasFile = newsData.values.any((value) =>
-        value is XFile ||
-        (value is List && value.isNotEmpty && value.first is XFile));
-
-    dynamic data;
-    if (hasFile) {
-      data = await _createFormData(newsData);
-    } else {
-      data = newsData;
-    }
-
     final response = await _apiClient.post(
-      '${AppConstants.baseUrl}/v1/admin/media/news/',
-      data: data,
+      '${AppConstants.baseUrl}${AppConstants.createNewsUrl}',
+      data: newsData,
     );
     return NewsModel.fromJson(response);
   }
 
   @override
   Future<NewsModel> updateNews(String id, Map<String, dynamic> newsData) async {
-    // Check if we need to upload a file
-    bool hasFile = newsData.values.any((value) =>
-        value is XFile ||
-        (value is List && value.isNotEmpty && value.first is XFile));
-
-    dynamic data;
-    if (hasFile) {
-      data = await _createFormData(newsData);
-    } else {
-      data = newsData;
-    }
-
     final response = await _apiClient.patch(
-      '${AppConstants.baseUrl}/v1/admin/media/news/$id/',
-      data: data,
+      '${AppConstants.baseUrl}${AppConstants.getNewsUrl(id)}',
+      data: newsData,
     );
     return NewsModel.fromJson(response);
   }
@@ -116,15 +69,39 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
   @override
   Future<void> deleteNews(String id) async {
     await _apiClient.delete(
-      '${AppConstants.baseUrl}/v1/admin/media/news/$id/',
+      '${AppConstants.baseUrl}${AppConstants.getNewsUrl(id)}',
     );
   }
 
   @override
   Future<void> approveNews(String id, Map<String, dynamic> statusData) async {
     await _apiClient.post(
-      '${AppConstants.baseUrl}/v1/admin/media/news/$id/approve/',
+      '${AppConstants.baseUrl}${AppConstants.getApproveNewsUrl(id)}',
       data: statusData,
     );
+  }
+
+  @override
+  Future<NewsImageModel> uploadNewsImage(String id, XFile image,
+      {void Function(int, int)? onSendProgress}) async {
+    final formData = await _createFormData({'image': image});
+    final response = await _apiClient.post(
+      '${AppConstants.baseUrl}${AppConstants.getUploadNewsImageUrl(id)}',
+      data: formData,
+      onSendProgress: onSendProgress,
+    );
+    return NewsImageModel.fromJson(response);
+  }
+
+  @override
+  Future<List<TeamModel>> searchTeams(String query) async {
+    final response = await _apiClient.get(
+      '${AppConstants.baseUrl}${AppConstants.searchTeamsUrl}',
+      queryParameters: {'search': query},
+    );
+    final List<dynamic> results = response['results'];
+    return results
+        .map((json) => TeamModel.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 }

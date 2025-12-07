@@ -57,4 +57,15 @@ class AppConstants {
       '/v1/admin/entities/competition/configs/reorder/';
   static const String competitionSearch =
       '/v1/admin/entities/competition/search/';
+
+  // News
+  static const String newsListUrl = '/v1/admin/media/news/';
+  static const String createNewsUrl = '/v1/admin/media/news/';
+  static const String searchTeamsUrl = '/v1/admin/entities/teams/search/';
+
+  static String getNewsUrl(String id) => '/v1/admin/media/news/$id/';
+  static String getApproveNewsUrl(String id) =>
+      '/v1/admin/media/news/$id/approve/';
+  static String getUploadNewsImageUrl(String id) =>
+      '/v1/admin/media/news/$id/images/';
 }
