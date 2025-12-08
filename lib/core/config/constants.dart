@@ -74,4 +74,11 @@ class AppConstants {
       '/v1/admin/entities/coaches/$coachId/';
   static String updateVenueUrl(String venueId) =>
       '/v1/admin/entities/venues/$venueId/';
+  static const String teamsUrl = '/v1/admin/entities/teams/';
+  static String getSquadUrl(String teamId) =>
+      '/v1/admin/entities/teams/$teamId/squad/';
+  static String updatePlayerUrl(String playerId) =>
+      '/v1/admin/entities/players/$playerId/';
+  static String updateSquadMemberUrl(String teamId, String memberId) =>
+      '/v1/admin/entities/teams/$teamId/squad/$memberId/';
 }

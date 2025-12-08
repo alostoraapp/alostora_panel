@@ -5,6 +5,7 @@ import '../../../../injection_container.dart';
 import '../../domain/entities/team_detail_entity.dart';
 import '../bloc/team_detail_bloc.dart';
 import '../widgets/team_detail_widgets.dart';
+import '../widgets/team_squad_tab.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/config/app_colors.dart';
@@ -349,9 +350,10 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
           team = state.team;
         } else if (state is TeamDetailUpdated) {
           team = state.team;
-        } else if (state is TeamDetailUpdating &&
-            _bloc.state is TeamDetailLoaded) {
-          team = (_bloc.state as TeamDetailLoaded).team;
+        } else if (state is TeamSquadLoaded) {
+          team = state.team;
+        } else if (state is TeamDetailUpdating) {
+          team = state.team;
         }
 
         final title = team?.name?['en'] ?? 'Team Details';
@@ -415,12 +417,15 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
                   ],
                 ),
                 Expanded(
-                  child: TabBarView(
-                    controller: _mainTabController,
-                    children: [
-                      _buildContent(team),
-                      const Center(child: Text('Squad')),
-                    ],
+                  child: BlocProvider.value(
+                    value: _bloc,
+                    child: TabBarView(
+                      controller: _mainTabController,
+                      children: [
+                        _buildContent(team),
+                        TeamSquadTab(teamId: widget.teamId),
+                      ],
+                    ),
                   ),
                 ),
               ],

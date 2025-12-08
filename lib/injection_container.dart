@@ -82,6 +82,8 @@ import 'features/teams/domain/usecases/get_team_detail_usecase.dart';
 import 'features/teams/domain/usecases/update_team_usecase.dart';
 import 'features/teams/domain/usecases/update_coach_use_case.dart';
 import 'features/teams/domain/usecases/update_venue_use_case.dart';
+import 'features/teams/domain/usecases/get_squad_use_case.dart';
+import 'features/teams/domain/usecases/update_player_use_case.dart';
 import 'features/teams/presentation/bloc/team_detail_bloc.dart';
 
 final sl = GetIt.instance;
@@ -231,11 +233,15 @@ Future<void> init() async {
         updateTeam: sl(),
         updateCoach: sl(),
         updateVenue: sl(),
+        getSquad: sl(),
+        updatePlayer: sl(),
       ));
   sl.registerLazySingleton(() => GetTeamDetailUseCase(sl()));
   sl.registerLazySingleton(() => UpdateTeamUseCase(sl()));
   sl.registerLazySingleton(() => UpdateCoachUseCase(sl()));
   sl.registerLazySingleton(() => UpdateVenueUseCase(sl()));
+  sl.registerLazySingleton(() => GetSquadUseCase(sl()));
+  sl.registerLazySingleton(() => UpdatePlayerUseCase(sl()));
   sl.registerLazySingleton<TeamRepository>(
       () => TeamRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<TeamRemoteDataSource>(

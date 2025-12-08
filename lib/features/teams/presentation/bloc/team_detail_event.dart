@@ -55,3 +55,27 @@ class UpdateVenueEvent extends TeamDetailEvent {
   @override
   List<Object> get props => [teamId, venueId, body];
 }
+
+class GetSquadEvent extends TeamDetailEvent {
+  final String teamId;
+
+  const GetSquadEvent({required this.teamId});
+
+  @override
+  List<Object> get props => [teamId];
+}
+
+class UpdatePlayerEvent extends TeamDetailEvent {
+  final String teamId;
+  final String playerId;
+  final Map<String, dynamic> body;
+
+  const UpdatePlayerEvent({
+    required this.teamId,
+    required this.playerId,
+    required this.body,
+  });
+
+  @override
+  List<Object> get props => [teamId, playerId, body];
+}

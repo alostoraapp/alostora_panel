@@ -73,3 +73,22 @@ class TeamDetailUpdateError extends TeamDetailState {
   @override
   List<Object> get props => [message];
 }
+
+class TeamSquadLoaded extends TeamDetailState {
+  final List<SquadMemberEntity> squad;
+  final TeamDetailEntity? team;
+
+  const TeamSquadLoaded({required this.squad, this.team});
+
+  @override
+  List<Object?> get props => [squad, team];
+}
+
+class TeamPlayerUpdated extends TeamDetailState {
+  final PlayerEntity player;
+
+  const TeamPlayerUpdated({required this.player});
+
+  @override
+  List<Object> get props => [player];
+}

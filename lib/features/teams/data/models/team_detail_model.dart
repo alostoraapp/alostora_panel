@@ -46,15 +46,16 @@ class TeamDetailModel extends TeamDetailEntity {
       competition: json['competition'] != null
           ? TeamCompetitionModel.fromJson(json['competition'])
           : null,
-      name: _parseLocalized(json['name']),
-      shortName: _parseLocalized(json['short_name']),
-      displayName: _parseLocalized(json['display_name']),
+      name: TeamDetailModel.parseLocalized(json['name']),
+      shortName: TeamDetailModel.parseLocalized(json['short_name']),
+      displayName: TeamDetailModel.parseLocalized(json['display_name']),
     );
   }
 
-  static Map<String, String>? _parseLocalized(dynamic json) {
-    if (json is Map<String, dynamic>) {
-      return json.map((key, value) => MapEntry(key, value.toString()));
+  static Map<String, String>? parseLocalized(dynamic json) {
+    if (json is Map) {
+      return json
+          .map((key, value) => MapEntry(key.toString(), value.toString()));
     }
     return null;
   }
@@ -73,9 +74,9 @@ class TeamCountryModel extends TeamCountryEntity {
     return TeamCountryModel(
       id: json['id'],
       logo: json['logo'],
-      name: TeamDetailModel._parseLocalized(json['name']),
-      shortName: TeamDetailModel._parseLocalized(json['short_name']),
-      displayName: TeamDetailModel._parseLocalized(json['display_name']),
+      name: TeamDetailModel.parseLocalized(json['name']),
+      shortName: TeamDetailModel.parseLocalized(json['short_name']),
+      displayName: TeamDetailModel.parseLocalized(json['display_name']),
     );
   }
 }
@@ -93,13 +94,13 @@ class TeamVenueModel extends TeamVenueEntity {
   factory TeamVenueModel.fromJson(Map<String, dynamic> json) {
     return TeamVenueModel(
       id: json['id'],
-      city: TeamDetailModel._parseLocalized(json['city']),
+      city: TeamDetailModel.parseLocalized(json['city']),
       capacity: json['capacity'],
       country: json['country'] != null
           ? TeamCountryModel.fromJson(json['country'])
           : null,
-      name: TeamDetailModel._parseLocalized(json['name']),
-      shortName: TeamDetailModel._parseLocalized(json['short_name']),
+      name: TeamDetailModel.parseLocalized(json['name']),
+      shortName: TeamDetailModel.parseLocalized(json['short_name']),
     );
   }
 }
@@ -124,8 +125,8 @@ class TeamCoachModel extends TeamCoachEntity {
           ? TeamCountryModel.fromJson(json['country'])
           : null,
       type: json['type'],
-      name: TeamDetailModel._parseLocalized(json['name']),
-      shortName: TeamDetailModel._parseLocalized(json['short_name']),
+      name: TeamDetailModel.parseLocalized(json['name']),
+      shortName: TeamDetailModel.parseLocalized(json['short_name']),
     );
   }
 }
@@ -150,8 +151,8 @@ class TeamCompetitionModel extends TeamCompetitionEntity {
       country: json['country'] != null
           ? TeamCountryModel.fromJson(json['country'])
           : null,
-      name: TeamDetailModel._parseLocalized(json['name']),
-      shortName: TeamDetailModel._parseLocalized(json['short_name']),
+      name: TeamDetailModel.parseLocalized(json['name']),
+      shortName: TeamDetailModel.parseLocalized(json['short_name']),
     );
   }
 }
