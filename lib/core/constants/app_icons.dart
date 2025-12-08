@@ -32,4 +32,15 @@ class AppIcons {
   static const String shield = '$_basePath/ic_shield.svg';
   static const String trophyStar = '$_basePath/ic_trophy_star.svg';
   static const String apps = '$_basePath/ic_apps.svg';
+
+  // Flags
+  static const String _flagsPath = '$_basePath/countries';
+  static const String flagUS = '$_flagsPath/US.svg';
+  static const String flagUK = '$_flagsPath/UK.svg';
+  static const String flagSA = '$_flagsPath/SA.svg';
+  static const String flagIR = '$_flagsPath/IR.svg';
+  static const String flagFR = '$_flagsPath/FR.svg';
+  static const String flagES = '$_flagsPath/ES.svg';
+  static const String flagDE = '$_flagsPath/DE.svg';
+  static const String flagIT = '$_flagsPath/IT.svg';
 }

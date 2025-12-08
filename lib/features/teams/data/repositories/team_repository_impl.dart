@@ -36,4 +36,30 @@ class TeamRepositoryImpl implements TeamRepository {
       return Left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, TeamCoachEntity>> updateCoach(
+      String coachId, Map<String, dynamic> body) async {
+    try {
+      final remoteCoach = await remoteDataSource.updateCoach(coachId, body);
+      return Right(remoteCoach);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TeamVenueEntity>> updateVenue(
+      String venueId, Map<String, dynamic> body) async {
+    try {
+      final result = await remoteDataSource.updateVenue(venueId, body);
+      return Right(result);
+    } on AppException catch (e) {
+      return Left(ServerFailure(message: e.errorResponse.firstError));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
 }

@@ -93,7 +93,7 @@ class TeamVenueModel extends TeamVenueEntity {
   factory TeamVenueModel.fromJson(Map<String, dynamic> json) {
     return TeamVenueModel(
       id: json['id'],
-      city: json['city'],
+      city: TeamDetailModel._parseLocalized(json['city']),
       capacity: json['capacity'],
       country: json['country'] != null
           ? TeamCountryModel.fromJson(json['country'])

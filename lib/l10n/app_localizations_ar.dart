@@ -439,13 +439,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get news => 'الأخبار';
 
   @override
-  String get normal => 'Normal';
+  String get normal => 'عادي';
 
   @override
-  String get important => 'Important';
+  String get important => 'مهم';
 
   @override
-  String get urgent => 'Urgent';
+  String get urgent => 'عاجل';
 
   @override
   String get pinned => 'مثبت';

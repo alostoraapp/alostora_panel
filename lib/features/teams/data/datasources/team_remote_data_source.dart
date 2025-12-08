@@ -5,6 +5,8 @@ import '../models/team_detail_model.dart';
 abstract class TeamRemoteDataSource {
   Future<TeamDetailModel> getTeamDetail(String teamId);
   Future<TeamDetailModel> updateTeam(String teamId, Map<String, dynamic> body);
+  Future<TeamCoachModel> updateCoach(String coachId, Map<String, dynamic> body);
+  Future<TeamVenueModel> updateVenue(String venueId, Map<String, dynamic> body);
 }
 
 class TeamRemoteDataSourceImpl implements TeamRemoteDataSource {
@@ -28,5 +30,25 @@ class TeamRemoteDataSourceImpl implements TeamRemoteDataSource {
       data: body,
     );
     return TeamDetailModel.fromJson(response);
+  }
+
+  @override
+  Future<TeamCoachModel> updateCoach(
+      String coachId, Map<String, dynamic> body) async {
+    final response = await apiClient.patch(
+      AppConstants.updateCoachUrl(coachId),
+      data: body,
+    );
+    return TeamCoachModel.fromJson(response);
+  }
+
+  @override
+  Future<TeamVenueModel> updateVenue(
+      String venueId, Map<String, dynamic> body) async {
+    final response = await apiClient.patch(
+      AppConstants.updateVenueUrl(venueId),
+      data: body,
+    );
+    return TeamVenueModel.fromJson(response);
   }
 }

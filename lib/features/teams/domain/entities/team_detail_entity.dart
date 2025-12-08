@@ -85,7 +85,7 @@ class TeamCountryEntity extends Equatable {
 
 class TeamVenueEntity extends Equatable {
   final String id;
-  final String? city;
+  final Map<String, String>? city;
   final int? capacity;
   final TeamCountryEntity? country;
   final Map<String, String>? name;

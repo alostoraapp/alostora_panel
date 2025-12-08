@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
+import '../constants/app_icons.dart';
 
 // A helper class to easily access the AppLocalizations
 // This allows you to call S.of(context).login instead of AppLocalizations.of(context)!.login
@@ -16,16 +17,16 @@ class L10n {
     const Locale('ar'), // Arabic (RTL)
   ];
 
-  static String getFlag(String code) {
+  static String? getFlagPath(String code) {
     switch (code) {
       case 'en':
-        return '🇺🇸';
+        return AppIcons.flagUK;
       case 'fa':
-        return '🇮🇷';
+        return AppIcons.flagIR;
       case 'ar':
-        return '🇸🇦';
+        return AppIcons.flagSA;
       default:
-        return '🇺🇳';
+        return null;
     }
   }
 

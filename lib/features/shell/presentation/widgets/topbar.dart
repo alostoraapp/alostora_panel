@@ -66,16 +66,22 @@ class Topbar extends StatelessWidget implements PreferredSizeWidget {
           ),
           itemBuilder: (context) {
             return L10n.all.map((locale) {
-              final flag = L10n.getFlag(locale.languageCode);
+              final flagPath = L10n.getFlagPath(locale.languageCode);
               return PopupMenuItem(
                 value: locale,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      flag,
-                      style: const TextStyle(fontSize: 20),
-                    ),
+                    if (flagPath != null)
+                      Container(
+                        width: 24,
+                        height: 24,
+                        decoration: const BoxDecoration(shape: BoxShape.circle),
+                        clipBehavior: Clip.antiAlias,
+                        child: SvgPicture.asset(flagPath, fit: BoxFit.cover),
+                      )
+                    else
+                      Text(locale.languageCode.toUpperCase()),
                     const SizedBox(width: 10),
                     Text(locale.languageCode.toUpperCase()),
                   ],

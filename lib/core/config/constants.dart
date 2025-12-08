@@ -70,4 +70,8 @@ class AppConstants {
       '/v1/admin/entities/teams/$teamId/';
   static String updateTeamUrl(String teamId) =>
       '/v1/admin/entities/teams/$teamId/';
+  static String updateCoachUrl(String coachId) =>
+      '/v1/admin/entities/coaches/$coachId/';
+  static String updateVenueUrl(String venueId) =>
+      '/v1/admin/entities/venues/$venueId/';
 }

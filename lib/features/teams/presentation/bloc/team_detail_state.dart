@@ -47,6 +47,24 @@ class TeamDetailUpdated extends TeamDetailState {
   List<Object> get props => [team];
 }
 
+class TeamCoachUpdated extends TeamDetailState {
+  final TeamCoachEntity coach;
+
+  const TeamCoachUpdated({required this.coach});
+
+  @override
+  List<Object> get props => [coach];
+}
+
+class TeamVenueUpdated extends TeamDetailState {
+  final TeamVenueEntity venue;
+
+  const TeamVenueUpdated({required this.venue});
+
+  @override
+  List<Object> get props => [venue];
+}
+
 class TeamDetailUpdateError extends TeamDetailState {
   final String message;
 

@@ -7,6 +7,8 @@ import 'package:alostora/features/match_detail/presentation/bloc/match_highlight
 import 'package:alostora/features/match_detail/presentation/bloc/match_highlights/match_highlights_event.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../core/constants/app_icons.dart';
 
 class HighlightEditScreen extends StatefulWidget {
   final String matchId;
@@ -183,24 +185,24 @@ class _HighlightEditScreenState extends State<HighlightEditScreen>
     return const SizedBox.shrink();
   }
 
-  String _getLanguageFlag(String code) {
+  String? _getLanguageFlagPath(String code) {
     switch (code) {
       case 'en':
-        return '🇺🇸';
+        return AppIcons.flagUK;
       case 'ar':
-        return '🇸🇦';
+        return AppIcons.flagSA;
       case 'fa':
-        return '🇮🇷';
+        return AppIcons.flagIR;
       case 'fr':
-        return '🇫🇷';
+        return AppIcons.flagFR;
       case 'es':
-        return '🇪🇸';
+        return AppIcons.flagES;
       case 'de':
-        return '🇩🇪';
+        return AppIcons.flagDE;
       case 'it':
-        return '🇮🇹';
+        return AppIcons.flagIT;
       default:
-        return '🏳️';
+        return null;
     }
   }
 
@@ -233,9 +235,18 @@ class _HighlightEditScreenState extends State<HighlightEditScreen>
         return ListView(
           shrinkWrap: true,
           children: availableLanguages.map((code) {
+            final flagPath = _getLanguageFlagPath(code);
             return ListTile(
-              leading: Text(_getLanguageFlag(code),
-                  style: const TextStyle(fontSize: 24)),
+              leading: flagPath != null
+                  ? Container(
+                      width: 32,
+                      height: 32,
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                      clipBehavior: Clip.antiAlias,
+                      child: SvgPicture.asset(flagPath, fit: BoxFit.cover),
+                    )
+                  : Text(code.toUpperCase(),
+                      style: const TextStyle(fontSize: 24)),
               title: Text(_getLanguageName(code)),
               onTap: () {
                 Navigator.pop(context);
@@ -392,11 +403,24 @@ class _HighlightEditScreenState extends State<HighlightEditScreen>
                       indicatorSize: TabBarIndicatorSize.label,
                       dividerColor: Colors.transparent,
                       tabs: _languages.map((code) {
+                        final flagPath = _getLanguageFlagPath(code);
                         return Tab(
                           child: Row(
                             children: [
-                              Text(
-                                  '${_getLanguageFlag(code)} ${code.toUpperCase()}'),
+                              if (flagPath != null)
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: SvgPicture.asset(flagPath,
+                                      fit: BoxFit.cover),
+                                )
+                              else
+                                Text(code.toUpperCase()),
+                              const SizedBox(width: 8),
+                              Text(code.toUpperCase()),
                               if (code != 'en') ...[
                                 const SizedBox(width: 8),
                                 InkWell(
