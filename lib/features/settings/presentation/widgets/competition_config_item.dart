@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../../app_router.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/l10n/s.dart';
 import '../../domain/entities/competition_config_entity.dart';
@@ -30,7 +32,8 @@ class CompetitionConfigItem extends StatelessWidget {
     final double spacing = isMobile ? 8.0 : 16.0;
     final double logoSize = isMobile ? 32.0 : 40.0;
     final double switchContainerWidth = isMobile ? 50.0 : 100.0;
-    final int cacheSize = (logoSize * MediaQuery.of(context).devicePixelRatio).round();
+    final int cacheSize =
+        (logoSize * MediaQuery.of(context).devicePixelRatio).round();
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -44,28 +47,38 @@ class CompetitionConfigItem extends StatelessWidget {
         children: [
           ReorderableDragStartListener(
             index: index,
-            child: Icon(Icons.drag_indicator, color: Colors.grey, size: isMobile ? 20 : 24),
+            child: Icon(Icons.drag_indicator,
+                color: Colors.grey, size: isMobile ? 20 : 24),
           ),
           SizedBox(width: spacing),
-          CachedNetworkImage(
-            imageUrl: config.competitionDetails.logo,
-            width: logoSize,
-            height: logoSize,
-            memCacheWidth: cacheSize,
-            memCacheHeight: cacheSize,
-            placeholder: (context, url) => Shimmer.fromColors(
-              baseColor: theme.colorScheme.surfaceContainerHighest,
-              highlightColor: theme.colorScheme.onSurface.withOpacity(0.1),
-              child: Container(
-                width: logoSize,
-                height: logoSize,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
+          GestureDetector(
+            onTap: () {
+              context.pushNamed(
+                AppRoutes.competitionDetail,
+                pathParameters: {'competitionId': config.competitionDetails.id},
+              );
+            },
+            child: CachedNetworkImage(
+              imageUrl: config.competitionDetails.logo,
+              width: logoSize,
+              height: logoSize,
+              memCacheWidth: cacheSize,
+              memCacheHeight: cacheSize,
+              placeholder: (context, url) => Shimmer.fromColors(
+                baseColor: theme.colorScheme.surfaceContainerHighest,
+                highlightColor: theme.colorScheme.onSurface.withOpacity(0.1),
+                child: Container(
+                  width: logoSize,
+                  height: logoSize,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
+              errorWidget: (context, url, error) =>
+                  Icon(Icons.broken_image, size: logoSize),
             ),
-            errorWidget: (context, url, error) => Icon(Icons.broken_image, size: logoSize),
           ),
           SizedBox(width: spacing),
           Expanded(
@@ -75,15 +88,18 @@ class CompetitionConfigItem extends StatelessWidget {
                 Text(
                   config.competitionDetails.shortName,
                   style: isMobile
-                      ? theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)
-                      : theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                      ? theme.textTheme.bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w600)
+                      : theme.textTheme.bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.w600),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (config.competitionDetails.country != null)
                   Text(
                     config.competitionDetails.country!.name,
-                    style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: theme.hintColor),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

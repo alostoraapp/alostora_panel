@@ -85,6 +85,12 @@ import 'features/teams/domain/usecases/update_venue_use_case.dart';
 import 'features/teams/domain/usecases/get_squad_use_case.dart';
 import 'features/teams/domain/usecases/update_player_use_case.dart';
 import 'features/teams/presentation/bloc/team_detail_bloc.dart';
+import 'features/competitions/data/datasources/competition_detail_remote_data_source.dart';
+import 'features/competitions/data/repositories/competition_detail_repository_impl.dart';
+import 'features/competitions/domain/repositories/competition_detail_repository.dart';
+import 'features/competitions/domain/usecases/get_competition_detail_usecase.dart';
+import 'features/competitions/domain/usecases/update_competition_detail_usecase.dart';
+import 'features/competitions/presentation/bloc/competition_detail_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -246,6 +252,18 @@ Future<void> init() async {
       () => TeamRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<TeamRemoteDataSource>(
       () => TeamRemoteDataSourceImpl(apiClient: sl()));
+
+  // Competition Detail
+  sl.registerFactory(() => CompetitionDetailBloc(
+        getCompetitionDetail: sl(),
+        updateCompetitionDetail: sl(),
+      ));
+  sl.registerLazySingleton(() => GetCompetitionDetailUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateCompetitionDetailUseCase(sl()));
+  sl.registerLazySingleton<CompetitionDetailRepository>(
+      () => CompetitionDetailRepositoryImpl(remoteDataSource: sl()));
+  sl.registerLazySingleton<CompetitionDetailRemoteDataSource>(
+      () => CompetitionDetailRemoteDataSourceImpl(apiClient: sl()));
 
   // --- Core ---
   sl.registerLazySingleton(() => ApiClient(sl()));

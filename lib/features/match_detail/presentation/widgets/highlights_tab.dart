@@ -8,10 +8,11 @@ import 'package:alostora/features/match_detail/domain/entities/highlight_entity.
 import 'package:alostora/features/match_detail/presentation/bloc/match_highlights/match_highlights_bloc.dart';
 import 'package:alostora/features/match_detail/presentation/bloc/match_highlights/match_highlights_event.dart';
 import 'package:alostora/features/match_detail/presentation/bloc/match_highlights/match_highlights_state.dart';
-import 'package:alostora/features/match_detail/presentation/screens/highlight_edit_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../../app_router.dart';
 
 class HighlightsTab extends StatelessWidget {
   final String matchId;
@@ -19,15 +20,13 @@ class HighlightsTab extends StatelessWidget {
   const HighlightsTab({super.key, required this.matchId});
 
   void _navigateToEditScreen(BuildContext context, HighlightEntity? highlight) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => HighlightEditScreen(
-          matchId: matchId,
-          highlight: highlight,
-          matchHighlightsBloc: context.read<MatchHighlightsBloc>(),
-        ),
-      ),
+    context.pushNamed(
+      AppRoutes.highlightEdit,
+      pathParameters: {'matchId': matchId},
+      extra: {
+        'highlight': highlight,
+        'matchHighlightsBloc': context.read<MatchHighlightsBloc>(),
+      },
     );
   }
 

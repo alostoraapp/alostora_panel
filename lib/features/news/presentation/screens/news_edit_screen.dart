@@ -17,8 +17,9 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_delta_from_html/flutter_quill_delta_from_html.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
-import '../../../teams/presentation/screens/team_detail_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../app_router.dart';
 import '../../../../core/constants/app_icons.dart';
 
 class NewsEditScreen extends StatefulWidget {
@@ -1278,9 +1279,10 @@ class _RelatedTeamsSelectorState extends State<_RelatedTeamsSelector> {
                               : 'Team')),
                       onDeleted: () => _removeTeam(team),
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => TeamDetailScreen(teamId: team['id']),
-                        ));
+                        context.pushNamed(
+                          AppRoutes.teamDetail,
+                          pathParameters: {'teamId': team['id']},
+                        );
                       },
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     );

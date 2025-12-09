@@ -113,6 +113,8 @@ class TeamDetailBloc extends Bloc<TeamDetailEvent, TeamDetailState> {
       currentTeam = (state as TeamSquadLoaded).team;
     } else if (state is TeamDetailUpdated) {
       currentTeam = (state as TeamDetailUpdated).team;
+    } else if (state is TeamPlayerUpdated) {
+      currentTeam = (state as TeamPlayerUpdated).team;
     }
 
     final result = await getSquad(GetSquadParams(teamId: event.teamId));
@@ -126,7 +128,18 @@ class TeamDetailBloc extends Bloc<TeamDetailEvent, TeamDetailState> {
     UpdatePlayerEvent event,
     Emitter<TeamDetailState> emit,
   ) async {
-    emit(TeamDetailUpdating());
+    TeamDetailEntity? currentTeam;
+    if (state is TeamDetailLoaded) {
+      currentTeam = (state as TeamDetailLoaded).team;
+    } else if (state is TeamSquadLoaded) {
+      currentTeam = (state as TeamSquadLoaded).team;
+    } else if (state is TeamDetailUpdated) {
+      currentTeam = (state as TeamDetailUpdated).team;
+    } else if (state is TeamPlayerUpdated) {
+      currentTeam = (state as TeamPlayerUpdated).team;
+    }
+
+    emit(TeamDetailUpdating(team: currentTeam));
     final result = await updatePlayer(UpdatePlayerParams(
       playerId: event.playerId,
       body: event.body,
@@ -134,7 +147,7 @@ class TeamDetailBloc extends Bloc<TeamDetailEvent, TeamDetailState> {
     result.fold(
       (failure) => emit(TeamDetailUpdateError(message: failure.toString())),
       (player) {
-        emit(TeamPlayerUpdated(player: player));
+        emit(TeamPlayerUpdated(player: player, team: currentTeam));
         // Refresh squad
         add(GetSquadEvent(teamId: event.teamId));
       },

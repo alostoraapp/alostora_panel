@@ -86,9 +86,10 @@ class TeamSquadLoaded extends TeamDetailState {
 
 class TeamPlayerUpdated extends TeamDetailState {
   final PlayerEntity player;
+  final TeamDetailEntity? team;
 
-  const TeamPlayerUpdated({required this.player});
+  const TeamPlayerUpdated({required this.player, this.team});
 
   @override
-  List<Object> get props => [player];
+  List<Object?> get props => [player, team];
 }

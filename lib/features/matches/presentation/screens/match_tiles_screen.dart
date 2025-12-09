@@ -137,15 +137,12 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
             },
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // Determine if we should use the wide layout (Row) or compact layout (Column)
-                // based on the available width of the list view.
-                // Threshold can be adjusted, e.g., 700px.
                 final bool useWideLayout = constraints.maxWidth > 700;
 
-                return ListView(
-                  padding: const EdgeInsets.all(10.0),
-                  children: [
-                    if (useWideLayout)
+                if (useWideLayout) {
+                  return ListView(
+                    padding: const EdgeInsets.all(10.0),
+                    children: [
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -155,52 +152,90 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                           const SizedBox(width: 16),
                           refreshButton,
                         ],
-                      )
-                    else
-                      Column(
-                        children: [
-                          timePicker,
-                          const SizedBox(height: 2),
-                          if (!ResponsiveBreakpoints.of(context).isMobile)
-                            Row(
-                              children: [
-                                Expanded(child: searchCard),
-                                const SizedBox(width: 8),
-                                refreshButton,
-                              ],
-                            )
-                          else
-                            searchCard,
-                        ],
                       ),
-                    const SizedBox(height: 16),
-                    // Handle different states from the BLoC
-                    if (state is MatchesLoading)
-                      _buildShimmerList()
-                    else if (state is MatchesLoaded)
-                      _buildMatchesList(
-                        context,
-                        state.competitions,
-                        isSplitView
-                            ? (match) {
-                                setState(() {
-                                  _selectedMatch = match;
-                                });
-                              }
-                            : null,
-                      )
-                    else if (state is MatchesError)
-                      ErrorView(
-                        message: state.message,
-                        onRetry: _fetchMatches,
-                      )
-                    else if (state is MatchesInitial)
-                      // Show shimmer or an empty state during initial load
-                      _buildShimmerList()
-                    else
-                      const SizedBox.shrink(),
-                  ],
-                );
+                      const SizedBox(height: 16),
+                      if (state is MatchesLoading)
+                        _buildShimmerList()
+                      else if (state is MatchesLoaded)
+                        _buildMatchesList(
+                          context,
+                          state.competitions,
+                          isSplitView
+                              ? (match) {
+                                  setState(() {
+                                    _selectedMatch = match;
+                                  });
+                                }
+                              : null,
+                        )
+                      else if (state is MatchesError)
+                        ErrorView(
+                          message: state.message,
+                          onRetry: _fetchMatches,
+                        )
+                      else if (state is MatchesInitial)
+                        _buildShimmerList()
+                      else
+                        const SizedBox.shrink(),
+                    ],
+                  );
+                } else {
+                  // Mobile Layout with Sticky Time Picker
+                  return CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        floating: true,
+                        snap: true,
+                        pinned: false,
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        automaticallyImplyLeading: false,
+                        toolbarHeight: 80, // Adjust based on card height
+                        flexibleSpace: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 5.0),
+                          child: timePicker,
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 2),
+                              searchCard,
+                              const SizedBox(height: 16),
+                              if (state is MatchesLoading)
+                                _buildShimmerList()
+                              else if (state is MatchesLoaded)
+                                _buildMatchesList(
+                                  context,
+                                  state.competitions,
+                                  isSplitView
+                                      ? (match) {
+                                          setState(() {
+                                            _selectedMatch = match;
+                                          });
+                                        }
+                                      : null,
+                                )
+                              else if (state is MatchesError)
+                                ErrorView(
+                                  message: state.message,
+                                  onRetry: _fetchMatches,
+                                )
+                              else if (state is MatchesInitial)
+                                _buildShimmerList()
+                              else
+                                const SizedBox.shrink(),
+                              const SizedBox(height: 16), // Bottom padding
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
               },
             ),
           );

@@ -354,6 +354,8 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
           team = state.team;
         } else if (state is TeamDetailUpdating) {
           team = state.team;
+        } else if (state is TeamPlayerUpdated) {
+          team = state.team;
         }
 
         final title = team?.name?['en'] ?? 'Team Details';

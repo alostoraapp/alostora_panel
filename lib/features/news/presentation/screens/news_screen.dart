@@ -8,22 +8,21 @@ import 'package:alostora/features/news/presentation/bloc/news_bloc.dart';
 import 'package:alostora/features/news/presentation/bloc/news_event.dart';
 import 'package:alostora/features/news/presentation/bloc/news_state.dart';
 import 'package:alostora/core/presentation/widgets/error_view.dart';
-import 'package:alostora/features/news/presentation/screens/news_edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../app_router.dart';
 
 class NewsScreen extends StatelessWidget {
   const NewsScreen({super.key});
 
   void _navigateToEditScreen(BuildContext context, NewsEntity? news) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => NewsEditScreen(
-          news: news,
-          newsBloc: context.read<NewsBloc>(),
-        ),
-      ),
+    context.pushNamed(
+      AppRoutes.newsEdit,
+      extra: {
+        'news': news,
+        'newsBloc': context.read<NewsBloc>(),
+      },
     );
   }
 

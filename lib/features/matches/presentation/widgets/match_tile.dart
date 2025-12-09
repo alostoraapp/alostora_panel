@@ -14,7 +14,6 @@ import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../domain/entities/match_entity.dart';
 import '../../domain/entities/match_status_enum.dart';
 import '../../domain/entities/team_entity.dart';
-import '../../../teams/presentation/screens/team_detail_screen.dart';
 
 class MatchTile extends StatefulWidget {
   final MatchEntity match;
@@ -232,9 +231,10 @@ class _MatchTileState extends State<MatchTile> {
 
     final logo = InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) => TeamDetailScreen(teamId: team.id),
-        ));
+        context.pushNamed(
+          AppRoutes.teamDetail,
+          pathParameters: {'teamId': team.id},
+        );
       },
       borderRadius: BorderRadius.circular(logoSize / 2),
       child: CachedNetworkImage(

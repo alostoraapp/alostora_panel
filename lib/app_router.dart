@@ -15,6 +15,14 @@ import 'features/splash/presentation/screens/splash_screen.dart';
 import 'features/news/presentation/screens/news_screen.dart';
 import 'injection_container.dart';
 import 'features/matches/domain/entities/match_entity.dart'; // Import MatchEntity
+import 'features/teams/presentation/screens/team_detail_screen.dart';
+import 'features/competitions/presentation/screens/competition_detail_screen.dart';
+import 'features/news/presentation/screens/news_edit_screen.dart';
+import 'features/news/domain/entities/news_entity.dart';
+import 'features/news/presentation/bloc/news_bloc.dart';
+import 'features/match_detail/presentation/screens/highlight_edit_screen.dart';
+import 'features/match_detail/domain/entities/highlight_entity.dart';
+import 'features/match_detail/presentation/bloc/match_highlights/match_highlights_bloc.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -85,6 +93,48 @@ class AppRouter {
             name: AppRoutes.news,
             builder: (context, state) => const NewsScreen(),
           ),
+          GoRoute(
+            path: AppRoutes.teamDetail,
+            name: AppRoutes.teamDetail,
+            builder: (context, state) {
+              final teamId = state.pathParameters['teamId']!;
+              return TeamDetailScreen(teamId: teamId);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.competitionDetail,
+            name: AppRoutes.competitionDetail,
+            builder: (context, state) {
+              final competitionId = state.pathParameters['competitionId']!;
+              return CompetitionDetailScreen(competitionId: competitionId);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.newsEdit,
+            name: AppRoutes.newsEdit,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>;
+              final news = extra['news'] as NewsEntity?;
+              final newsBloc = extra['newsBloc'] as NewsBloc;
+              return NewsEditScreen(news: news, newsBloc: newsBloc);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.highlightEdit,
+            name: AppRoutes.highlightEdit,
+            builder: (context, state) {
+              final matchId = state.pathParameters['matchId']!;
+              final extra = state.extra as Map<String, dynamic>;
+              final highlight = extra['highlight'] as HighlightEntity?;
+              final matchHighlightsBloc =
+                  extra['matchHighlightsBloc'] as MatchHighlightsBloc;
+              return HighlightEditScreen(
+                matchId: matchId,
+                highlight: highlight,
+                matchHighlightsBloc: matchHighlightsBloc,
+              );
+            },
+          ),
         ],
       ),
     ],
@@ -135,4 +185,14 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String competitionSelect = '/settings/competition-select';
   static const String news = '/news';
+  static const String newsEdit = '/news/edit';
+
+  // Teams
+  static const String teamDetail = '/teams/:teamId';
+
+  // Competitions
+  static const String competitionDetail = '/competitions/:competitionId';
+
+  // Highlights
+  static const String highlightEdit = '/matches/:matchId/highlights/edit';
 }

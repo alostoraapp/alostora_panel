@@ -330,7 +330,7 @@ class _PositionSectionState extends State<PositionSection>
           axisAlignment: -1.0,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 24),
-            child: ResponsiveGrid(
+            child: SquadResponsiveGrid(
               children: widget.players
                   .map((member) =>
                       PlayerCard(member: member, onEdit: widget.onEdit))
@@ -339,6 +339,49 @@ class _PositionSectionState extends State<PositionSection>
           ),
         ),
       ],
+    );
+  }
+}
+
+class SquadResponsiveGrid extends StatelessWidget {
+  final List<Widget> children;
+  final double spacing;
+  final double runSpacing;
+
+  const SquadResponsiveGrid({
+    super.key,
+    required this.children,
+    this.spacing = 16.0,
+    this.runSpacing = 16.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        int crossAxisCount = 1;
+        if (width > 2500) {
+          crossAxisCount = 4;
+        } else if (width > 900) {
+          crossAxisCount = 3;
+        }
+
+        // Calculate item width
+        final totalSpacing = (crossAxisCount - 1) * spacing;
+        final itemWidth = (width - totalSpacing) / crossAxisCount;
+
+        return Wrap(
+          spacing: spacing,
+          runSpacing: runSpacing,
+          children: children.map((child) {
+            return SizedBox(
+              width: itemWidth,
+              child: child,
+            );
+          }).toList(),
+        );
+      },
     );
   }
 }
