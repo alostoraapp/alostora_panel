@@ -23,6 +23,15 @@ class _TeamSquadTabState extends State<TeamSquadTab> {
     context.read<TeamDetailBloc>().add(GetSquadEvent(teamId: widget.teamId));
   }
 
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TeamDetailBloc, TeamDetailState>(
@@ -38,12 +47,6 @@ class _TeamSquadTabState extends State<TeamSquadTab> {
         if (state is TeamDetailLoaded ||
             state is TeamDetailUpdated ||
             state is TeamDetailUpdating) {
-          // If we are here, it means we might be switching tabs or updating.
-          // If we don't have squad data in this state, we might need to fetch it or show loading.
-          // However, TeamDetailBloc logic I added earlier tries to preserve team data in TeamSquadLoaded.
-          // But if we are in TeamDetailLoaded, we don't have squad list in the state props usually.
-          // Let's rely on the fact that we trigger GetSquadEvent on init.
-          // If the state is still TeamDetailLoaded, it means GetSquadEvent hasn't processed yet or emitted TeamSquadLoaded.
           return const Center(child: CircularProgressIndicator());
         }
         return const Center(child: CircularProgressIndicator());
@@ -52,6 +55,28 @@ class _TeamSquadTabState extends State<TeamSquadTab> {
   }
 
   Widget _buildSquadList(List<SquadMemberEntity> squad) {
+    // Filter squad based on search query
+    final filteredSquad = squad.where((member) {
+      if (_searchQuery.isEmpty) return true;
+      final query = _searchQuery.toLowerCase();
+
+      // Check shirt number
+      if (member.shirtNumber.toString().contains(query)) return true;
+
+      // Check names (name, short_name, display_name) in all languages
+      bool checkLocalized(Map<String, String>? localizedMap) {
+        if (localizedMap == null) return false;
+        return localizedMap.values
+            .any((value) => value.toLowerCase().contains(query));
+      }
+
+      if (checkLocalized(member.player.name)) return true;
+      if (checkLocalized(member.player.shortName)) return true;
+      if (checkLocalized(member.player.displayName)) return true;
+
+      return false;
+    }).toList();
+
     if (squad.isEmpty) {
       return const Center(child: Text('No players found.'));
     }
@@ -67,7 +92,7 @@ class _TeamSquadTabState extends State<TeamSquadTab> {
 
     // Group by position
     final Map<String, List<SquadMemberEntity>> groupedSquad = {};
-    for (var member in squad) {
+    for (var member in filteredSquad) {
       final position = member.position;
       if (!groupedSquad.containsKey(position)) {
         groupedSquad[position] = [];
@@ -87,24 +112,82 @@ class _TeamSquadTabState extends State<TeamSquadTab> {
         return a.compareTo(b);
       });
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: sortedKeys.map((code) {
-          final title = positionNames[code] ?? code;
-          return PositionSection(
-            title: title,
-            players: groupedSquad[code]!,
-            onEdit: (member) => _showEditPlayerDialog(member),
-          );
-        }).toList(),
-      ),
+    return Column(
+      children: [
+        // Search Bar
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Search players...',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: _searchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {
+                          _searchQuery = '';
+                        });
+                      },
+                    )
+                  : null,
+              filled: true,
+              fillColor: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withOpacity(0.3),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+              });
+            },
+          ),
+        ),
+        Expanded(
+          child: filteredSquad.isEmpty
+              ? const Center(child: Text('No players match your search.'))
+              : SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    children: sortedKeys.map((code) {
+                      final title = positionNames[code] ?? code;
+                      return PositionSection(
+                        title: title,
+                        players: groupedSquad[code]!,
+                        onEdit: (member) => _showEditPlayerDialog(member),
+                      );
+                    }).toList(),
+                  ),
+                ),
+        ),
+      ],
     );
   }
 
   void _showEditPlayerDialog(SquadMemberEntity member) {
     final bloc = context.read<TeamDetailBloc>();
-    /*
     showDialog(
       context: context,
       builder: (context) => PlayerEditDialog(
@@ -140,7 +223,6 @@ class _TeamSquadTabState extends State<TeamSquadTab> {
         },
       ),
     );
-    */
   }
 }
 
