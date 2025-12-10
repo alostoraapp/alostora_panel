@@ -51,7 +51,9 @@ import 'features/matches/data/datasources/matches_remote_datasource.dart';
 import 'features/matches/data/repositories/matches_repository_impl.dart';
 import 'features/matches/domain/repositories/matches_repository.dart';
 import 'features/matches/domain/usecases/get_matches_usecase.dart';
+import 'features/matches/domain/usecases/get_match_usecase.dart';
 import 'features/matches/presentation/bloc/matches_bloc.dart';
+import 'features/match_detail/presentation/bloc/match_detail/match_detail_bloc.dart';
 import 'features/settings/data/datasources/competition_config_remote_datasource.dart';
 import 'features/settings/data/repositories/competition_config_repository_impl.dart';
 import 'features/settings/domain/repositories/competition_config_repository.dart';
@@ -116,9 +118,11 @@ Future<void> init() async {
       () => MatchesRepositoryImpl(sl()));
   sl.registerLazySingleton<MatchesRemoteDataSource>(
       () => MatchesRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton(() => GetMatchUseCase(sl()));
 
   // Match Detail
   // Blocs
+  sl.registerFactory(() => MatchDetailBloc(sl()));
   sl.registerFactory(() => LineupBloc(
         getLineupUsecase: sl(),
         updateManOfTheMatch: sl(),

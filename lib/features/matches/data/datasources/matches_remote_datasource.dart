@@ -1,6 +1,7 @@
 import '../../../../core/config/constants.dart';
 import '../../../../core/services/api_client.dart';
 import '../models/competition_model.dart';
+import '../models/match_model.dart';
 
 abstract class MatchesRemoteDataSource {
   Future<List<CompetitionModel>> getMatches({
@@ -10,12 +11,14 @@ abstract class MatchesRemoteDataSource {
     int? startTimestamp,
     int? endTimestamp,
   });
+
+  Future<MatchModel> getMatch(String id);
 }
 
 class MatchesRemoteDataSourceImpl implements MatchesRemoteDataSource {
-  final ApiClient _apiClient;
+  final ApiClient apiClient;
 
-  MatchesRemoteDataSourceImpl(this._apiClient);
+  MatchesRemoteDataSourceImpl(this.apiClient);
 
   @override
   Future<List<CompetitionModel>> getMatches({
@@ -33,7 +36,7 @@ class MatchesRemoteDataSourceImpl implements MatchesRemoteDataSource {
       if (endTimestamp != null) 'end_timestamp': endTimestamp,
     };
 
-    final response = await _apiClient.get(
+    final response = await apiClient.get(
       AppConstants.matchesListUrl,
       queryParameters: queryParameters,
     );
@@ -47,5 +50,19 @@ class MatchesRemoteDataSourceImpl implements MatchesRemoteDataSource {
         .map((competition) =>
             CompetitionModel.fromJson(competition as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<MatchModel> getMatch(String id) async {
+    // Assuming the API client returns the parsed JSON directly or throws on error.
+    // If it returns a raw response object, you'd need to check status code and parse data.
+    final response = await apiClient.get('${AppConstants.matchesListUrl}$id/');
+
+    if (response is! Map<String, dynamic>) {
+      // Or throw a specific exception if the response format is unexpected
+      throw Exception('Unexpected response format for getMatch');
+    }
+
+    return MatchModel.fromJson(response);
   }
 }

@@ -69,11 +69,9 @@ class AppRouter {
             path: AppRoutes.matchDetail,
             name: AppRoutes.matchDetail,
             builder: (context, state) {
+              final matchId = state.pathParameters['matchId']!;
               final match = state.extra as MatchEntity?;
-              if (match == null) {
-                return const PlaceholderScreen(title: 'Error: Match not found');
-              }
-              return MatchDetailScreen(match: match);
+              return MatchDetailScreen(matchId: matchId, match: match);
             },
           ),
           GoRoute(

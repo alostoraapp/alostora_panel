@@ -144,7 +144,7 @@ class _MatchTileState extends State<MatchTile> {
         onTap: widget.isInteractive
             ? (widget.onTap ??
                 () {
-                  GoRouter.of(context).goNamed(
+                  context.pushNamed(
                     AppRoutes.matchDetail,
                     pathParameters: {'matchId': widget.match.id},
                     extra: widget.match,

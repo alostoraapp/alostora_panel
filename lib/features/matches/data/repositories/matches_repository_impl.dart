@@ -4,6 +4,7 @@ import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/either.dart';
 import '../../domain/entities/competition_entity.dart';
+import '../../domain/entities/match_entity.dart';
 import '../../domain/repositories/matches_repository.dart';
 import '../datasources/matches_remote_datasource.dart';
 
@@ -29,6 +30,22 @@ class MatchesRepositoryImpl implements MatchesRepository {
         endTimestamp: endTimestamp,
       );
       return Right(competitionModels.map((model) => model.toEntity()).toList());
+    } on DioException catch (e) {
+      if (e.error is AppException) {
+        return Left(
+            ServerFailure(message: (e.error as AppException).toString()));
+      }
+      return Left(ServerFailure(message: e.message ?? 'Unknown Dio Error'));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, MatchEntity>> getMatch(String id) async {
+    try {
+      final matchModel = await _remoteDataSource.getMatch(id);
+      return Right(matchModel.toEntity());
     } on DioException catch (e) {
       if (e.error is AppException) {
         return Left(

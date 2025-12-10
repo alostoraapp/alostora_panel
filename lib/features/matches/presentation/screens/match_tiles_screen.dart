@@ -291,6 +291,7 @@ class _MatchTilesScreenState extends State<MatchTilesScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                   child: MatchDetailScreen(
                                     key: ValueKey(_selectedMatch!.id),
+                                    matchId: _selectedMatch!.id,
                                     match: _selectedMatch!,
                                   ),
                                 ),
