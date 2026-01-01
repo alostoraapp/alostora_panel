@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/foundation.dart';
 import '../../../../core/constants/app_icons.dart';
 
 import '../../domain/entities/squad_entity.dart';
@@ -203,11 +204,32 @@ class _TeamSquadTabState extends State<TeamSquadTab> {
           // }
 
           final playerData = <String, dynamic>{};
-          if (data.containsKey('name')) playerData['name'] = data['name'];
-          if (data.containsKey('short_name'))
-            playerData['short_name'] = data['short_name'];
-          if (data.containsKey('display_name'))
-            playerData['display_name'] = data['display_name'];
+
+          if (data.containsKey('name')) {
+            final nameMap = Map<String, dynamic>.from(data['name']);
+            if (nameMap.isNotEmpty && !mapEquals(nameMap, member.player.name)) {
+              playerData['name'] = nameMap;
+            }
+          }
+
+          if (data.containsKey('short_name')) {
+            final shortNameMap = Map<String, dynamic>.from(data['short_name']);
+            if (shortNameMap.isNotEmpty &&
+                !mapEquals(shortNameMap, member.player.shortName)) {
+              playerData['short_name'] = shortNameMap;
+            }
+          }
+
+          if (data.containsKey('display_name')) {
+            final displayNameMap =
+                Map<String, dynamic>.from(data['display_name']);
+            if (displayNameMap.isNotEmpty &&
+                !mapEquals(displayNameMap, member.player.displayName)) {
+              playerData['display_name'] = displayNameMap;
+            }
+          }
+
+          if (playerData.isEmpty) return;
 
           final updateData = <String, dynamic>{
             'player': playerData,

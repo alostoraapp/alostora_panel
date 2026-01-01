@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/foundation.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../domain/entities/competition_detail_entity.dart';
 
@@ -419,6 +420,15 @@ class _EditCompetitionDialogState extends State<EditCompetitionDialog>
                       final Map<String, dynamic> nameMap = {};
                       final Map<String, dynamic> shortNameMap = {};
 
+                      // Helpers to ensure we compare apples to apples
+                      // Filter out empty strings from original maps because our form maps only include non-empty values
+                      Map<String, dynamic> getCleanOriginal(
+                          Map<String, String>? original) {
+                        if (original == null) return {};
+                        return Map.fromEntries(original.entries
+                            .where((e) => e.value.trim().isNotEmpty));
+                      }
+
                       for (var lang in _languages) {
                         if (_nameControllers[lang]?.text.isNotEmpty == true) {
                           nameMap[lang] = _nameControllers[lang]!.text;
@@ -430,10 +440,23 @@ class _EditCompetitionDialogState extends State<EditCompetitionDialog>
                         }
                       }
 
-                      final body = {
-                        if (nameMap.isNotEmpty) 'name': nameMap,
-                        if (shortNameMap.isNotEmpty) 'short_name': shortNameMap,
-                      };
+                      final body = <String, dynamic>{};
+
+                      final cleanOriginalName =
+                          getCleanOriginal(widget.competition.name);
+                      if (nameMap.isNotEmpty &&
+                          !mapEquals(nameMap, cleanOriginalName)) {
+                        body['name'] = nameMap;
+                      }
+
+                      final cleanOriginalShortName =
+                          getCleanOriginal(widget.competition.shortName);
+                      if (shortNameMap.isNotEmpty &&
+                          !mapEquals(shortNameMap, cleanOriginalShortName)) {
+                        body['short_name'] = shortNameMap;
+                      }
+
+                      if (body.isEmpty) return;
 
                       widget.onSave(body);
                     },

@@ -55,11 +55,11 @@ class TeamRemoteDataSourceImpl implements TeamRemoteDataSource {
   @override
   Future<TeamDetailModel> updateTeam(
       String teamId, Map<String, dynamic> data) async {
-    await apiClient.patch(
+    final response = await apiClient.patch(
       AppConstants.updateTeamUrl(teamId),
       data: data,
     );
-    return TeamDetailModel.fromJson({});
+    return TeamDetailModel.fromJson(response);
   }
 
   @override
