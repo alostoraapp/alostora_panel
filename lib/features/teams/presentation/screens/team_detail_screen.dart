@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../injection_container.dart';
 import '../../domain/entities/team_detail_entity.dart';
@@ -139,7 +140,20 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
     }
   }
 
+  TeamDetailEntity? get _currentTeam {
+    final state = _bloc.state;
+    if (state is TeamDetailLoaded) return state.team;
+    if (state is TeamDetailUpdated) return state.team;
+    if (state is TeamSquadLoaded) return state.team;
+    if (state is TeamDetailUpdating) return state.team;
+    if (state is TeamPlayerUpdated) return state.team;
+    return null;
+  }
+
   void _saveTeam() {
+    final team = _currentTeam;
+    if (team == null) return;
+
     final Map<String, dynamic> nameMap = {};
     final Map<String, dynamic> shortNameMap = {};
     final Map<String, dynamic> displayNameMap = {};
@@ -178,31 +192,60 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
 
     final int? capacity = int.tryParse(_venueCapacityController.text);
 
-    final body = {
-      if (nameMap.isNotEmpty) 'name': nameMap,
-      if (shortNameMap.isNotEmpty) 'short_name': shortNameMap,
-      if (displayNameMap.isNotEmpty) 'display_name': displayNameMap,
-      if (venueNameMap.isNotEmpty ||
-          venueShortNameMap.isNotEmpty ||
-          venueCityMap.isNotEmpty ||
-          capacity != null)
-        'venue': {
-          if (venueNameMap.isNotEmpty) 'name': venueNameMap,
-          if (venueShortNameMap.isNotEmpty) 'short_name': venueShortNameMap,
-          if (venueCityMap.isNotEmpty) 'city': venueCityMap,
-          if (capacity != null) 'capacity': capacity,
-        },
-      if (coachNameMap.isNotEmpty || coachShortNameMap.isNotEmpty)
-        'coach': {
-          if (coachNameMap.isNotEmpty) 'name': coachNameMap,
-          if (coachShortNameMap.isNotEmpty) 'short_name': coachShortNameMap,
-        },
-    };
+    final body = <String, dynamic>{};
+
+    if (nameMap.isNotEmpty && !mapEquals(nameMap, team.name)) {
+      body['name'] = nameMap;
+    }
+    if (shortNameMap.isNotEmpty && !mapEquals(shortNameMap, team.shortName)) {
+      body['short_name'] = shortNameMap;
+    }
+    if (displayNameMap.isNotEmpty &&
+        !mapEquals(displayNameMap, team.displayName)) {
+      body['display_name'] = displayNameMap;
+    }
+
+    // Venue Logic (for combined update)
+    final venueBody = <String, dynamic>{};
+    if (venueNameMap.isNotEmpty && !mapEquals(venueNameMap, team.venue?.name)) {
+      venueBody['name'] = venueNameMap;
+    }
+    if (venueShortNameMap.isNotEmpty &&
+        !mapEquals(venueShortNameMap, team.venue?.shortName)) {
+      venueBody['short_name'] = venueShortNameMap;
+    }
+    if (venueCityMap.isNotEmpty && !mapEquals(venueCityMap, team.venue?.city)) {
+      venueBody['city'] = venueCityMap;
+    }
+    if (capacity != null && capacity != team.venue?.capacity) {
+      venueBody['capacity'] = capacity;
+    }
+    if (venueBody.isNotEmpty) {
+      body['venue'] = venueBody;
+    }
+
+    // Coach Logic (for combined update)
+    final coachBody = <String, dynamic>{};
+    if (coachNameMap.isNotEmpty && !mapEquals(coachNameMap, team.coach?.name)) {
+      coachBody['name'] = coachNameMap;
+    }
+    if (coachShortNameMap.isNotEmpty &&
+        !mapEquals(coachShortNameMap, team.coach?.shortName)) {
+      coachBody['short_name'] = coachShortNameMap;
+    }
+    if (coachBody.isNotEmpty) {
+      body['coach'] = coachBody;
+    }
+
+    if (body.isEmpty) return;
 
     _bloc.add(UpdateTeamEvent(teamId: widget.teamId, body: body));
   }
 
   void _saveCoach() {
+    final team = _currentTeam;
+    if (team == null) return;
+
     final Map<String, dynamic> coachNameMap = {};
     final Map<String, dynamic> coachShortNameMap = {};
 
@@ -215,12 +258,14 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
       }
     }
 
-    final body = {
-      if (coachNameMap.isNotEmpty) 'name': coachNameMap,
-      if (coachShortNameMap.isNotEmpty) 'short_name': coachShortNameMap,
-    };
-
-    if (body.isEmpty) return;
+    final body = <String, dynamic>{};
+    if (coachNameMap.isNotEmpty && !mapEquals(coachNameMap, team.coach?.name)) {
+      body['name'] = coachNameMap;
+    }
+    if (coachShortNameMap.isNotEmpty &&
+        !mapEquals(coachShortNameMap, team.coach?.shortName)) {
+      body['short_name'] = coachShortNameMap;
+    }
 
     if (body.isEmpty) return;
 
@@ -234,6 +279,9 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
   }
 
   void _saveVenue() {
+    final team = _currentTeam;
+    if (team == null) return;
+
     final Map<String, dynamic> venueNameMap = {};
     final Map<String, dynamic> venueShortNameMap = {};
     final Map<String, dynamic> venueCityMap = {};
@@ -252,12 +300,20 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
 
     final int? capacity = int.tryParse(_venueCapacityController.text);
 
-    final body = {
-      if (venueNameMap.isNotEmpty) 'name': venueNameMap,
-      if (venueShortNameMap.isNotEmpty) 'short_name': venueShortNameMap,
-      if (venueCityMap.isNotEmpty) 'city': venueCityMap,
-      if (capacity != null) 'capacity': capacity,
-    };
+    final body = <String, dynamic>{};
+    if (venueNameMap.isNotEmpty && !mapEquals(venueNameMap, team.venue?.name)) {
+      body['name'] = venueNameMap;
+    }
+    if (venueShortNameMap.isNotEmpty &&
+        !mapEquals(venueShortNameMap, team.venue?.shortName)) {
+      body['short_name'] = venueShortNameMap;
+    }
+    if (venueCityMap.isNotEmpty && !mapEquals(venueCityMap, team.venue?.city)) {
+      body['city'] = venueCityMap;
+    }
+    if (capacity != null && capacity != team.venue?.capacity) {
+      body['capacity'] = capacity;
+    }
 
     if (body.isEmpty) return;
 

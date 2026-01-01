@@ -1,6 +1,6 @@
 class AppConstants {
-  // static const String baseUrl = 'http://localhost:8000';
-  static const String baseUrl = 'https://apiv2.alostora.org';
+  static const String baseUrl = 'http://localhost:8000';
+  // static const String baseUrl = 'https://apiv2.alostora.org';
 
   // Auth
   static const String loginUrl = '/v1/admin/users/login/';
