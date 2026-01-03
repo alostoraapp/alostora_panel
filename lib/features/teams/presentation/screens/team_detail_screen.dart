@@ -150,6 +150,14 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
     return null;
   }
 
+  // Helper to ensure we compare apples to apples
+  // Filter out empty strings from original maps because our form maps only include non-empty values
+  Map<String, dynamic> _getCleanOriginal(Map<String, String>? original) {
+    if (original == null) return {};
+    return Map.fromEntries(
+        original.entries.where((e) => e.value.trim().isNotEmpty));
+  }
+
   void _saveTeam() {
     final team = _currentTeam;
     if (team == null) return;
@@ -194,27 +202,32 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
 
     final body = <String, dynamic>{};
 
-    if (nameMap.isNotEmpty && !mapEquals(nameMap, team.name)) {
+    if (nameMap.isNotEmpty &&
+        !mapEquals(nameMap, _getCleanOriginal(team.name))) {
       body['name'] = nameMap;
     }
-    if (shortNameMap.isNotEmpty && !mapEquals(shortNameMap, team.shortName)) {
+    if (shortNameMap.isNotEmpty &&
+        !mapEquals(shortNameMap, _getCleanOriginal(team.shortName))) {
       body['short_name'] = shortNameMap;
     }
     if (displayNameMap.isNotEmpty &&
-        !mapEquals(displayNameMap, team.displayName)) {
+        !mapEquals(displayNameMap, _getCleanOriginal(team.displayName))) {
       body['display_name'] = displayNameMap;
     }
 
     // Venue Logic (for combined update)
     final venueBody = <String, dynamic>{};
-    if (venueNameMap.isNotEmpty && !mapEquals(venueNameMap, team.venue?.name)) {
+    if (venueNameMap.isNotEmpty &&
+        !mapEquals(venueNameMap, _getCleanOriginal(team.venue?.name))) {
       venueBody['name'] = venueNameMap;
     }
     if (venueShortNameMap.isNotEmpty &&
-        !mapEquals(venueShortNameMap, team.venue?.shortName)) {
+        !mapEquals(
+            venueShortNameMap, _getCleanOriginal(team.venue?.shortName))) {
       venueBody['short_name'] = venueShortNameMap;
     }
-    if (venueCityMap.isNotEmpty && !mapEquals(venueCityMap, team.venue?.city)) {
+    if (venueCityMap.isNotEmpty &&
+        !mapEquals(venueCityMap, _getCleanOriginal(team.venue?.city))) {
       venueBody['city'] = venueCityMap;
     }
     if (capacity != null && capacity != team.venue?.capacity) {
@@ -226,11 +239,13 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
 
     // Coach Logic (for combined update)
     final coachBody = <String, dynamic>{};
-    if (coachNameMap.isNotEmpty && !mapEquals(coachNameMap, team.coach?.name)) {
+    if (coachNameMap.isNotEmpty &&
+        !mapEquals(coachNameMap, _getCleanOriginal(team.coach?.name))) {
       coachBody['name'] = coachNameMap;
     }
     if (coachShortNameMap.isNotEmpty &&
-        !mapEquals(coachShortNameMap, team.coach?.shortName)) {
+        !mapEquals(
+            coachShortNameMap, _getCleanOriginal(team.coach?.shortName))) {
       coachBody['short_name'] = coachShortNameMap;
     }
     if (coachBody.isNotEmpty) {
@@ -259,11 +274,13 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
     }
 
     final body = <String, dynamic>{};
-    if (coachNameMap.isNotEmpty && !mapEquals(coachNameMap, team.coach?.name)) {
+    if (coachNameMap.isNotEmpty &&
+        !mapEquals(coachNameMap, _getCleanOriginal(team.coach?.name))) {
       body['name'] = coachNameMap;
     }
     if (coachShortNameMap.isNotEmpty &&
-        !mapEquals(coachShortNameMap, team.coach?.shortName)) {
+        !mapEquals(
+            coachShortNameMap, _getCleanOriginal(team.coach?.shortName))) {
       body['short_name'] = coachShortNameMap;
     }
 
@@ -301,14 +318,17 @@ class _TeamDetailScreenState extends State<TeamDetailScreen>
     final int? capacity = int.tryParse(_venueCapacityController.text);
 
     final body = <String, dynamic>{};
-    if (venueNameMap.isNotEmpty && !mapEquals(venueNameMap, team.venue?.name)) {
+    if (venueNameMap.isNotEmpty &&
+        !mapEquals(venueNameMap, _getCleanOriginal(team.venue?.name))) {
       body['name'] = venueNameMap;
     }
     if (venueShortNameMap.isNotEmpty &&
-        !mapEquals(venueShortNameMap, team.venue?.shortName)) {
+        !mapEquals(
+            venueShortNameMap, _getCleanOriginal(team.venue?.shortName))) {
       body['short_name'] = venueShortNameMap;
     }
-    if (venueCityMap.isNotEmpty && !mapEquals(venueCityMap, team.venue?.city)) {
+    if (venueCityMap.isNotEmpty &&
+        !mapEquals(venueCityMap, _getCleanOriginal(team.venue?.city))) {
       body['city'] = venueCityMap;
     }
     if (capacity != null && capacity != team.venue?.capacity) {
