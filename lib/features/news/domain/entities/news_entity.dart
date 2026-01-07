@@ -1,17 +1,18 @@
 import 'package:equatable/equatable.dart';
 
+import 'news_category.dart';
+
 class NewsEntity extends Equatable {
   final String id;
-  final String title;
-  final String content;
+  final Map<String, String> title;
+  final Map<String, String> content;
   final String sourceUrl;
   final String status;
   final String priority;
   final bool isPinned;
   final List<dynamic>? relatedTeamsDetails;
   final List<NewsImageEntity> images;
-  final List<NewsTranslationEntity> titleTranslations;
-  final List<NewsTranslationEntity> contentTranslations;
+  final NewsCategory? categoryDetails;
   final String createdAt;
   final String updatedAt;
 
@@ -25,8 +26,7 @@ class NewsEntity extends Equatable {
     required this.isPinned,
     this.relatedTeamsDetails,
     required this.images,
-    required this.titleTranslations,
-    required this.contentTranslations,
+    this.categoryDetails,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -42,8 +42,7 @@ class NewsEntity extends Equatable {
         isPinned,
         relatedTeamsDetails,
         images,
-        titleTranslations,
-        contentTranslations,
+        categoryDetails,
         createdAt,
         updatedAt,
       ];
@@ -66,17 +65,4 @@ class NewsImageEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, image, order, sourceUrl, createdAt];
-}
-
-class NewsTranslationEntity extends Equatable {
-  final String languageCode;
-  final String text;
-
-  const NewsTranslationEntity({
-    required this.languageCode,
-    required this.text,
-  });
-
-  @override
-  List<Object?> get props => [languageCode, text];
 }

@@ -11,6 +11,7 @@ import 'package:alostora/core/presentation/widgets/error_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:alostora/core/presentation/cubit/language_cubit.dart';
 import '../../../../app_router.dart';
 
 class NewsScreen extends StatelessWidget {
@@ -194,7 +195,12 @@ class NewsScreen extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            newsItem.title,
+                                            newsItem.title[context
+                                                    .read<LanguageCubit>()
+                                                    .state
+                                                    .languageCode] ??
+                                                newsItem.title['en'] ??
+                                                '',
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
@@ -202,19 +208,6 @@ class NewsScreen extends StatelessWidget {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           const SizedBox(height: 4),
-                                          if (newsItem
-                                              .titleTranslations.isNotEmpty)
-                                            Text(
-                                              newsItem
-                                                  .titleTranslations.first.text,
-                                              style: TextStyle(
-                                                  color: theme.textTheme
-                                                      .bodyMedium?.color
-                                                      ?.withOpacity(0.7),
-                                                  fontSize: 14),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
                                           const SizedBox(height: 8),
                                           Row(
                                             children: [

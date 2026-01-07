@@ -1,4 +1,5 @@
 import 'package:alostora/features/news/domain/entities/news_entity.dart';
+import 'news_category_model.dart';
 
 class NewsModel extends NewsEntity {
   const NewsModel({
@@ -11,8 +12,7 @@ class NewsModel extends NewsEntity {
     required super.isPinned,
     super.relatedTeamsDetails,
     required super.images,
-    required super.titleTranslations,
-    required super.contentTranslations,
+    super.categoryDetails,
     required super.createdAt,
     required super.updatedAt,
   });
@@ -20,8 +20,12 @@ class NewsModel extends NewsEntity {
   factory NewsModel.fromJson(Map<String, dynamic> json) {
     return NewsModel(
       id: json['id'],
-      title: json['title'] ?? '',
-      content: json['content'] ?? '',
+      title: json['title'] is Map
+          ? Map<String, String>.from(json['title'])
+          : {'en': json['title']?.toString() ?? ''},
+      content: json['content'] is Map
+          ? Map<String, String>.from(json['content'])
+          : {'en': json['content']?.toString() ?? ''},
       sourceUrl: json['source_url'] ?? '',
       status: json['status'] ?? 'draft',
       priority: json['priority'] ?? 'normal',
@@ -32,16 +36,10 @@ class NewsModel extends NewsEntity {
                   (e) => NewsImageModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <NewsImageEntity>[],
-      titleTranslations: (json['title_translations'] as List<dynamic>?)
-              ?.map((e) =>
-                  NewsTranslationModel.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      contentTranslations: (json['content_translations'] as List<dynamic>?)
-              ?.map((e) =>
-                  NewsTranslationModel.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      categoryDetails: json['category_details'] != null
+          ? NewsCategoryModel.fromJson(
+              json['category_details'] as Map<String, dynamic>)
+          : null,
       createdAt: json['created_at'] ?? '',
       updatedAt: json['updated_at'] ?? '',
     );
@@ -69,24 +67,8 @@ class NewsModel extends NewsEntity {
           createdAt: e.createdAt,
         ).toJson();
       }).toList(),
-      'title_translations': titleTranslations.map((e) {
-        if (e is NewsTranslationModel) {
-          return e.toJson();
-        }
-        return NewsTranslationModel(
-          languageCode: e.languageCode,
-          text: e.text,
-        ).toJson();
-      }).toList(),
-      'content_translations': contentTranslations.map((e) {
-        if (e is NewsTranslationModel) {
-          return e.toJson();
-        }
-        return NewsTranslationModel(
-          languageCode: e.languageCode,
-          text: e.text,
-        ).toJson();
-      }).toList(),
+      if (categoryDetails != null)
+        'category_details': (categoryDetails as NewsCategoryModel).toJson(),
       'created_at': createdAt,
       'updated_at': updatedAt,
     };
@@ -119,27 +101,6 @@ class NewsImageModel extends NewsImageEntity {
       'order': order,
       'source_url': sourceUrl,
       'created_at': createdAt,
-    };
-  }
-}
-
-class NewsTranslationModel extends NewsTranslationEntity {
-  const NewsTranslationModel({
-    required super.languageCode,
-    required super.text,
-  });
-
-  factory NewsTranslationModel.fromJson(Map<String, dynamic> json) {
-    return NewsTranslationModel(
-      languageCode: json['language_code'],
-      text: json['text'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'language_code': languageCode,
-      'text': text,
     };
   }
 }

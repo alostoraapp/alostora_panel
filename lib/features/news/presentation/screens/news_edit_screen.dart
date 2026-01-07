@@ -13,6 +13,7 @@ import 'package:alostora/features/news/presentation/bloc/news_event.dart';
 import 'package:alostora/features/news/presentation/bloc/news_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:alostora/core/presentation/cubit/language_cubit.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_delta_from_html/flutter_quill_delta_from_html.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,6 +22,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../app_router.dart';
 import '../../../../core/constants/app_icons.dart';
+import '../../domain/entities/news_category.dart';
+import '../bloc/news_category/news_category_bloc.dart';
+import '../bloc/news_category/news_category_event.dart';
+import '../bloc/news_category/news_category_state.dart';
 
 class NewsEditScreen extends StatefulWidget {
   final NewsEntity? news;
@@ -61,6 +66,9 @@ class _NewsEditScreenState extends State<NewsEditScreen>
   final Map<String, TextEditingController> _titleControllers = {};
   final Map<String, QuillController> _contentControllers = {};
 
+  final NewsCategoryBloc _newsCategoryBloc = sl<NewsCategoryBloc>();
+  String? _selectedCategoryId;
+
   @override
   void initState() {
     super.initState();
@@ -74,6 +82,9 @@ class _NewsEditScreenState extends State<NewsEditScreen>
     _isPinned = widget.news?.isPinned ?? false;
     _selectedPriority = widget.news?.priority ?? 'normal';
     _status = widget.news?.status ?? 'draft';
+    _selectedCategoryId = widget.news?.categoryDetails?.id;
+
+    _newsCategoryBloc.add(const GetNewsCategoriesEvent());
 
     // Initialize images
     if (widget.news != null) {
@@ -89,26 +100,30 @@ class _NewsEditScreenState extends State<NewsEditScreen>
     }
 
     // Initialize languages and controllers
+    // Initialize languages and controllers
     if (widget.news != null) {
-      _titleControllers['en'] = TextEditingController(text: widget.news!.title);
-      _contentControllers['en'] = _createQuillController(widget.news!.content);
-
-      // Process title translations
-      for (var translation in widget.news!.titleTranslations) {
-        if (!_languages.contains(translation.languageCode)) {
-          _languages.add(translation.languageCode);
+      // Process title Map
+      widget.news!.title.forEach((lang, text) {
+        if (!_languages.contains(lang)) {
+          _languages.add(lang);
         }
-        _titleControllers[translation.languageCode] =
-            TextEditingController(text: translation.text);
+        _titleControllers[lang] = TextEditingController(text: text);
+      });
+
+      // Process content Map
+      widget.news!.content.forEach((lang, text) {
+        if (!_languages.contains(lang)) {
+          _languages.add(lang);
+        }
+        _contentControllers[lang] = _createQuillController(text);
+      });
+
+      // Ensure 'en' exists if not present (fallback)
+      if (!_titleControllers.containsKey('en')) {
+        _titleControllers['en'] = TextEditingController();
       }
-
-      // Process content translations
-      for (var translation in widget.news!.contentTranslations) {
-        if (!_languages.contains(translation.languageCode)) {
-          _languages.add(translation.languageCode);
-        }
-        _contentControllers[translation.languageCode] =
-            _createQuillController(translation.text);
+      if (!_contentControllers.containsKey('en')) {
+        _contentControllers['en'] = QuillController.basic();
       }
     } else {
       _titleControllers['en'] = TextEditingController();
@@ -156,6 +171,7 @@ class _NewsEditScreenState extends State<NewsEditScreen>
     for (var controller in _contentControllers.values) {
       controller.dispose();
     }
+    _newsCategoryBloc.close();
     super.dispose();
   }
 
@@ -579,52 +595,39 @@ class _NewsEditScreenState extends State<NewsEditScreen>
   void _saveNews() {
     final s = S.of(context);
 
-    // Collect translations
-    List<Map<String, String>> titleTranslations = [];
-    List<Map<String, String>> contentTranslations = [];
+    // Collect Data as Maps
+    Map<String, String> titleMap = {};
+    Map<String, String> contentMap = {};
 
     _titleControllers.forEach((code, controller) {
-      if (code != 'en' && controller.text.isNotEmpty) {
-        titleTranslations.add({
-          'language_code': code,
-          'text': controller.text,
-        });
+      if (controller.text.isNotEmpty) {
+        titleMap[code] = controller.text;
       }
     });
 
     _contentControllers.forEach((code, controller) {
-      if (code != 'en') {
-        final html = _convertDeltaToHtml(controller.document.toDelta());
-        if (html.isNotEmpty && html != '<p><br/></p>') {
-          contentTranslations.add({
-            'language_code': code,
-            'text': html,
-          });
-        }
+      final html = _convertDeltaToHtml(controller.document.toDelta());
+      // Check if html is empty or just generic empty paragraph
+      if (html.isNotEmpty && html != '<p><br/></p>') {
+        contentMap[code] = html;
       }
     });
 
-    final enContent = _contentControllers['en'] != null
-        ? _convertDeltaToHtml(_contentControllers['en']!.document.toDelta())
-        : '';
+    // Fallback/Validation
+    if (titleMap.isEmpty || !titleMap.containsKey('en')) {
+      // Should we enforce EN? Let's generic validation.
+      if (_titleControllers['en']?.text.isNotEmpty == true) {
+        titleMap['en'] = _titleControllers['en']!.text;
+      }
+    }
 
-    // Collect Images
+    // Collect Images (Same as before)
     List<XFile> newImages = [];
     for (var item in _newsImages) {
       if (item is XFile) {
         newImages.add(item);
       }
     }
-
-    // Determine Cover
-    // If cover is an existing image, we might need to send its ID.
-    // If cover is a new image, we might need to send its index in the newImages list?
-    // Or maybe we send 'cover_image_index' relative to the full list?
-    // Since I don't know the backend API perfectly, I'll try to send:
-    // - images: new files
-    // - deleted_images: ids
-    // - cover_image_id: id (if existing)
-    // - cover_image_index: index in newImages (if new)
 
     String? coverImageId;
     int? coverImageIndexInNew;
@@ -639,14 +642,13 @@ class _NewsEditScreenState extends State<NewsEditScreen>
     }
 
     final newsData = {
-      'title': _titleControllers['en']?.text ?? '',
-      'content': enContent,
+      'title': titleMap,
+      'content': contentMap,
+      'category': _selectedCategoryId,
       'source_url': _sourceUrlController.text,
       'status': _status,
       'priority': _selectedPriority,
       'is_pinned': _isPinned,
-      'title_translations': titleTranslations,
-      'content_translations': contentTranslations,
       'images': newImages,
       'deleted_image_ids': _deletedImageIds,
       'related_teams': _selectedRelatedTeams.map((t) => t['id']).toList(),
@@ -954,6 +956,57 @@ class _NewsEditScreenState extends State<NewsEditScreen>
                 },
               ),
               const SizedBox(height: 24),
+
+              // Category Selector
+              BlocBuilder<NewsCategoryBloc, NewsCategoryState>(
+                bloc: _newsCategoryBloc,
+                builder: (context, state) {
+                  if (state is NewsCategoryLoading) {
+                    return const LinearProgressIndicator();
+                  } else if (state is NewsCategoryLoaded) {
+                    return DropdownButtonFormField<String?>(
+                      value: _selectedCategoryId,
+                      decoration: InputDecoration(
+                        labelText: 'Category',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                      ),
+                      items: [
+                        const DropdownMenuItem<String?>(
+                          value: null,
+                          child: Text('None'),
+                        ),
+                        ...state.categories.map((category) {
+                          final title = category.title[context
+                                  .read<LanguageCubit>()
+                                  .state
+                                  .languageCode] ??
+                              category.title['en'] ??
+                              'Unknown';
+                          return DropdownMenuItem<String?>(
+                            value: category.id,
+                            child: Text(title),
+                          );
+                        }),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCategoryId = value;
+                        });
+                      },
+                      validator: (value) => null,
+                    );
+                  } else if (state is NewsCategoryError) {
+                    return Text('Error loading categories: ${state.message}',
+                        style: TextStyle(color: theme.colorScheme.error));
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+              const SizedBox(height: 16),
 
               // Priority Dropdown
               DropdownButtonFormField<String>(
