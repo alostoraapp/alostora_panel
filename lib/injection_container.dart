@@ -73,6 +73,16 @@ import 'features/news/domain/usecases/create_news_usecase.dart';
 import 'features/news/domain/usecases/delete_news_usecase.dart';
 import 'features/news/domain/usecases/get_news_usecase.dart';
 import 'features/news/domain/usecases/update_news_usecase.dart';
+import 'features/news/presentation/bloc/news_category/news_category_bloc.dart';
+import 'features/news/domain/usecases/news_categories/get_news_categories_usecase.dart';
+import 'features/news/domain/usecases/news_categories/add_news_category_usecase.dart';
+import 'features/news/domain/usecases/news_categories/update_news_category_usecase.dart';
+import 'features/news/domain/usecases/news_categories/toggle_news_category_status_usecase.dart';
+import 'features/news/domain/usecases/news_categories/delete_news_category_usecase.dart';
+import 'features/news/domain/usecases/news_categories/reorder_news_categories_usecase.dart';
+import 'features/news/domain/repositories/news_category_repository.dart';
+import 'features/news/data/repositories/news_category_repository_impl.dart';
+import 'features/news/data/datasources/news_category_remote_data_source.dart';
 
 import 'features/news/domain/usecases/upload_news_image_usecase.dart';
 import 'features/news/domain/usecases/search_teams_usecase.dart';
@@ -236,6 +246,27 @@ Future<void> init() async {
       () => NewsRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<NewsRemoteDataSource>(
       () => NewsRemoteDataSourceImpl(sl()));
+
+  // News Categories
+  sl.registerFactory(() => NewsCategoryBloc(
+        getNewsCategories: sl(),
+        addNewsCategory: sl(),
+        updateNewsCategory: sl(),
+        toggleNewsCategoryStatus: sl(),
+        deleteNewsCategory: sl(),
+        reorderNewsCategories: sl(),
+      ));
+  sl.registerLazySingleton(() => GetNewsCategoriesUseCase(sl()));
+  sl.registerLazySingleton(() => AddNewsCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateNewsCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => ToggleNewsCategoryStatusUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteNewsCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => ReorderNewsCategoriesUseCase(sl()));
+
+  sl.registerLazySingleton<NewsCategoryRepository>(
+      () => NewsCategoryRepositoryImpl(sl()));
+  sl.registerLazySingleton<NewsCategoryRemoteDataSource>(
+      () => NewsCategoryRemoteDataSourceImpl(sl()));
 
   // Teams
   sl.registerFactory(() => TeamDetailBloc(

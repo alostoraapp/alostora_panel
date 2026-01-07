@@ -24,6 +24,11 @@ List<SidebarMenuModel> getSidebarMenus(BuildContext context) {
           route: '/matches/tiles',
         ),
         SidebarMenuModel(
+          title: 'News Categories',
+          icon: AppIcons.list,
+          route: '/news/categories',
+        ),
+        SidebarMenuModel(
           title: s.news,
           icon: AppIcons.circle,
           route: '/news',

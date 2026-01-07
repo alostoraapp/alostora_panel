@@ -65,6 +65,14 @@ class AppConstants {
   static String getUploadNewsImageUrl(String id) =>
       '/v1/admin/media/news/$id/images/';
 
+  // News Categories
+  static const String newsCategoriesListUrl =
+      '/v1/admin/media/news/categories/';
+  static const String newsCategoriesReorderUrl =
+      '/v1/admin/media/news/categories/reorder/';
+  static String getNewsCategoryUrl(String id) =>
+      '/v1/admin/media/news/categories/$id/';
+
   // Teams
   static String getTeamDetailUrl(String teamId) =>
       '/v1/admin/entities/teams/$teamId/';

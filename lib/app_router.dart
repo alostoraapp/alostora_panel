@@ -13,6 +13,7 @@ import 'features/shell/presentation/screens/app_shell.dart';
 import 'features/shell/presentation/screens/placeholder_screen.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
 import 'features/news/presentation/screens/news_screen.dart';
+import 'features/news/presentation/screens/news_category_screen.dart';
 import 'injection_container.dart';
 import 'features/matches/domain/entities/match_entity.dart'; // Import MatchEntity
 import 'features/teams/presentation/screens/team_detail_screen.dart';
@@ -90,6 +91,11 @@ class AppRouter {
             path: AppRoutes.news,
             name: AppRoutes.news,
             builder: (context, state) => const NewsScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.newsCategories,
+            name: AppRoutes.newsCategories,
+            builder: (context, state) => const NewsCategoryScreen(),
           ),
           GoRoute(
             path: AppRoutes.teamDetail,
@@ -183,6 +189,7 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String competitionSelect = '/settings/competition-select';
   static const String news = '/news';
+  static const String newsCategories = '/news/categories';
   static const String newsEdit = '/news/edit';
 
   // Teams
