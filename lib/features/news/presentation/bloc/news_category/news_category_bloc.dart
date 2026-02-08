@@ -127,15 +127,7 @@ class NewsCategoryBloc extends Bloc<NewsCategoryEvent, NewsCategoryState> {
   ) async {
     final currentState = state;
     if (currentState is NewsCategoryLoaded) {
-      final List<String> ids = List.from(event.orderedIds);
-      final item = ids.removeAt(event.oldIndex);
-      ids.insert(event.newIndex, item);
-
-      // We should probably update UI immediately (optimistic)
-      // But we need the full objects.
-      // The event passed orderedIds which are Strings.
-      // Wait, ReorderableListView in screen gives oldIndex/newIndex.
-      // We need to reorder the actual objects in the state to update UI immediately.
+      final List<String> ids = event.orderedIds;
 
       final currentList = List.of(currentState.categories);
       final movedItem = currentList.removeAt(event.oldIndex);

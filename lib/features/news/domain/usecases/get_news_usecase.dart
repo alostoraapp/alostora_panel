@@ -9,7 +9,8 @@ class GetNewsUseCase {
   GetNewsUseCase(this.repository);
 
   Future<Either<Failure, List<NewsEntity>>> call(
-      {int limit = 10, int offset = 0}) {
-    return repository.getNews(limit: limit, offset: offset);
+      {int limit = 10, int offset = 0, String? categoryId}) {
+    return repository.getNews(
+        limit: limit, offset: offset, categoryId: categoryId);
   }
 }

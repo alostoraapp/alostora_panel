@@ -13,9 +13,10 @@ class NewsRepositoryImpl implements NewsRepository {
 
   @override
   Future<Either<Failure, List<NewsEntity>>> getNews(
-      {int limit = 10, int offset = 0}) async {
+      {int limit = 10, int offset = 0, String? categoryId}) async {
     try {
-      final news = await remoteDataSource.getNews(limit: limit, offset: offset);
+      final news = await remoteDataSource.getNews(
+          limit: limit, offset: offset, categoryId: categoryId);
       return Right(news);
     } on AppException catch (e) {
       return Left(ServerFailure(message: e.errorResponse.firstError));

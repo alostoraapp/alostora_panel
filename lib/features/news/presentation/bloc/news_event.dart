@@ -4,17 +4,22 @@ abstract class NewsEvent extends Equatable {
   const NewsEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class GetNewsEvent extends NewsEvent {
   final int limit;
   final int offset;
+  final String? categoryId;
 
-  const GetNewsEvent({this.limit = 10, this.offset = 0});
+  const GetNewsEvent({
+    this.limit = 10,
+    this.offset = 0,
+    this.categoryId,
+  });
 
   @override
-  List<Object> get props => [limit, offset];
+  List<Object?> get props => [limit, offset, categoryId];
 }
 
 class CreateNewsEvent extends NewsEvent {

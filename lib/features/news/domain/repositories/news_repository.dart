@@ -5,7 +5,7 @@ import 'package:alostora/features/news/domain/entities/team_entity.dart';
 
 abstract class NewsRepository {
   Future<Either<Failure, List<NewsEntity>>> getNews(
-      {int limit = 10, int offset = 0});
+      {int limit = 10, int offset = 0, String? categoryId});
   Future<Either<Failure, NewsEntity>> createNews(Map<String, dynamic> newsData);
   Future<Either<Failure, NewsEntity>> updateNews(
       String id, Map<String, dynamic> newsData);

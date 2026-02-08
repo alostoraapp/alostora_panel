@@ -6,7 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class NewsRemoteDataSource {
-  Future<List<NewsModel>> getNews({int limit = 10, int offset = 0});
+  Future<List<NewsModel>> getNews(
+      {int limit = 10, int offset = 0, String? categoryId});
   Future<NewsModel> createNews(Map<String, dynamic> newsData);
   Future<NewsModel> updateNews(String id, Map<String, dynamic> newsData);
   Future<void> deleteNews(String id);
@@ -22,11 +23,19 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
   NewsRemoteDataSourceImpl(this._apiClient);
 
   @override
-  Future<List<NewsModel>> getNews({int limit = 10, int offset = 0}) async {
+  Future<List<NewsModel>> getNews(
+      {int limit = 10, int offset = 0, String? categoryId}) async {
     final int page = (offset ~/ limit) + 1;
+    final Map<String, dynamic> queryParams = {
+      'page': page,
+      'page_size': limit,
+    };
+    if (categoryId != null) {
+      queryParams['category_id'] = categoryId;
+    }
     final response = await _apiClient.get(
       '${AppConstants.baseUrl}${AppConstants.newsListUrl}',
-      queryParameters: {'page': page, 'page_size': limit},
+      queryParameters: queryParams,
     );
     final List<dynamic> results = response['results'];
     return results

@@ -232,6 +232,7 @@ Future<void> init() async {
         deleteNews: sl(),
         approveNews: sl(),
         uploadNewsImage: sl(),
+        getNewsCategories: sl(),
       ));
   sl.registerLazySingleton(() => GetNewsUseCase(sl()));
   sl.registerLazySingleton(() => CreateNewsUseCase(sl()));

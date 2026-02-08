@@ -1,9 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:alostora/core/usecase/usecase.dart';
+import 'package:alostora/features/news/domain/entities/news_category.dart';
 import 'package:alostora/features/news/domain/usecases/get_news_usecase.dart';
 import 'package:alostora/features/news/domain/usecases/create_news_usecase.dart';
 import 'package:alostora/features/news/domain/usecases/update_news_usecase.dart';
 import 'package:alostora/features/news/domain/usecases/delete_news_usecase.dart';
 import 'package:alostora/features/news/domain/usecases/approve_news_usecase.dart';
+import 'package:alostora/features/news/domain/usecases/news_categories/get_news_categories_usecase.dart';
 import 'news_event.dart';
 import 'news_state.dart';
 
@@ -17,6 +20,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   final DeleteNewsUseCase deleteNews;
   final ApproveNewsUseCase approveNews;
   final UploadNewsImageUseCase uploadNewsImage;
+  final GetNewsCategoriesUseCase getNewsCategories;
 
   NewsBloc({
     required this.getNews,
@@ -25,6 +29,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
     required this.deleteNews,
     required this.approveNews,
     required this.uploadNewsImage,
+    required this.getNewsCategories,
   }) : super(NewsInitial()) {
     on<GetNewsEvent>(_onGetNews);
     on<CreateNewsEvent>(_onCreateNews);
@@ -35,6 +40,16 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
 
   Future<void> _onGetNews(GetNewsEvent event, Emitter<NewsState> emit) async {
     final isRefresh = event.offset == 0;
+    List<NewsCategory> categories = [];
+    String? currentCategoryId = event.categoryId;
+
+    if (state is NewsLoaded) {
+      categories = (state as NewsLoaded).categories;
+      // If categoryId is not passed (e.g. load more), use the one from state
+      if (currentCategoryId == null && !isRefresh) {
+        currentCategoryId = (state as NewsLoaded).selectedCategoryId;
+      }
+    }
 
     if (!isRefresh && state is NewsLoaded) {
       final currentState = state as NewsLoaded;
@@ -44,7 +59,20 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
       emit(NewsLoading());
     }
 
-    final result = await getNews(limit: event.limit, offset: event.offset);
+    // Fetch categories if empty
+    if (categories.isEmpty) {
+      final catResult = await getNewsCategories(NoParams());
+      catResult.fold(
+        (l) => null,
+        (r) => categories = r,
+      );
+    }
+
+    final result = await getNews(
+        limit: event.limit,
+        offset: event.offset,
+        categoryId: currentCategoryId);
+
     result.fold(
       (failure) {
         if (!isRefresh && state is NewsLoaded) {
@@ -58,11 +86,16 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
         if (!isRefresh && state is NewsLoaded) {
           emit(NewsLoaded(
             (state as NewsLoaded).news + news,
+            categories: categories,
+            selectedCategoryId: currentCategoryId,
             hasReachedMax: hasReachedMax,
             isLoadingMore: false,
           ));
         } else {
-          emit(NewsLoaded(news, hasReachedMax: hasReachedMax));
+          emit(NewsLoaded(news,
+              categories: categories,
+              selectedCategoryId: currentCategoryId,
+              hasReachedMax: hasReachedMax));
         }
       },
     );
