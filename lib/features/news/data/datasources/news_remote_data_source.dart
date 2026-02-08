@@ -23,9 +23,10 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
 
   @override
   Future<List<NewsModel>> getNews({int limit = 10, int offset = 0}) async {
+    final int page = (offset ~/ limit) + 1;
     final response = await _apiClient.get(
       '${AppConstants.baseUrl}${AppConstants.newsListUrl}',
-      queryParameters: {'limit': limit, 'offset': offset},
+      queryParameters: {'page': page, 'page_size': limit},
     );
     final List<dynamic> results = response['results'];
     return results
