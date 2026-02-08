@@ -14,8 +14,44 @@ import 'package:go_router/go_router.dart';
 import 'package:alostora/core/presentation/cubit/language_cubit.dart';
 import '../../../../app_router.dart';
 
-class NewsScreen extends StatelessWidget {
+class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
+
+  @override
+  State<NewsScreen> createState() => _NewsScreenState();
+}
+
+class _NewsScreenState extends State<NewsScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_isBottom) {
+      final newsBloc = context.read<NewsBloc>();
+      final state = newsBloc.state;
+      if (state is NewsLoaded && !state.hasReachedMax && !state.isLoadingMore) {
+        newsBloc.add(GetNewsEvent(offset: state.news.length));
+      }
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.6);
+  }
 
   void _navigateToEditScreen(BuildContext context, NewsEntity? news) {
     context.pushNamed(
@@ -119,9 +155,18 @@ class NewsScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: ListView.builder(
+                      controller: _scrollController,
                       padding: const EdgeInsets.all(16),
-                      itemCount: state.news.length,
+                      itemCount: state.isLoadingMore
+                          ? state.news.length + 1
+                          : state.news.length,
                       itemBuilder: (context, index) {
+                        if (index >= state.news.length) {
+                          return const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
                         final newsItem = state.news[index];
                         final coverImage = newsItem.images.firstWhere(
                             (img) => img.order == 'cover',

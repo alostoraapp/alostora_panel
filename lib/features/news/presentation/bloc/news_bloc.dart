@@ -34,11 +34,37 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   }
 
   Future<void> _onGetNews(GetNewsEvent event, Emitter<NewsState> emit) async {
-    emit(NewsLoading());
+    final isRefresh = event.offset == 0;
+
+    if (!isRefresh && state is NewsLoaded) {
+      final currentState = state as NewsLoaded;
+      if (currentState.hasReachedMax || currentState.isLoadingMore) return;
+      emit(currentState.copyWith(isLoadingMore: true));
+    } else {
+      emit(NewsLoading());
+    }
+
     final result = await getNews(limit: event.limit, offset: event.offset);
     result.fold(
-      (failure) => emit(const NewsError('Failed to fetch news')),
-      (news) => emit(NewsLoaded(news)),
+      (failure) {
+        if (!isRefresh && state is NewsLoaded) {
+          emit((state as NewsLoaded).copyWith(isLoadingMore: false));
+        } else {
+          emit(const NewsError('Failed to fetch news'));
+        }
+      },
+      (news) {
+        final hasReachedMax = news.length < event.limit;
+        if (!isRefresh && state is NewsLoaded) {
+          emit(NewsLoaded(
+            (state as NewsLoaded).news + news,
+            hasReachedMax: hasReachedMax,
+            isLoadingMore: false,
+          ));
+        } else {
+          emit(NewsLoaded(news, hasReachedMax: hasReachedMax));
+        }
+      },
     );
   }
 
