@@ -5,7 +5,6 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/constants/app_icons.dart';
-import '../../../../core/l10n/s.dart';
 import '../../../../core/presentation/cubit/language_cubit.dart';
 import '../../../../core/presentation/widgets/error_view.dart';
 import '../../../../injection_container.dart';
@@ -49,7 +48,6 @@ class _NewsCategoryViewState extends State<NewsCategoryView> {
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context);
     final theme = Theme.of(context);
     final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
     final currentLocale = context.watch<LanguageCubit>().state.languageCode;

@@ -25,15 +25,14 @@ class CompetitionModel extends Equatable {
   factory CompetitionModel.fromJson(Map<String, dynamic> json) {
     final matchesList = json['matches'] as List?;
     return CompetitionModel(
-      id: json['id'],
-      exId: json['ex_id'],
-      name: json['name'],
-      shortName: json['short_name'],
-      logo: json['logo'],
-      countryName: json['country_name'],
+      id: json['id']?.toString() ?? '',
+      exId: json['ex_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      shortName: json['short_name']?.toString() ?? '',
+      logo: json['logo']?.toString() ?? '',
+      countryName: json['country_name']?.toString(),
       matches: matchesList
-              ?.where((i) =>
-                  i != null && i['home_team'] != null && i['away_team'] != null)
+              ?.where((i) => i != null)
               .map((i) => MatchModel.fromJson(i as Map<String, dynamic>))
               .toList() ??
           [],
@@ -53,5 +52,6 @@ class CompetitionModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, exId, name, shortName, logo, countryName, matches];
+  List<Object?> get props =>
+      [id, exId, name, shortName, logo, countryName, matches];
 }

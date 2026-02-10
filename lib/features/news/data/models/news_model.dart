@@ -1,3 +1,6 @@
+import 'package:alostora/features/matches/data/models/team_model.dart';
+import 'package:alostora/features/matches/domain/entities/match_entity.dart';
+import 'package:alostora/features/matches/domain/entities/match_status_enum.dart';
 import 'package:alostora/features/news/domain/entities/news_entity.dart';
 import 'news_category_model.dart';
 
@@ -13,24 +16,29 @@ class NewsModel extends NewsEntity {
     super.relatedTeamsDetails,
     required super.images,
     super.categoryDetails,
+    super.relatedMatch,
+    super.relatedMatchDetails,
+    super.isLive = false,
     required super.createdAt,
     required super.updatedAt,
   });
 
   factory NewsModel.fromJson(Map<String, dynamic> json) {
     return NewsModel(
-      id: json['id'],
+      id: json['id']?.toString() ?? '',
       title: json['title'] is Map
           ? Map<String, String>.from(json['title'])
           : {'en': json['title']?.toString() ?? ''},
       content: json['content'] is Map
           ? Map<String, String>.from(json['content'])
           : {'en': json['content']?.toString() ?? ''},
-      sourceUrl: json['source_url'] ?? '',
-      status: json['status'] ?? 'draft',
-      priority: json['priority'] ?? 'normal',
+      sourceUrl: json['source_url']?.toString() ?? '',
+      status: json['status']?.toString() ?? 'draft',
+      priority: json['priority']?.toString() ?? 'normal',
       isPinned: json['is_pinned'] ?? false,
-      relatedTeamsDetails: json['related_teams_details'] as List<dynamic>?,
+      relatedTeamsDetails: (json['related_teams_details'] as List<dynamic>?)
+          ?.map((e) => TeamModel.fromJson(e as Map<String, dynamic>).toEntity())
+          .toList(),
       images: (json['images'] as List<dynamic>?)
               ?.map<NewsImageEntity>(
                   (e) => NewsImageModel.fromJson(e as Map<String, dynamic>))
@@ -40,8 +48,27 @@ class NewsModel extends NewsEntity {
           ? NewsCategoryModel.fromJson(
               json['category_details'] as Map<String, dynamic>)
           : null,
-      createdAt: json['created_at'] ?? '',
-      updatedAt: json['updated_at'] ?? '',
+      relatedMatch: json['related_match']?.toString() ??
+          json['related_match_details']?['id']?.toString(),
+      relatedMatchDetails: json['related_match_details'] != null
+          ? MatchEntity(
+              id: json['related_match_details']['id']?.toString() ?? '',
+              exId: '',
+              matchTime: DateTime.now(),
+              status: MatchStatus.notStarted,
+              homeScoreFinal: 0,
+              awayScoreFinal: 0,
+              homeTeam: TeamModel.fromJson(
+                      json['related_match_details']['home_team'] ?? {})
+                  .toEntity(),
+              awayTeam: TeamModel.fromJson(
+                      json['related_match_details']['away_team'] ?? {})
+                  .toEntity(),
+            )
+          : null,
+      isLive: json['is_live'] ?? false,
+      createdAt: json['created_at']?.toString() ?? '',
+      updatedAt: json['updated_at']?.toString() ?? '',
     );
   }
 
@@ -55,6 +82,8 @@ class NewsModel extends NewsEntity {
       'priority': priority,
       'is_pinned': isPinned,
       'related_teams_details': relatedTeamsDetails,
+      'related_match': relatedMatch,
+      'is_live': isLive,
       'images': images.map((e) {
         if (e is NewsImageModel) {
           return e.toJson();
@@ -86,11 +115,11 @@ class NewsImageModel extends NewsImageEntity {
 
   factory NewsImageModel.fromJson(Map<String, dynamic> json) {
     return NewsImageModel(
-      id: json['id'],
-      image: json['image'] ?? '',
-      order: json['order'] ?? '',
-      sourceUrl: json['source_url'] ?? '',
-      createdAt: json['created_at'] ?? '',
+      id: json['id']?.toString() ?? '',
+      image: json['image']?.toString() ?? '',
+      order: json['order']?.toString() ?? '',
+      sourceUrl: json['source_url']?.toString() ?? '',
+      createdAt: json['created_at']?.toString() ?? '',
     );
   }
 

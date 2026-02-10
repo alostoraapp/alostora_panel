@@ -19,11 +19,11 @@ class TeamModel extends Equatable {
 
   factory TeamModel.fromJson(Map<String, dynamic> json) {
     return TeamModel(
-      id: json['id'],
-      exId: json['ex_id'],
-      name: json['name'],
-      shortName: json['short_name'],
-      logo: json['logo'],
+      id: json['id']?.toString() ?? '',
+      exId: json['ex_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      shortName: json['short_name']?.toString() ?? '',
+      logo: json['logo']?.toString() ?? '',
     );
   }
 

@@ -41,16 +41,22 @@ class MatchModel extends Equatable {
 
   factory MatchModel.fromJson(Map<String, dynamic> json) {
     return MatchModel(
-      id: json['id'],
-      exId: json['ex_id'],
-      matchTime: json['match_time'],
-      statusCode: json['status_code'],
-      firstHalfStartTime: json['first_half_start_time'],
-      secondHalfStartTime: json['second_half_start_time'],
-      homeScoreFinal: json['home_score_final'],
-      awayScoreFinal: json['away_score_final'],
-      homeTeam: TeamModel.fromJson(json['home_team']),
-      awayTeam: TeamModel.fromJson(json['away_team']),
+      id: json['id']?.toString() ?? '',
+      exId: json['ex_id']?.toString() ?? '',
+      matchTime: json['match_time'] is int ? json['match_time'] : 0,
+      statusCode: json['status_code'] is int ? json['status_code'] : 0,
+      firstHalfStartTime: json['first_half_start_time'] is int
+          ? json['first_half_start_time']
+          : null,
+      secondHalfStartTime: json['second_half_start_time'] is int
+          ? json['second_half_start_time']
+          : null,
+      homeScoreFinal:
+          json['home_score_final'] is int ? json['home_score_final'] : 0,
+      awayScoreFinal:
+          json['away_score_final'] is int ? json['away_score_final'] : 0,
+      homeTeam: TeamModel.fromJson(json['home_team'] ?? {}),
+      awayTeam: TeamModel.fromJson(json['away_team'] ?? {}),
       hasManOfTheMatch: json['has_man_of_the_match'] ?? false,
       hasIncidentsMedia: json['has_incidents_media'] ?? false,
       hasHighlights: json['has_highlights'] ?? false,

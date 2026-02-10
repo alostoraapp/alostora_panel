@@ -5,6 +5,9 @@ import 'dart:typed_data';
 
 import 'package:alostora/core/config/constants.dart';
 import 'package:alostora/core/l10n/s.dart';
+import '../../../matches/domain/entities/match_entity.dart';
+import '../../../matches/presentation/bloc/matches_bloc.dart';
+import '../../../matches/presentation/widgets/match_tile.dart';
 import 'package:alostora/features/news/domain/entities/news_entity.dart';
 import 'package:alostora/features/news/domain/usecases/create_news_usecase.dart';
 import 'package:alostora/features/news/domain/usecases/upload_news_image_usecase.dart';
@@ -22,7 +25,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../app_router.dart';
 import '../../../../core/constants/app_icons.dart';
-import '../../domain/entities/news_category.dart';
+import 'match_selection_screen.dart';
 import '../bloc/news_category/news_category_bloc.dart';
 import '../bloc/news_category/news_category_event.dart';
 import '../bloc/news_category/news_category_state.dart';
@@ -57,6 +60,9 @@ class _NewsEditScreenState extends State<NewsEditScreen>
   NewsEntity? _currentNews;
 
   bool _isPinned = false;
+  String? _relatedMatchId;
+  MatchEntity? _selectedMatch;
+  bool _isLive = false;
   String _selectedPriority = 'normal';
   String _status = 'draft';
 
@@ -80,9 +86,23 @@ class _NewsEditScreenState extends State<NewsEditScreen>
             ? widget.news!.relatedTeamsDetails.toString()
             : '');
     _isPinned = widget.news?.isPinned ?? false;
+    _relatedMatchId = widget.news?.relatedMatch;
+    _isLive = widget.news?.isLive ?? false;
     _selectedPriority = widget.news?.priority ?? 'normal';
     _status = widget.news?.status ?? 'draft';
     _selectedCategoryId = widget.news?.categoryDetails?.id;
+    _selectedMatch = widget.news?.relatedMatchDetails;
+
+    if (widget.news?.relatedTeamsDetails != null) {
+      _selectedRelatedTeams = widget.news!.relatedTeamsDetails!
+          .map((team) => {
+                'id': team.id,
+                'name': team.name,
+                'short_name': team.shortName,
+                'logo': team.logo,
+              })
+          .toList();
+    }
 
     _newsCategoryBloc.add(const GetNewsCategoriesEvent());
 
@@ -649,6 +669,8 @@ class _NewsEditScreenState extends State<NewsEditScreen>
       'status': _status,
       'priority': _selectedPriority,
       'is_pinned': _isPinned,
+      'is_live': _isLive,
+      'related_match': _relatedMatchId,
       'images': newImages,
       'deleted_image_ids': _deletedImageIds,
       'related_teams': _selectedRelatedTeams.map((t) => t['id']).toList(),
@@ -946,7 +968,12 @@ class _NewsEditScreenState extends State<NewsEditScreen>
               // Related Teams
               _RelatedTeamsSelector(
                 initialTeams: widget.news?.relatedTeamsDetails
-                        ?.map((e) => Map<String, dynamic>.from(e))
+                        ?.map((e) => {
+                              'id': e.id,
+                              'name': e.name,
+                              'short_name': e.shortName,
+                              'logo': e.logo,
+                            })
                         .toList() ??
                     [],
                 onTeamsChanged: (teams) {
@@ -1069,6 +1096,110 @@ class _NewsEditScreenState extends State<NewsEditScreen>
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                   dense: true,
                 ),
+              ),
+              const SizedBox(height: 16),
+
+              // Is Live Switch
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: theme.colorScheme.outline.withOpacity(0.5)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: SwitchListTile(
+                  title: const Text('Is Live',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  value: _isLive,
+                  onChanged: (value) {
+                    setState(() {
+                      _isLive = value;
+                    });
+                  },
+                  secondary: Icon(
+                    _isLive ? Icons.live_tv : Icons.live_tv_outlined,
+                    color: _isLive ? Colors.red : Colors.grey,
+                    size: 20,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                  dense: true,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Related Match Selector
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Related Match', style: theme.textTheme.titleMedium),
+                  if (_selectedMatch != null)
+                    IconButton(
+                      icon: Icon(Icons.delete_outline,
+                          color: theme.colorScheme.error),
+                      onPressed: () {
+                        setState(() {
+                          _selectedMatch = null;
+                          _relatedMatchId = null;
+                        });
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: () async {
+                  final MatchEntity? match = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => sl<MatchesBloc>(),
+                        child: const MatchSelectionScreen(),
+                      ),
+                    ),
+                  );
+                  if (match != null) {
+                    setState(() {
+                      _selectedMatch = match;
+                      _relatedMatchId = match.id;
+                    });
+                  }
+                },
+                child: _selectedMatch != null
+                    ? MatchTile(
+                        match: _selectedMatch!,
+                        isInteractive: false,
+                      )
+                    : Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color:
+                                  theme.colorScheme.outline.withOpacity(0.5)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.sports_soccer,
+                                color: theme.colorScheme.primary),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                _relatedMatchId ?? 'Select a match',
+                                style: TextStyle(
+                                  color: _relatedMatchId == null
+                                      ? theme.colorScheme.onSurfaceVariant
+                                      : theme.colorScheme.onSurface,
+                                ),
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward_ios, size: 16),
+                          ],
+                        ),
+                      ),
               ),
 
               const SizedBox(height: 40),

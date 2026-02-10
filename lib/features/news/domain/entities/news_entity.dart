@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../matches/domain/entities/match_entity.dart';
+import '../../../matches/domain/entities/team_entity.dart';
 import 'news_category.dart';
 
 class NewsEntity extends Equatable {
@@ -10,9 +12,12 @@ class NewsEntity extends Equatable {
   final String status;
   final String priority;
   final bool isPinned;
-  final List<dynamic>? relatedTeamsDetails;
+  final List<TeamEntity>? relatedTeamsDetails;
   final List<NewsImageEntity> images;
   final NewsCategory? categoryDetails;
+  final String? relatedMatch;
+  final MatchEntity? relatedMatchDetails;
+  final bool isLive;
   final String createdAt;
   final String updatedAt;
 
@@ -27,6 +32,9 @@ class NewsEntity extends Equatable {
     this.relatedTeamsDetails,
     required this.images,
     this.categoryDetails,
+    this.relatedMatch,
+    this.relatedMatchDetails,
+    this.isLive = false,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -43,6 +51,9 @@ class NewsEntity extends Equatable {
         relatedTeamsDetails,
         images,
         categoryDetails,
+        relatedMatch,
+        relatedMatchDetails,
+        isLive,
         createdAt,
         updatedAt,
       ];

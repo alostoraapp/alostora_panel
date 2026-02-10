@@ -11,11 +11,13 @@ class NewsCategoryModel extends NewsCategory {
 
   factory NewsCategoryModel.fromJson(Map<String, dynamic> json) {
     return NewsCategoryModel(
-      id: json['id'] as String,
-      order: json['order'] as int? ?? 0,
-      isActive: json['is_active'] as bool? ?? false,
-      title: Map<String, String>.from(json['title'] as Map),
-      createdAt: json['created_at'] as String,
+      id: json['id']?.toString() ?? '',
+      order: json['order'] is int ? json['order'] : 0,
+      isActive: json['is_active'] ?? false,
+      title: json['title'] is Map
+          ? Map<String, String>.from(json['title'])
+          : {'en': json['title']?.toString() ?? ''},
+      createdAt: json['created_at']?.toString() ?? '',
     );
   }
 
