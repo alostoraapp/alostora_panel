@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -82,8 +83,6 @@ class _MatchSelectionScreenState extends State<MatchSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return BlocBuilder<MatchesBloc, MatchesState>(
       builder: (context, state) {
         final selectedDate = state.selectedDate ?? DateTime.now();
@@ -116,72 +115,118 @@ class _MatchSelectionScreenState extends State<MatchSelectionScreen> {
                 child: Icon(
                   Icons.refresh,
                   size: 24,
-                  color: theme.iconTheme.color,
+                  color: Theme.of(context).iconTheme.color,
                 ),
               ),
             ),
           ),
         );
 
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Select Related Match'),
-            centerTitle: true,
-          ),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 16.0),
-                child: LayoutBuilder(builder: (context, constraints) {
-                  final bool useWideLayout = constraints.maxWidth > 700;
-                  if (useWideLayout) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: timePicker),
-                        const SizedBox(width: 16),
-                        Expanded(child: searchCard),
-                        const SizedBox(width: 16),
-                        refreshButton,
-                      ],
-                    );
-                  } else {
-                    return Column(
-                      children: [
-                        timePicker,
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(child: searchCard),
-                            const SizedBox(width: 8),
-                            refreshButton,
-                          ],
+        Widget buildListContent() {
+          return RefreshIndicator(
+            onRefresh: () async {
+              _fetchMatches();
+            },
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final bool isDesktop =
+                    ResponsiveBreakpoints.of(context).isDesktop ||
+                        ResponsiveBreakpoints.of(context).isTablet;
+                final bool useWideLayout =
+                    isDesktop || constraints.maxWidth > 700;
+
+                if (useWideLayout) {
+                  return ListView(
+                    padding: const EdgeInsets.all(10.0),
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(child: timePicker),
+                          const SizedBox(width: 16),
+                          Expanded(child: searchCard),
+                          const SizedBox(width: 16),
+                          refreshButton,
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      if (state is MatchesLoading)
+                        _buildShimmerList()
+                      else if (state is MatchesLoaded)
+                        _buildMatchesList(context, state.competitions)
+                      else if (state is MatchesError)
+                        ErrorView(
+                          message: state.message,
+                          onRetry: _fetchMatches,
+                        )
+                      else if (state is MatchesInitial)
+                        _buildShimmerList()
+                      else
+                        const SizedBox.shrink(),
+                    ],
+                  );
+                } else {
+                  // Mobile Layout with Sticky Time Picker
+                  return CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        floating: true,
+                        snap: true,
+                        pinned: false,
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        automaticallyImplyLeading: false,
+                        toolbarHeight: 80,
+                        flexibleSpace: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 5.0),
+                          child: timePicker,
                         ),
-                      ],
-                    );
-                  }
-                }),
-              ),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async => _fetchMatches(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: state is MatchesLoading
-                        ? _buildShimmerList()
-                        : state is MatchesLoaded
-                            ? _buildMatchesList(context, state.competitions)
-                            : state is MatchesError
-                                ? ErrorView(
-                                    message: state.message,
-                                    onRetry: _fetchMatches,
-                                  )
-                                : _buildShimmerList(),
-                  ),
-                ),
-              ),
-            ],
+                      ),
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 2),
+                              searchCard,
+                              const SizedBox(height: 16),
+                              if (state is MatchesLoading)
+                                _buildShimmerList()
+                              else if (state is MatchesLoaded)
+                                _buildMatchesList(context, state.competitions)
+                              else if (state is MatchesError)
+                                ErrorView(
+                                  message: state.message,
+                                  onRetry: _fetchMatches,
+                                )
+                              else if (state is MatchesInitial)
+                                _buildShimmerList()
+                              else
+                                const SizedBox.shrink(),
+                              const SizedBox(height: 16),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
+          );
+        }
+
+        return BlocListener<LanguageCubit, Locale>(
+          listener: (context, locale) {
+            _fetchMatches();
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Select Related Match'),
+              centerTitle: true,
+            ),
+            body: buildListContent(),
           ),
         );
       },
@@ -200,7 +245,8 @@ class _MatchSelectionScreenState extends State<MatchSelectionScreen> {
       );
     }
     return ListView.separated(
-      padding: const EdgeInsets.only(bottom: 32),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: competitions.length,
       separatorBuilder: (context, index) => const SizedBox(height: 24),
       itemBuilder: (context, index) {
@@ -256,7 +302,8 @@ class _MatchSelectionScreenState extends State<MatchSelectionScreen> {
 
   Widget _buildShimmerList() {
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: 3,
       separatorBuilder: (context, index) => const SizedBox(height: 24),
       itemBuilder: (context, index) => Column(
@@ -330,83 +377,102 @@ class _TimePickerCard extends StatelessWidget {
     final s = S.of(context);
     final isRtl = context.read<LanguageCubit>().isRTL();
 
+    final liveButton = SizedBox(
+      height: 40.0,
+      width: 50.0,
+      child: isLiveSelected
+          ? ElevatedButton(
+              onPressed: () => onLiveSelected(false),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              ),
+              child: Text(s.liveFilter),
+            )
+          : OutlinedButton(
+              onPressed: () => onLiveSelected(true),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.red,
+                side: const BorderSide(color: Colors.red),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              ),
+              child: Text(s.liveFilter),
+            ),
+    );
+
     return Card(
       elevation: 2,
       shadowColor: Colors.black12,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            liveButton,
             SizedBox(
-              height: 40,
-              child: isLiveSelected
-                  ? ElevatedButton(
-                      onPressed: () => onLiveSelected(false),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: Text(s.liveFilter),
-                    )
-                  : OutlinedButton(
-                      onPressed: () => onLiveSelected(true),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        side: const BorderSide(color: Colors.red),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: Text(s.liveFilter),
+              width: 200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: SvgPicture.asset(
+                      isRtl
+                          ? AppIcons.angleSmallRight
+                          : AppIcons.angleSmallLeft,
+                      colorFilter: ColorFilter.mode(
+                          theme.iconTheme.color!, BlendMode.srcIn),
                     ),
-            ),
-            const Spacer(),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: SvgPicture.asset(
-                    isRtl ? AppIcons.angleSmallRight : AppIcons.angleSmallLeft,
-                    colorFilter: ColorFilter.mode(
-                        theme.iconTheme.color!, BlendMode.srcIn),
+                    onPressed: () => onDateChanged(
+                        selectedDate.subtract(const Duration(days: 1))),
                   ),
-                  onPressed: () => onDateChanged(
-                      selectedDate.subtract(const Duration(days: 1))),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(_getDateText(context, selectedDate),
-                        style: theme.textTheme.bodySmall),
-                    Text(DateFormat('MM/dd').format(selectedDate),
-                        style: theme.textTheme.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                IconButton(
-                  icon: SvgPicture.asset(
-                    isRtl ? AppIcons.angleSmallLeft : AppIcons.angleSmallRight,
-                    colorFilter: ColorFilter.mode(
-                        theme.iconTheme.color!, BlendMode.srcIn),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(_getDateText(context, selectedDate),
+                            style: theme.textTheme.bodySmall),
+                        Text(DateFormat('yyyy/MM/dd').format(selectedDate),
+                            style: theme.textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
                   ),
-                  onPressed: () =>
-                      onDateChanged(selectedDate.add(const Duration(days: 1))),
-                ),
-              ],
-            ),
-            const Spacer(),
-            IconButton(
-              icon: SvgPicture.asset(AppIcons.calendar,
-                  colorFilter: ColorFilter.mode(
-                      theme.colorScheme.onPrimary, BlendMode.srcIn)),
-              style: IconButton.styleFrom(
-                backgroundColor: theme.colorScheme.primary,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  IconButton(
+                    icon: SvgPicture.asset(
+                      isRtl
+                          ? AppIcons.angleSmallLeft
+                          : AppIcons.angleSmallRight,
+                      colorFilter: ColorFilter.mode(
+                          theme.iconTheme.color!, BlendMode.srcIn),
+                    ),
+                    onPressed: () => onDateChanged(
+                        selectedDate.add(const Duration(days: 1))),
+                  ),
+                ],
               ),
-              onPressed: () => _showDatePicker(context, theme),
+            ),
+            SizedBox(
+              height: 40.0,
+              width: 40.0,
+              child: IconButton(
+                icon: SvgPicture.asset(AppIcons.calendar,
+                    colorFilter: ColorFilter.mode(
+                        theme.colorScheme.onPrimary, BlendMode.srcIn)),
+                style: IconButton.styleFrom(
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: theme.colorScheme.onPrimary,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                onPressed: () => _showDatePicker(context, theme),
+              ),
             ),
           ],
         ),
@@ -419,26 +485,36 @@ class _TimePickerCard extends StatelessWidget {
       context: context,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Container(
-          width: 350,
-          height: 400,
-          padding: const EdgeInsets.all(16),
-          child: SfDateRangePicker(
-            initialSelectedDate: selectedDate,
-            view: DateRangePickerView.month,
-            selectionMode: DateRangePickerSelectionMode.single,
-            onSelectionChanged: (args) {
-              if (args.value is DateTime) {
-                onDateChanged(args.value);
-                Navigator.pop(context);
-              }
-            },
-            headerStyle: DateRangePickerHeaderStyle(
-              textAlign: TextAlign.center,
-              textStyle: theme.textTheme.titleMedium,
+        child: SizedBox(
+          width: 320,
+          height: 380,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: SfDateRangePicker(
+              initialSelectedDate: selectedDate,
+              view: DateRangePickerView.month,
+              selectionMode: DateRangePickerSelectionMode.single,
+              onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                if (args.value is DateTime) {
+                  onDateChanged(args.value);
+                  Navigator.pop(context);
+                }
+              },
+              headerStyle: DateRangePickerHeaderStyle(
+                textAlign: TextAlign.center,
+                textStyle: theme.textTheme.titleMedium,
+                backgroundColor: theme.scaffoldBackgroundColor,
+              ),
+              monthViewSettings: DateRangePickerMonthViewSettings(
+                viewHeaderStyle: DateRangePickerViewHeaderStyle(
+                  textStyle: theme.textTheme.bodySmall,
+                ),
+              ),
+              selectionTextStyle: theme.textTheme.bodyLarge
+                  ?.copyWith(color: theme.colorScheme.onPrimary),
+              selectionColor: theme.colorScheme.primary,
+              todayHighlightColor: theme.colorScheme.primary,
             ),
-            selectionColor: theme.colorScheme.primary,
-            todayHighlightColor: theme.colorScheme.primary,
           ),
         ),
       ),
@@ -461,44 +537,58 @@ class _SearchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = S.of(context);
+    final iconColor = theme.iconTheme.color;
 
     return Card(
       elevation: 2,
       shadowColor: Colors.black12,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
-          children: [
-            SvgPicture.asset(AppIcons.search,
-                width: 20,
-                height: 20,
-                colorFilter:
-                    ColorFilter.mode(theme.hintColor, BlendMode.srcIn)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  hintText: s.search,
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(color: theme.hintColor),
+      child: SizedBox(
+        height: 64.0,
+        child: Center(
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: s.search,
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: SvgPicture.asset(
+                        AppIcons.search,
+                        width: 20,
+                        height: 20,
+                        colorFilter: iconColor != null
+                            ? ColorFilter.mode(iconColor, BlendMode.srcIn)
+                            : null,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
                 ),
               ),
-            ),
-            DropdownButton<String>(
-              value: ordering,
-              underline: const SizedBox.shrink(),
-              items: [
-                DropdownMenuItem(
-                    value: 'importance', child: Text(s.sortByImportance)),
-                DropdownMenuItem(value: 'time', child: Text(s.sortByTime)),
-              ],
-              onChanged: onOrderingChanged,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.w500),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: DropdownButton<String>(
+                  value: ordering,
+                  underline: const SizedBox.shrink(),
+                  items: [
+                    DropdownMenuItem(
+                        value: 'importance', child: Text(s.sortByImportance)),
+                    DropdownMenuItem(value: 'time', child: Text(s.sortByTime)),
+                  ],
+                  onChanged: onOrderingChanged,
+                  style: theme.textTheme.labelMedium,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -520,6 +610,7 @@ class _CompetitionHeader extends StatelessWidget {
       elevation: 1,
       color: isDark ? const Color(0xFF1B2131) : const Color(0xFF37373f),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -529,10 +620,23 @@ class _CompetitionHeader extends StatelessWidget {
               imageUrl: logoUrl,
               width: 24,
               height: 24,
-              placeholder: (_, __) =>
-                  const CircularProgressIndicator(strokeWidth: 2),
-              errorWidget: (_, __, ___) => const Icon(Icons.sports_soccer,
-                  color: Colors.white, size: 20),
+              fit: BoxFit.contain,
+              placeholder: (context, url) => Shimmer.fromColors(
+                baseColor: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                highlightColor: isDark ? Colors.grey[600]! : Colors.grey[100]!,
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => const Icon(
+                  Icons.sports_soccer,
+                  color: Colors.white70,
+                  size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -563,10 +667,33 @@ class _CompetitionHeaderShimmer extends StatelessWidget {
       baseColor: isDark ? Colors.grey[800]! : Colors.grey[300]!,
       highlightColor: isDark ? Colors.grey[700]! : Colors.grey[100]!,
       child: Card(
+        elevation: 1,
         color: isDark ? const Color(0xFF1B2131) : const Color(0xFF37373f),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        clipBehavior: Clip.antiAlias,
         margin: EdgeInsets.zero,
-        child: Container(height: 48),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Container(
+                width: 24,
+                height: 24,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  height: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
