@@ -42,12 +42,18 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
     final isRefresh = event.offset == 0;
     List<NewsCategory> categories = [];
     String? currentCategoryId = event.categoryId;
+    String? currentSearch = event.search;
 
     if (state is NewsLoaded) {
-      categories = (state as NewsLoaded).categories;
+      final currentState = state as NewsLoaded;
+      categories = currentState.categories;
       // If categoryId is not passed (e.g. load more), use the one from state
       if (currentCategoryId == null && !isRefresh) {
-        currentCategoryId = (state as NewsLoaded).selectedCategoryId;
+        currentCategoryId = currentState.selectedCategoryId;
+      }
+      // If search is not passed (e.g. load more or category change), use the one from state
+      if (currentSearch == null && !isRefresh) {
+        currentSearch = currentState.search;
       }
     }
 
@@ -71,7 +77,8 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
     final result = await getNews(
         limit: event.limit,
         offset: event.offset,
-        categoryId: currentCategoryId);
+        categoryId: currentCategoryId,
+        search: currentSearch);
 
     result.fold(
       (failure) {
@@ -88,6 +95,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
             (state as NewsLoaded).news + news,
             categories: categories,
             selectedCategoryId: currentCategoryId,
+            search: currentSearch,
             hasReachedMax: hasReachedMax,
             isLoadingMore: false,
           ));
@@ -95,6 +103,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
           emit(NewsLoaded(news,
               categories: categories,
               selectedCategoryId: currentCategoryId,
+              search: currentSearch,
               hasReachedMax: hasReachedMax));
         }
       },

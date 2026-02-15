@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:alostora/core/config/constants.dart';
 import 'package:alostora/core/config/app_colors.dart';
 import 'package:alostora/core/constants/app_icons.dart';
@@ -24,16 +25,39 @@ class NewsScreen extends StatefulWidget {
 
 class _NewsScreenState extends State<NewsScreen> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _scrollController.dispose();
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
     super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
+      final newsBloc = context.read<NewsBloc>();
+      final currentState = newsBloc.state;
+      String? categoryId;
+      if (currentState is NewsLoaded) {
+        categoryId = currentState.selectedCategoryId;
+      }
+      newsBloc.add(GetNewsEvent(
+        categoryId: categoryId,
+        search: _searchController.text,
+      ));
+    });
   }
 
   void _navigateToEditScreen(BuildContext context, NewsEntity? news) {
@@ -55,26 +79,31 @@ class _NewsScreenState extends State<NewsScreen> {
       create: (context) => sl<NewsBloc>()..add(const GetNewsEvent()),
       child: BlocBuilder<NewsBloc, NewsState>(
         builder: (context, state) {
-          if (state is NewsLoading) {
+          if (state is NewsLoading && state is! NewsLoaded) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is NewsError) {
+          } else if (state is NewsError && state is! NewsLoaded) {
             return ErrorView(
               message: state.message,
               onRetry: () => context.read<NewsBloc>().add(const GetNewsEvent()),
             );
-          } else if (state is NewsLoaded) {
+          } else if (state is NewsLoaded ||
+              (state is NewsLoading &&
+                  context.read<NewsBloc>().state is NewsLoaded)) {
+            final currentState = state is NewsLoaded
+                ? state
+                : (context.read<NewsBloc>().state as NewsLoaded);
             final activeLanguage =
                 context.read<LanguageCubit>().state.languageCode;
             int initialIndex = 0;
-            if (state.selectedCategoryId != null) {
-              final index = state.categories
-                  .indexWhere((c) => c.id == state.selectedCategoryId);
+            if (currentState.selectedCategoryId != null) {
+              final index = currentState.categories
+                  .indexWhere((c) => c.id == currentState.selectedCategoryId);
               if (index != -1) {
                 initialIndex = index + 1;
               }
             }
             return DefaultTabController(
-              length: state.categories.length + 1,
+              length: currentState.categories.length + 1,
               initialIndex: initialIndex,
               child: Scaffold(
                 body: Column(
@@ -82,12 +111,47 @@ class _NewsScreenState extends State<NewsScreen> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             s.news,
                             style: theme.textTheme.titleLarge,
                           ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.surface,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: theme.colorScheme.outline
+                                      .withOpacity(0.5),
+                                ),
+                              ),
+                              child: TextField(
+                                controller: _searchController,
+                                decoration: InputDecoration(
+                                  hintText: s.search,
+                                  prefixIcon: Icon(Icons.search,
+                                      size: 20,
+                                      color:
+                                          theme.colorScheme.onSurfaceVariant),
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                  contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                ),
+                                style: theme.textTheme.bodyMedium,
+                                onSubmitted: (value) {
+                                  context.read<NewsBloc>().add(GetNewsEvent(
+                                      categoryId:
+                                          currentState.selectedCategoryId,
+                                      search: value));
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
                           Row(
                             children: [
                               SizedBox(
@@ -96,7 +160,9 @@ class _NewsScreenState extends State<NewsScreen> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     context.read<NewsBloc>().add(GetNewsEvent(
-                                        categoryId: state.selectedCategoryId));
+                                        categoryId:
+                                            currentState.selectedCategoryId,
+                                        search: _searchController.text));
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: theme.colorScheme.surface,
@@ -117,7 +183,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               SizedBox(
                                 width: 38.0,
                                 height: 38.0,
@@ -151,17 +217,17 @@ class _NewsScreenState extends State<NewsScreen> {
                     TabBar(
                       onTap: (index) {
                         if (index == 0) {
-                          if (state.selectedCategoryId != null) {
-                            context
-                                .read<NewsBloc>()
-                                .add(const GetNewsEvent(categoryId: null));
+                          if (currentState.selectedCategoryId != null) {
+                            context.read<NewsBloc>().add(GetNewsEvent(
+                                categoryId: null,
+                                search: _searchController.text));
                           }
                         } else {
-                          final category = state.categories[index - 1];
-                          if (state.selectedCategoryId != category.id) {
-                            context
-                                .read<NewsBloc>()
-                                .add(GetNewsEvent(categoryId: category.id));
+                          final category = currentState.categories[index - 1];
+                          if (currentState.selectedCategoryId != category.id) {
+                            context.read<NewsBloc>().add(GetNewsEvent(
+                                categoryId: category.id,
+                                search: _searchController.text));
                           }
                         }
                       },
@@ -182,7 +248,7 @@ class _NewsScreenState extends State<NewsScreen> {
                             child: Text('All'),
                           ),
                         ),
-                        ...state.categories.map(
+                        ...currentState.categories.map(
                           (category) => Tab(
                             child: Padding(
                               padding:
@@ -207,7 +273,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                 !currentState.isLoadingMore) {
                               newsBloc.add(GetNewsEvent(
                                   offset: currentState.news.length,
-                                  categoryId: currentState.selectedCategoryId));
+                                  categoryId: currentState.selectedCategoryId,
+                                  search: _searchController.text));
                             }
                           }
                           return false;
@@ -215,18 +282,18 @@ class _NewsScreenState extends State<NewsScreen> {
                         child: ListView.builder(
                           controller: _scrollController,
                           padding: const EdgeInsets.all(16),
-                          itemCount: state.isLoadingMore
-                              ? state.news.length + 1
-                              : state.news.length,
+                          itemCount: currentState.isLoadingMore
+                              ? currentState.news.length + 1
+                              : currentState.news.length,
                           itemBuilder: (context, index) {
-                            if (index >= state.news.length) {
+                            if (index >= currentState.news.length) {
                               return const Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child:
                                     Center(child: CircularProgressIndicator()),
                               );
                             }
-                            final newsItem = state.news[index];
+                            final newsItem = currentState.news[index];
                             final coverImage = newsItem.images.firstWhere(
                                 (img) => img.order == 'cover',
                                 orElse: () => newsItem.images.isNotEmpty
@@ -257,8 +324,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                     children: [
                                       // Cover Image
                                       SizedBox(
-                                        width: 140,
-                                        height: 110,
+                                        width: 110,
+                                        height: 85,
                                         child: Stack(
                                           fit: StackFit.expand,
                                           children: [
@@ -291,12 +358,56 @@ class _NewsScreenState extends State<NewsScreen> {
                                                         color: theme.colorScheme
                                                             .onSurfaceVariant),
                                                   ),
+                                            if (newsItem.categoryDetails !=
+                                                null)
+                                              Positioned(
+                                                bottom: 6,
+                                                left: 6,
+                                                right: 6,
+                                                child: Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 3),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black
+                                                        .withOpacity(0.65),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                  child: Text(
+                                                    newsItem.categoryDetails!
+                                                                .title[
+                                                            context
+                                                                .read<
+                                                                    LanguageCubit>()
+                                                                .state
+                                                                .languageCode] ??
+                                                        newsItem
+                                                            .categoryDetails!
+                                                            .title['en'] ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
                                           ],
                                         ),
                                       ),
                                       Expanded(
                                         child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              12, 8, 4, 8),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -308,10 +419,12 @@ class _NewsScreenState extends State<NewsScreen> {
                                                         .languageCode] ??
                                                     newsItem.title['en'] ??
                                                     '',
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
-                                                maxLines: 2,
+                                                style: theme
+                                                    .textTheme.titleSmall
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                maxLines: 3,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                               const SizedBox(height: 4),
@@ -322,7 +435,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                                       'urgent')
                                                     const Padding(
                                                       padding: EdgeInsets.only(
-                                                          right: 8.0),
+                                                          right: 6.0),
                                                       child: Icon(
                                                           Icons
                                                               .notifications_active,
@@ -330,9 +443,37 @@ class _NewsScreenState extends State<NewsScreen> {
                                                           size: 16),
                                                     ),
                                                   if (newsItem.isPinned)
-                                                    const Icon(Icons.push_pin,
-                                                        size: 16,
-                                                        color: Colors.blue),
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: 6.0),
+                                                      child: Icon(
+                                                          Icons.push_pin,
+                                                          size: 16,
+                                                          color: Colors.blue),
+                                                    ),
+                                                  if (newsItem.isLive)
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: 6.0),
+                                                      child: Icon(Icons.live_tv,
+                                                          size: 16,
+                                                          color: Colors.red),
+                                                    ),
+                                                  if (newsItem.relatedMatch !=
+                                                          null &&
+                                                      newsItem.relatedMatch!
+                                                          .isNotEmpty)
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 6.0),
+                                                      child: Icon(
+                                                          Icons.sports_soccer,
+                                                          size: 16,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .primary),
+                                                    ),
                                                 ],
                                               ),
                                             ],
@@ -340,7 +481,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(12.0),
+                                        padding: const EdgeInsets.only(
+                                            right: 8.0, left: 4.0),
                                         child: Center(
                                           child: _buildStatusIndicator(
                                               context, newsItem.status),
@@ -371,17 +513,19 @@ class _NewsScreenState extends State<NewsScreen> {
     switch (status) {
       case 'draft':
         return const SizedBox(
-          width: 24,
-          height: 24,
+          width: 20,
+          height: 20,
           child: CircularProgressIndicator(
             strokeWidth: 2,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
           ),
         );
       case 'pending_approval':
-        return const Icon(Icons.pending_actions, color: Colors.orange);
+        return const Icon(Icons.pending_actions,
+            color: Colors.orange, size: 20);
       case 'published':
-        return Icon(Icons.check_circle, color: theme.colorScheme.primary);
+        return Icon(Icons.check_circle,
+            color: theme.colorScheme.primary, size: 20);
       default:
         return const SizedBox.shrink();
     }

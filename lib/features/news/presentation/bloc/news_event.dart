@@ -11,15 +11,17 @@ class GetNewsEvent extends NewsEvent {
   final int limit;
   final int offset;
   final String? categoryId;
+  final String? search;
 
   const GetNewsEvent({
     this.limit = 10,
     this.offset = 0,
     this.categoryId,
+    this.search,
   });
 
   @override
-  List<Object?> get props => [limit, offset, categoryId];
+  List<Object?> get props => [limit, offset, categoryId, search];
 }
 
 class CreateNewsEvent extends NewsEvent {

@@ -17,6 +17,7 @@ class NewsLoaded extends NewsState {
   final List<NewsEntity> news;
   final List<NewsCategory> categories;
   final String? selectedCategoryId;
+  final String? search;
   final bool hasReachedMax;
   final bool isLoadingMore;
 
@@ -24,6 +25,7 @@ class NewsLoaded extends NewsState {
     this.news, {
     this.categories = const [],
     this.selectedCategoryId,
+    this.search,
     this.hasReachedMax = false,
     this.isLoadingMore = false,
   });
@@ -32,6 +34,7 @@ class NewsLoaded extends NewsState {
     List<NewsEntity>? news,
     List<NewsCategory>? categories,
     String? selectedCategoryId,
+    String? search,
     bool? hasReachedMax,
     bool? isLoadingMore,
   }) {
@@ -39,14 +42,21 @@ class NewsLoaded extends NewsState {
       news ?? this.news,
       categories: categories ?? this.categories,
       selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
+      search: search ?? this.search,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [news, categories, selectedCategoryId, hasReachedMax, isLoadingMore];
+  List<Object?> get props => [
+        news,
+        categories,
+        selectedCategoryId,
+        search,
+        hasReachedMax,
+        isLoadingMore
+      ];
 }
 
 class NewsError extends NewsState {

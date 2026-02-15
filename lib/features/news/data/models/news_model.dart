@@ -44,9 +44,9 @@ class NewsModel extends NewsEntity {
                   (e) => NewsImageModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <NewsImageEntity>[],
-      categoryDetails: json['category_details'] != null
-          ? NewsCategoryModel.fromJson(
-              json['category_details'] as Map<String, dynamic>)
+      categoryDetails: (json['category'] ?? json['category_details']) != null
+          ? NewsCategoryModel.fromJson((json['category'] ??
+              json['category_details']) as Map<String, dynamic>)
           : null,
       relatedMatch: json['related_match']?.toString() ??
           json['related_match_details']?['id']?.toString(),

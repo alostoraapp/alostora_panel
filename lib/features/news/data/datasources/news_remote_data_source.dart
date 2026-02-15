@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 
 abstract class NewsRemoteDataSource {
   Future<List<NewsModel>> getNews(
-      {int limit = 10, int offset = 0, String? categoryId});
+      {int limit = 10, int offset = 0, String? categoryId, String? search});
   Future<NewsModel> createNews(Map<String, dynamic> newsData);
   Future<NewsModel> updateNews(String id, Map<String, dynamic> newsData);
   Future<void> deleteNews(String id);
@@ -24,7 +24,10 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
 
   @override
   Future<List<NewsModel>> getNews(
-      {int limit = 10, int offset = 0, String? categoryId}) async {
+      {int limit = 10,
+      int offset = 0,
+      String? categoryId,
+      String? search}) async {
     final int page = (offset ~/ limit) + 1;
     final Map<String, dynamic> queryParams = {
       'page': page,
@@ -32,6 +35,9 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
     };
     if (categoryId != null) {
       queryParams['category_id'] = categoryId;
+    }
+    if (search != null && search.isNotEmpty) {
+      queryParams['search'] = search;
     }
     final response = await _apiClient.get(
       '${AppConstants.baseUrl}${AppConstants.newsListUrl}',
