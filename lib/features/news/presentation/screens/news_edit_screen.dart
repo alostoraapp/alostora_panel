@@ -605,11 +605,109 @@ class _NewsEditScreenState extends State<NewsEditScreen>
   }
 
   String _convertDeltaToHtml(dynamic delta) {
+    var deltaList = delta.toJson() as List;
+
+    // Helper to safely cast and copy map
+    List<Map<String, dynamic>> sanitizedDelta = [];
+
+    for (var op in deltaList) {
+      if (op is Map<String, dynamic>) {
+        Map<String, dynamic> newOp = Map<String, dynamic>.from(op);
+
+        if (newOp.containsKey('attributes') && newOp['attributes'] != null) {
+          final attrs = Map<String, dynamic>.from(newOp['attributes']);
+
+          // 1. Normalize Background Color
+          if (attrs.containsKey('backgroundColor')) {
+            attrs['background'] = attrs['backgroundColor'];
+            attrs.remove('backgroundColor');
+          }
+
+          // 2. Sanitize Color Values (background & color)
+          // Handle 'background'
+          if (attrs.containsKey('background')) {
+            attrs['background'] = _sanitizeColor(attrs['background']);
+          }
+          // Handle 'color'
+          if (attrs.containsKey('color')) {
+            attrs['color'] = _sanitizeColor(attrs['color']);
+          }
+
+          // 3. Normalize Alignment
+          // Quill uses 'align', Converter expects 'align' -> 'text-align' logic handled by converter
+          // usually fine, but ensure it's a string
+
+          newOp['attributes'] = attrs;
+        }
+        sanitizedDelta.add(newOp);
+      } else {
+        // Fallback for unexpected types, though usually ops are Maps
+        try {
+          sanitizedDelta.add(Map<String, dynamic>.from(op as Map));
+        } catch (_) {}
+      }
+    }
+
     final converter = QuillDeltaToHtmlConverter(
-      delta.toJson(),
-      ConverterOptions.forEmail(),
+      sanitizedDelta,
+      ConverterOptions(
+        converterOptions: OpConverterOptions(
+          inlineStylesFlag: true,
+        ),
+      ),
     );
     return converter.convert();
+  }
+
+  /// Converts various color representations to valid CSS Hex string
+  String? _sanitizeColor(dynamic value) {
+    if (value == null) return null;
+
+    // If it's an integer (Flutter Color value 0xAARRGGBB)
+    if (value is int) {
+      final hex = value.toRadixString(16).padLeft(8, '0');
+      // Extract RRGGBB (last 6 chars)
+      if (hex.length >= 6) {
+        return '#${hex.substring(hex.length - 6)}';
+      }
+    }
+
+    // If it's a String
+    if (value is String) {
+      if (value.isEmpty) return null;
+
+      // Check for 0x prefix
+      if (value.startsWith('0x') || value.startsWith('0X')) {
+        final hex = value.substring(2);
+        if (hex.length >= 6) {
+          return '#${hex.substring(hex.length - 6)}';
+        }
+        return '#$hex';
+      }
+
+      // Check if it already has #
+      if (value.startsWith('#')) {
+        return value;
+      }
+
+      // Assume it's a raw hex string without # or special name
+      // Simple check to see if valid hex
+      final validHex = RegExp(r'^[0-9a-fA-F]+$');
+      if (validHex.hasMatch(value)) {
+        if (value.length >= 6) {
+          // If 8 chars, likely AARRGGBB, take last 6
+          if (value.length == 8) {
+            return '#${value.substring(2)}';
+          }
+          return '#$value';
+        }
+      }
+
+      // Return as is (could be 'red', 'blue', etc.)
+      return value;
+    }
+
+    return value.toString();
   }
 
   void _saveNews() {
@@ -684,6 +782,9 @@ class _NewsEditScreenState extends State<NewsEditScreen>
     }
 
     if (widget.news != null) {
+      // For update, rename 'category' to 'category_id'
+      newsData['category_id'] = newsData['category'];
+      newsData.remove('category');
       widget.newsBloc.add(UpdateNewsEvent(widget.news!.id, newsData));
     } else {
       widget.newsBloc.add(CreateNewsEvent(newsData));
@@ -909,11 +1010,15 @@ class _NewsEditScreenState extends State<NewsEditScreen>
                                 QuillSimpleToolbar(
                                   controller: _contentControllers[code]!,
                                   config: const QuillSimpleToolbarConfig(
-                                    showFontFamily: false,
-                                    showFontSize: false,
                                     showSearchButton: false,
-                                    showSubscript: false,
-                                    showSuperscript: false,
+                                    showFontFamily: true,
+                                    showFontSize: true,
+                                    showSubscript: true,
+                                    showSuperscript: true,
+                                    showColorButton: true,
+                                    showBackgroundColorButton: true,
+                                    showDirection: true,
+                                    showAlignmentButtons: true,
                                   ),
                                 ),
                                 const Divider(height: 1),
