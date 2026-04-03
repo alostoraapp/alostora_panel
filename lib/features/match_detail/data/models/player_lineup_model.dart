@@ -15,7 +15,7 @@ class PlayerLineupModel extends PlayerLineupEntity {
 
   factory PlayerLineupModel.fromJson(Map<String, dynamic> json) {
     return PlayerLineupModel(
-      id: json['id'],
+      id: json['id']?.toString() ?? '',
       player: json['player'] != null
           ? PlayerInfoModel.fromJson(json['player'])
           : null,
@@ -23,7 +23,7 @@ class PlayerLineupModel extends PlayerLineupEntity {
       isStarter: json['is_starter'],
       isCaptain: json['is_captain'],
       shirtNumber: json['shirt_number'],
-      position: json['position'],
+      position: json['position']?.toString(),
       rating: double.tryParse(json['rating']?.toString() ?? '0.0') ?? 0.0,
     );
   }

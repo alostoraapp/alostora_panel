@@ -11,11 +11,11 @@ class CountryModel extends CountryEntity {
 
   factory CountryModel.fromJson(Map<String, dynamic> json) {
     return CountryModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      shortName: json['short_name'] ?? '',
-      displayName: json['display_name'] ?? '',
-      logo: json['logo'] ?? '',
+      id: json['id']?.toString() ?? '',
+      name: json['name'],
+      shortName: json['short_name'],
+      displayName: json['display_name'],
+      logo: json['logo']?.toString() ?? '',
     );
   }
 

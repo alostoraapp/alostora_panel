@@ -11,11 +11,11 @@ class PlayerInfoModel extends PlayerInfoEntity {
 
   factory PlayerInfoModel.fromJson(Map<String, dynamic> json) {
     return PlayerInfoModel(
-      id: json['id'],
+      id: json['id']?.toString() ?? '',
       name: json['name'],
       shortName: json['short_name'],
       displayName: json['display_name'],
-      logo: json['logo'],
+      logo: json['logo']?.toString(),
     );
   }
 }

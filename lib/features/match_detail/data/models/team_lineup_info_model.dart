@@ -11,11 +11,11 @@ class TeamLineupInfoModel extends TeamLineupInfoEntity {
 
   factory TeamLineupInfoModel.fromJson(Map<String, dynamic> json) {
     return TeamLineupInfoModel(
-      id: json['id'],
+      id: json['id']?.toString() ?? '',
       name: json['name'],
       shortName: json['short_name'],
       displayName: json['display_name'],
-      logo: json['logo'],
+      logo: json['logo']?.toString(),
     );
   }
 }

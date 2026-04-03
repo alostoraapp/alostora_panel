@@ -41,11 +41,11 @@ class IncidentModel extends IncidentEntity {
     }
 
     return IncidentModel(
-      id: json['id'],
-      matchId: json['match'],
-      order: json['order'] ?? 0,
+      id: json['id']?.toString() ?? '',
+      matchId: json['match']?.toString() ?? '',
+      order: int.tryParse(json['order']?.toString() ?? '0') ?? 0,
       type: _parseEnum(StatTypeChoices.values, json['type']),
-      time: json['time'],
+      time: int.tryParse(json['time']?.toString() ?? '0') ?? 0,
       addedTime: null, // API doesn't seem to have added_time in the example
       position: _parseEnum(IncidentPositionChoices.values, json['position']),
       player: json['player'] != null

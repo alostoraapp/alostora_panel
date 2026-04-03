@@ -11,9 +11,9 @@ class TvChannelModel extends TvChannelEntity {
 
   factory TvChannelModel.fromJson(Map<String, dynamic> json) {
     return TvChannelModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      logo: json['logo'] ?? '',
+      id: json['id']?.toString() ?? '',
+      name: json['name'],
+      logo: json['logo']?.toString() ?? '',
       country: CountryModel.fromJson(json['country'] ?? {}),
     );
   }
