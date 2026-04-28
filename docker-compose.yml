@@ -9,7 +9,7 @@ services:
     # This correctly pulls the image built by the CI/CD
     image: ghcr.io/alostoraapp/alostora_panel:latest
     container_name: admin_panel
-    restart: on-failure
+    restart: always
 
     # No build context and no app volumes are needed here
     # which is correct for this approach.
